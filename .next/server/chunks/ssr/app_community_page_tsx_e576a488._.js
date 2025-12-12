@@ -1,0 +1,3 @@
+module.exports=[63775,a=>{"use strict";var b=a.i(87924);function c(){return(0,b.jsxs)("div",{className:"p-6 space-y-2",children:[(0,b.jsx)("h1",{className:"text-white text-2xl font-semibold",children:"Community"}),(0,b.jsx)("p",{className:"text-zinc-400",children:"Join discussions and connect with other traders."})]})}a.s(["default",()=>c])}];
+
+//# sourceMappingURL=app_community_page_tsx_e576a488._.js.map

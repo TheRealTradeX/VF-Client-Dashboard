@@ -1,0 +1,17 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/accounts/[id]/page": "/accounts/[id]",
+  "/accounts/page": "/accounts",
+  "/analytics/page": "/analytics",
+  "/challenges/page": "/challenges",
+  "/community/page": "/community",
+  "/dashboard/page": "/dashboard",
+  "/icon.svg/route": "/icon.svg",
+  "/journal/page": "/journal",
+  "/leaderboard/page": "/leaderboard",
+  "/page": "/",
+  "/payouts/page": "/payouts",
+  "/resources/page": "/resources",
+  "/settings/page": "/settings"
+}

@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 13% 6%;
+    --foreground: 220 20% 96%;
+    --muted: 230 11% 12%;
+    --muted-foreground: 220 13% 70%;
+    --popover: 230 10% 8%;
+    --popover-foreground: 220 20% 96%;
+    --card: 230 10% 8%;
+    --card-foreground: 220 20% 96%;
+    --border: 230 10% 18%;
+    --input: 230 10% 14%;
+    --primary: 160 84% 55%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 12% 20%;
+    --secondary-foreground: 220 16% 82%;
+    --accent: 220 14% 16%;
+    --accent-foreground: 220 22% 96%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+    --ring: 160 84% 55%;
+    --radius: 0.75rem;
+    --sidebar: 230 10% 9%;
+    --sidebar-foreground: 220 20% 96%;
+    --sidebar-primary: 160 84% 55%;
+    --sidebar-primary-foreground: 230 10% 9%;
+    --sidebar-accent: 230 10% 14%;
+    --sidebar-accent-foreground: 220 20% 96%;
+    --sidebar-border: 230 10% 18%;
+    --sidebar-ring: 160 84% 55%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.08), transparent 30%),
+      radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.05), transparent 28%),
+      linear-gradient(135deg, rgba(12, 12, 16, 0.95), rgba(9, 10, 15, 0.98));
+    background-attachment: fixed;
+  }
+
+  a {
+    @apply text-primary underline-offset-4 transition hover:text-primary/80;
+  }
+
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Global scrollbar styling */
+* {
+  scrollbar-color: #2b2b32 #0d0d14;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #0d0d14;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #2b2b32;
+  border-radius: 9999px;
+  border: 2px solid #0d0d14;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #3a3a44;
+}

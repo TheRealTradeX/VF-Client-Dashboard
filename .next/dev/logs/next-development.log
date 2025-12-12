@@ -1,0 +1,46 @@
+[00:00:00.676] Server  LOG      ✓ Ready in 440ms
+[00:00:03.883] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:09.243] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\node_modules_473cc24e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:09.243] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\[root-of-the-server]__30bb670c._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:09.243] Server  WARN    Error: Route "/accounts/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:03:56.848] Server  LOG      ✓ Compiled in 117ms
+[00:05:51.506] Server  LOG      ✓ Compiled in 127ms
+[00:05:59.124] Server  LOG      ✓ Compiled in 93ms
+[00:06:10.279] Server  LOG      ✓ Compiled in 124ms
+[00:07:25.403] Server  LOG      ✓ Compiled in 107ms
+[00:08:44.028] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\node_modules_473cc24e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:08:44.028] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\[root-of-the-server]__30bb670c._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:08:44.029] Server  WARN    Error: Route "/accounts/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:11:53.343] Server  LOG      ✓ Compiled in 109ms
+[00:12:03.341] Server  LOG      ✓ Compiled in 115ms
+[00:12:15.868] Server  LOG      ✓ Compiled in 129ms
+[00:13:01.381] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:01.381] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:15:15.723] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\node_modules_473cc24e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:15:15.724] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\[root-of-the-server]__30bb670c._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:15:15.724] Server  WARN    Error: Route "/accounts/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:15:44.278] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\node_modules_473cc24e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:15:44.279] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\[root-of-the-server]__30bb670c._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:15:44.279] Server  WARN    Error: Route "/accounts/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:17:53.363] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:17:53.364] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:19:40.138] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\node_modules_473cc24e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:19:40.139] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\[root-of-the-server]__30bb670c._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:19:40.139] Server  WARN    Error: Route "/accounts/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:28:55.076] Server  LOG      ✓ Compiled in 117ms
+[00:29:05.633] Server  LOG      ✓ Compiled in 111ms
+[00:29:32.130] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\node_modules_473cc24e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:29:32.131] Server  ERROR   C:\Users\peral\OneDrive\Desktop\Dev Projects\VF-Client-Dashboard\.next\dev\server\chunks\ssr\[root-of-the-server]__30bb670c._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:29:32.131] Server  WARN    Error: Route "/accounts/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
