@@ -10,7 +10,7 @@ export default function DashboardPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-white text-2xl mb-1">Welcome back, John</h1>
+        <h1 className="text-white text-2xl mb-1">Welcome back, Jefrey</h1>
         <p className="text-zinc-400">Here&apos;s what&apos;s happening with your accounts today</p>
       </div>
 

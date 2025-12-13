@@ -1,51 +1,47 @@
-import Link from "next/link";
-import {
-  mockAccounts,
-  trades as baseTrades,
-  journalEntries as baseJournal,
-  rulesByAccountId,
-  credentialsByAccountId,
-  normalizeAccounts,
-  getAccountRouteId,
-} from "@/lib/mockData";
 import { AccountDetailsView } from "@/components/accounts/account-details-view";
+import {
+  accounts,
+  credentialsByAccountId,
+  getAccountRouteId,
+  journalEntries,
+  rulesByAccountId,
+  trades,
+} from "@/lib/mockData";
+import { notFound } from "next/navigation";
 
-export default function AccountDetailsPage({ params }: { params: { id: string } }) {
-  const raw = params.id ?? "";
-  const routeId = decodeURIComponent(raw).trim();
-  const accounts = normalizeAccounts(mockAccounts);
-  const account = accounts.find((a) => getAccountRouteId(a) === routeId);
+type AccountDetailsPageProps = {
+  params: { id: string };
+};
 
-  if (!account) {
-    return (
-      <div className="p-6 space-y-4">
-        <h1 className="text-2xl text-white">Account not found</h1>
-        <p className="text-zinc-400">
-          We couldn&apos;t locate an account with ID: <code className="text-white">{routeId}</code>
-        </p>
-        <Link
-          href="/accounts"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black hover:bg-emerald-600 transition-colors"
-        >
-          Back to Accounts
-        </Link>
-      </div>
-    );
+export default function AccountDetailsPage({ params }: AccountDetailsPageProps) {
+  const rawId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  let routeId = rawId ?? "";
+  try {
+    routeId = decodeURIComponent(routeId);
+  } catch {
+    // keep raw route id if decode fails
   }
+  const normalize = (value: string) => value.toString().toLowerCase().trim();
 
-  const accountTrades = baseTrades.filter((t) => t.accountId === getAccountRouteId(account));
-  const accountJournal = baseJournal.filter((j) => j.accountId === getAccountRouteId(account));
-  const rules = rulesByAccountId[getAccountRouteId(account)];
-  const creds = credentialsByAccountId[getAccountRouteId(account)];
+  const account =
+    accounts.find((acct) => {
+      const routeKey = getAccountRouteId(acct);
+      return normalize(routeKey) === normalize(routeId) || normalize(acct.id) === normalize(routeId);
+    }) ?? accounts[0];
+
+  const accountTrades = trades.filter((trade) => trade.accountId === account.id);
+  const accountJournal = journalEntries.filter((entry) => entry.accountId === account.id);
+  const rules = rulesByAccountId[account.id];
+  const credentials = credentialsByAccountId[account.id];
 
   return (
-    <div className="p-6 pb-10">
+    <div className="p-6">
       <AccountDetailsView
         account={account}
         trades={accountTrades}
         journalEntries={accountJournal}
         rules={rules}
-        credentials={creds}
+        credentials={credentials}
       />
     </div>
   );

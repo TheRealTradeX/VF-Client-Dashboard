@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/dev/Velocity%20DEV/VF-Client-Dashboard/app/resources/page.tsx"],"sourcesContent":["\"use client\";\n\nexport default function ResourcesPage() {\n  return (\n    <div className=\"p-6 space-y-2\">\n      <h1 className=\"text-white text-2xl font-semibold\">Resources</h1>\n      <p className=\"text-zinc-400\">Documentation, guides, and helpful links coming soon.</p>\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAA;;AAEe,SAAS;IACtB,qBACE,8OAAC;QAAI,WAAU;;0BACb,8OAAC;gBAAG,WAAU;0BAAoC;;;;;;0BAClD,8OAAC;gBAAE,WAAU;0BAAgB;;;;;;;;;;;;AAGnC"}}]
+}

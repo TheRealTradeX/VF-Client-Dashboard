@@ -65,6 +65,7 @@ export function PerformanceChart() {
               }}
               formatter={(value: number) => [`$${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, '']}
               labelStyle={{ color: '#a1a1aa' }}
+              cursor={{ fill: 'transparent' }}
             />
             <Area
               type="monotone"

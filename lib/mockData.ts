@@ -317,10 +317,31 @@ export const credentialsByAccountId: Record<string, AccountCredentials[]> = {
 };
 
 export function formatCurrency(value: number, options: Intl.NumberFormatOptions = {}) {
+  const normalized: Intl.NumberFormatOptions = { ...options };
+
+  const clampDigits = (num: number | undefined) =>
+    num === undefined ? undefined : Math.min(20, Math.max(0, num));
+
+  normalized.minimumFractionDigits = clampDigits(normalized.minimumFractionDigits);
+  normalized.maximumFractionDigits = clampDigits(normalized.maximumFractionDigits);
+
+  if (normalized.maximumFractionDigits !== undefined && normalized.minimumFractionDigits === undefined) {
+    normalized.minimumFractionDigits = Math.min(2, normalized.maximumFractionDigits);
+  }
+  if (
+    normalized.minimumFractionDigits !== undefined &&
+    normalized.maximumFractionDigits !== undefined &&
+    normalized.minimumFractionDigits > normalized.maximumFractionDigits
+  ) {
+    normalized.maximumFractionDigits = normalized.minimumFractionDigits;
+  }
+  if (normalized.minimumFractionDigits === undefined) {
+    normalized.minimumFractionDigits = 2;
+  }
+
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 2,
-    ...options,
+    ...normalized,
   }).format(value);
 }

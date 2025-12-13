@@ -26,7 +26,6 @@ const navigation = [
   { name: "Challenges", href: "/challenges", icon: Trophy },
   { name: "Payouts", href: "/payouts", icon: DollarSign },
   { name: "Leaderboard", href: "/leaderboard", icon: TrendingUp },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
 ];
 
 const secondaryNavigation = [
@@ -61,7 +60,7 @@ export function Sidebar() {
 
   return (
     <div
-      className={`bg-zinc-950 border-r border-zinc-900 flex flex-col transition-all duration-300 ${
+      className={`bg-zinc-950 border-r border-zinc-900 flex flex-col transition-all duration-300 sticky top-0 h-screen flex-shrink-0 ${
         isCollapsed ? "w-20" : "w-64"
       }`}
     >
@@ -77,7 +76,6 @@ export function Sidebar() {
           {!isCollapsed && (
             <div className="leading-tight">
               <div className="text-white tracking-tight">Velocity Funds</div>
-              <div className="text-xs text-emerald-500">Prop Trading</div>
             </div>
           )}
         </div>
@@ -133,10 +131,10 @@ export function Sidebar() {
         <div className="p-4 border-t border-zinc-900">
           <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
-              <span className="text-black">JD</span>
+              <span className="text-black">JP</span>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-white text-sm truncate">John Doe</div>
+              <div className="text-white text-sm truncate">Jefrey Peralta</div>
               <div className="text-xs text-zinc-500">Funded Trader</div>
             </div>
           </div>
@@ -145,7 +143,7 @@ export function Sidebar() {
       {isCollapsed && (
         <div className="p-4 border-t border-zinc-900">
           <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto">
-            <span className="text-black text-sm">JD</span>
+            <span className="text-black text-sm">JP</span>
           </div>
         </div>
       )}

@@ -22,13 +22,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className="dark">
       <body
         className={cn(
-          "min-h-screen bg-background text-foreground antialiased overflow-x-hidden",
+          "min-h-screen bg-background text-foreground antialiased overflow-x-hidden font-sans",
           fontSans.variable,
         )}
       >
-        <div className="min-h-screen flex bg-black overflow-hidden">
+        <div className="h-screen flex bg-black overflow-hidden">
           <Sidebar />
-          <div className="flex-1 flex flex-col overflow-hidden bg-black min-w-0">
+          <div className="flex-1 flex flex-col bg-black min-w-0 h-screen overflow-hidden">
             <Topbar />
             <main className="flex-1 overflow-y-auto bg-black min-w-0">
               <div className="min-h-full bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.08),_transparent_35%)] min-w-0">

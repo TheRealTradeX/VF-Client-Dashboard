@@ -31,6 +31,7 @@ export function PerformanceChart({ data }: PerformanceChartProps) {
                 color: '#fff',
               }}
               formatter={(value: number) => [`$${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, '']}
+              cursor={{ fill: 'transparent' }}
             />
             <Legend 
               wrapperStyle={{ color: '#94a3b8' }}

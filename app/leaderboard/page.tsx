@@ -50,12 +50,12 @@ const topTraders = [
   },
   {
     rank: 6,
-    name: "You (John Doe)",
+    name: "You (Jefrey Peralta)",
     country: "USA",
     profit: "$25,430.00",
     winRate: "72.4%",
     trades: 123,
-    avatar: "JD",
+    avatar: "JP",
     isCurrentUser: true,
   },
 ];

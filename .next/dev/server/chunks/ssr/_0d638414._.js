@@ -285,11 +285,25 @@ const credentialsByAccountId = {
     ]
 };
 function formatCurrency(value, options = {}) {
+    const normalized = {
+        ...options
+    };
+    const clampDigits = (num)=>num === undefined ? undefined : Math.min(20, Math.max(0, num));
+    normalized.minimumFractionDigits = clampDigits(normalized.minimumFractionDigits);
+    normalized.maximumFractionDigits = clampDigits(normalized.maximumFractionDigits);
+    if (normalized.maximumFractionDigits !== undefined && normalized.minimumFractionDigits === undefined) {
+        normalized.minimumFractionDigits = Math.min(2, normalized.maximumFractionDigits);
+    }
+    if (normalized.minimumFractionDigits !== undefined && normalized.maximumFractionDigits !== undefined && normalized.minimumFractionDigits > normalized.maximumFractionDigits) {
+        normalized.maximumFractionDigits = normalized.minimumFractionDigits;
+    }
+    if (normalized.minimumFractionDigits === undefined) {
+        normalized.minimumFractionDigits = 2;
+    }
     return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-        minimumFractionDigits: 2,
-        ...options
+        ...normalized
     }).format(value);
 }
 }),
@@ -1068,6 +1082,9 @@ function PerformanceChart() {
                                     ],
                                 labelStyle: {
                                     color: '#a1a1aa'
+                                },
+                                cursor: {
+                                    fill: 'transparent'
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard/PerformanceChart.tsx",
@@ -1083,7 +1100,7 @@ function PerformanceChart() {
                                 name: "Balance"
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard/PerformanceChart.tsx",
-                                lineNumber: 69,
+                                lineNumber: 70,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Area$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Area"], {
@@ -1095,7 +1112,7 @@ function PerformanceChart() {
                                 name: "Equity"
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard/PerformanceChart.tsx",
-                                lineNumber: 77,
+                                lineNumber: 78,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -1493,7 +1510,7 @@ function DashboardPage() {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                         className: "text-white text-2xl mb-1",
-                        children: "Welcome back, John"
+                        children: "Welcome back, Jefrey"
                     }, void 0, false, {
                         fileName: "[project]/app/dashboard/page.tsx",
                         lineNumber: 13,

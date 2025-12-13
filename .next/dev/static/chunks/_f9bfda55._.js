@@ -285,11 +285,25 @@ const credentialsByAccountId = {
     ]
 };
 function formatCurrency(value, options = {}) {
+    const normalized = {
+        ...options
+    };
+    const clampDigits = (num)=>num === undefined ? undefined : Math.min(20, Math.max(0, num));
+    normalized.minimumFractionDigits = clampDigits(normalized.minimumFractionDigits);
+    normalized.maximumFractionDigits = clampDigits(normalized.maximumFractionDigits);
+    if (normalized.maximumFractionDigits !== undefined && normalized.minimumFractionDigits === undefined) {
+        normalized.minimumFractionDigits = Math.min(2, normalized.maximumFractionDigits);
+    }
+    if (normalized.minimumFractionDigits !== undefined && normalized.maximumFractionDigits !== undefined && normalized.minimumFractionDigits > normalized.maximumFractionDigits) {
+        normalized.maximumFractionDigits = normalized.minimumFractionDigits;
+    }
+    if (normalized.minimumFractionDigits === undefined) {
+        normalized.minimumFractionDigits = 2;
+    }
     return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-        minimumFractionDigits: 2,
-        ...options
+        ...normalized
     }).format(value);
 }
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -307,75 +321,96 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/mockData.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Bar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/cartesian/Bar.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$BarChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/chart/BarChart.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$CartesianGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/cartesian/CartesianGrid.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Legend$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/component/Legend.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Line$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/cartesian/Line.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$LineChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/chart/LineChart.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$polar$2f$PolarAngleAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/polar/PolarAngleAxis.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$polar$2f$PolarGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/polar/PolarGrid.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$polar$2f$Radar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/polar/Radar.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$RadarChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/chart/RadarChart.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/component/ResponsiveContainer.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/component/Tooltip.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/cartesian/XAxis.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/cartesian/YAxis.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/arrow-left.js [app-client] (ecmascript) <export default as ArrowLeft>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2d$days$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CalendarDays$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/calendar-days.js [app-client] (ecmascript) <export default as CalendarDays>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-left.js [app-client] (ecmascript) <export default as ChevronLeft>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-right.js [app-client] (ecmascript) <export default as ChevronRight>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/plus.js [app-client] (ecmascript) <export default as Plus>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$notebook$2d$pen$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__NotebookPen$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/notebook-pen.js [app-client] (ecmascript) <export default as NotebookPen>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/sparkles.js [app-client] (ecmascript) <export default as Sparkles>");
 ;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature(), _s3 = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
 ;
 ;
+;
+const durationBuckets = [
+    {
+        label: "0-5m",
+        min: 0,
+        max: 5
+    },
+    {
+        label: "5-15m",
+        min: 5,
+        max: 15
+    },
+    {
+        label: "15-30m",
+        min: 15,
+        max: 30
+    },
+    {
+        label: "30-60m",
+        min: 30,
+        max: 60
+    },
+    {
+        label: "1h+",
+        min: 60,
+        max: Number.POSITIVE_INFINITY
+    }
+];
+const toDateKey = (date)=>{
+    const normalized = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return normalized.toISOString().slice(0, 10);
+};
+const formatRange = (start, end)=>`${start.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric"
+    })} - ${end.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric"
+    })}`;
+const clamp = (value, min, max)=>Math.min(max, Math.max(min, value));
 function AccountDetailsView({ account, trades, journalEntries, rules, credentials }) {
     _s();
-    const [selectedDate, setSelectedDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const kpis = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "AccountDetailsView.useMemo[kpis]": ()=>{
-            const accountTrades = trades;
-            const wins = accountTrades.filter({
-                "AccountDetailsView.useMemo[kpis].wins": (t)=>t.pnl > 0
-            }["AccountDetailsView.useMemo[kpis].wins"]);
-            const losses = accountTrades.filter({
-                "AccountDetailsView.useMemo[kpis].losses": (t)=>t.pnl < 0
-            }["AccountDetailsView.useMemo[kpis].losses"]);
-            const winRate = wins.length + losses.length > 0 ? wins.length / (wins.length + losses.length) * 100 : account.winRate || 0;
-            const grossWin = wins.reduce({
-                "AccountDetailsView.useMemo[kpis].grossWin": (sum, t)=>sum + t.pnl
-            }["AccountDetailsView.useMemo[kpis].grossWin"], 0);
-            const grossLoss = Math.abs(losses.reduce({
-                "AccountDetailsView.useMemo[kpis].grossLoss": (sum, t)=>sum + t.pnl
-            }["AccountDetailsView.useMemo[kpis].grossLoss"], 0));
-            const profitFactor = grossLoss > 0 ? grossWin / grossLoss : account.profitFactor || 0;
-            return [
-                {
-                    label: "Balance",
-                    value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.balance)
-                },
-                {
-                    label: "Equity",
-                    value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.equity)
-                },
-                {
-                    label: "Today P&L",
-                    value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.dailyPnl),
-                    positive: account.dailyPnl >= 0
-                },
-                {
-                    label: "Total P&L",
-                    value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.totalPnl),
-                    positive: account.totalPnl >= 0
-                },
-                {
-                    label: "Win Rate",
-                    value: `${winRate.toFixed(1)}%`
-                },
-                {
-                    label: "Profit Factor",
-                    value: profitFactor.toFixed(2)
-                }
-            ];
-        }
-    }["AccountDetailsView.useMemo[kpis]"], [
-        account,
-        trades
+    const storageKey = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[storageKey]": ()=>`vf-journal-${account.id}`
+    }["AccountDetailsView.useMemo[storageKey]"], [
+        account.id
     ]);
+    const [month, setMonth] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        "AccountDetailsView.useState": ()=>{
+            const latest = trades[0]?.entryTime ? new Date(trades[0].entryTime) : new Date();
+            return new Date(latest.getFullYear(), latest.getMonth(), 1);
+        }
+    }["AccountDetailsView.useState"]);
+    const [altMonth, setAltMonth] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        "AccountDetailsView.useState": ()=>new Date(month)
+    }["AccountDetailsView.useState"]);
+    const [selectedDate, setSelectedDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [journalOpen, setJournalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [journalContent, setJournalContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [journalTradeId, setJournalTradeId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(trades[0]?.id ?? "");
     const [journal, setJournal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AccountDetailsView.useEffect": ()=>{
-            const storageKey = `vf-journal-${account.id}`;
             const stored = ("TURBOPACK compile-time truthy", 1) ? window.localStorage.getItem(storageKey) : "TURBOPACK unreachable";
             const parsed = stored ? JSON.parse(stored) : [];
             setJournal([
@@ -384,23 +419,519 @@ function AccountDetailsView({ account, trades, journalEntries, rules, credential
             ]);
         }
     }["AccountDetailsView.useEffect"], [
-        account.id,
-        journalEntries
+        journalEntries,
+        storageKey
     ]);
-    const handleAddJournal = (entry)=>{
+    const persistJournal = (entries)=>{
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+        const baseIds = new Set(journalEntries.map((j)=>j.id));
+        const custom = entries.filter((e)=>!baseIds.has(e.id));
+        window.localStorage.setItem(storageKey, JSON.stringify(custom));
+    };
+    const handleSaveJournal = ()=>{
+        if (!journalContent.trim()) return;
         const newEntry = {
-            ...entry,
-            id: `J-${Date.now()}`
+            id: `J-${Date.now()}`,
+            accountId: account.id,
+            tradeId: journalTradeId || undefined,
+            date: new Date().toISOString().slice(0, 10),
+            content: journalContent,
+            tags: [],
+            mood: "Focused"
         };
         const updated = [
             newEntry,
             ...journal
         ];
         setJournal(updated);
-        if ("TURBOPACK compile-time truthy", 1) {
-            window.localStorage.setItem(`vf-journal-${account.id}`, JSON.stringify(updated.filter((e)=>!journalEntries.find((j)=>j.id === e.id))));
-        }
+        persistJournal(updated);
+        setJournalContent("");
+        setJournalOpen(false);
     };
+    const dayGroups = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[dayGroups]": ()=>{
+            const map = new Map();
+            trades.forEach({
+                "AccountDetailsView.useMemo[dayGroups]": (trade)=>{
+                    const key = toDateKey(new Date(trade.entryTime));
+                    const group = map.get(key) ?? {
+                        trades: [],
+                        pnl: 0,
+                        wins: 0,
+                        losses: 0
+                    };
+                    group.trades.push(trade);
+                    group.pnl += trade.pnl;
+                    if (trade.pnl > 0) group.wins += 1;
+                    if (trade.pnl < 0) group.losses += 1;
+                    map.set(key, group);
+                }
+            }["AccountDetailsView.useMemo[dayGroups]"]);
+            return map;
+        }
+    }["AccountDetailsView.useMemo[dayGroups]"], [
+        trades
+    ]);
+    const dailyData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[dailyData]": ()=>Array.from(dayGroups.entries()).map({
+                "AccountDetailsView.useMemo[dailyData]": ([date, value])=>{
+                    const winPct = value.trades.length ? value.wins / value.trades.length * 100 : 0;
+                    return {
+                        date,
+                        pnl: value.pnl,
+                        tradeCount: value.trades.length,
+                        winPct,
+                        wins: value.wins,
+                        losses: value.losses
+                    };
+                }
+            }["AccountDetailsView.useMemo[dailyData]"]).sort({
+                "AccountDetailsView.useMemo[dailyData]": (a, b)=>a.date.localeCompare(b.date)
+            }["AccountDetailsView.useMemo[dailyData]"])
+    }["AccountDetailsView.useMemo[dailyData]"], [
+        dayGroups
+    ]);
+    const derived = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[derived]": ()=>{
+            const totalTrades = trades.length;
+            const wins = trades.filter({
+                "AccountDetailsView.useMemo[derived].wins": (t)=>t.pnl > 0
+            }["AccountDetailsView.useMemo[derived].wins"]);
+            const losses = trades.filter({
+                "AccountDetailsView.useMemo[derived].losses": (t)=>t.pnl < 0
+            }["AccountDetailsView.useMemo[derived].losses"]);
+            const netPnl = trades.reduce({
+                "AccountDetailsView.useMemo[derived].netPnl": (sum, t)=>sum + t.pnl
+            }["AccountDetailsView.useMemo[derived].netPnl"], 0);
+            const grossProfit = wins.reduce({
+                "AccountDetailsView.useMemo[derived].grossProfit": (sum, t)=>sum + t.pnl
+            }["AccountDetailsView.useMemo[derived].grossProfit"], 0);
+            const grossLoss = Math.abs(losses.reduce({
+                "AccountDetailsView.useMemo[derived].grossLoss": (sum, t)=>sum + t.pnl
+            }["AccountDetailsView.useMemo[derived].grossLoss"], 0));
+            const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : wins.length ? Number.POSITIVE_INFINITY : 0;
+            const tradeWinRate = totalTrades ? wins.length / totalTrades * 100 : 0;
+            const dayWinRate = dailyData.length ? dailyData.filter({
+                "AccountDetailsView.useMemo[derived]": (d)=>d.pnl > 0
+            }["AccountDetailsView.useMemo[derived]"]).length / dailyData.length * 100 : 0;
+            const avgWin = wins.length ? grossProfit / wins.length : 0;
+            const avgLoss = losses.length ? losses.reduce({
+                "AccountDetailsView.useMemo[derived]": (sum, t)=>sum + t.pnl
+            }["AccountDetailsView.useMemo[derived]"], 0) / losses.length : 0;
+            const avgDuration = totalTrades ? trades.reduce({
+                "AccountDetailsView.useMemo[derived]": (sum, t)=>sum + (t.durationMinutes ?? 0)
+            }["AccountDetailsView.useMemo[derived]"], 0) / totalTrades : 0;
+            const avgWinDuration = wins.length ? wins.reduce({
+                "AccountDetailsView.useMemo[derived]": (sum, t)=>sum + (t.durationMinutes ?? 0)
+            }["AccountDetailsView.useMemo[derived]"], 0) / wins.length : 0;
+            const avgLossDuration = losses.length ? losses.reduce({
+                "AccountDetailsView.useMemo[derived]": (sum, t)=>sum + (t.durationMinutes ?? 0)
+            }["AccountDetailsView.useMemo[derived]"], 0) / losses.length : 0;
+            const bestTrade = trades.reduce({
+                "AccountDetailsView.useMemo[derived].bestTrade": (best, trade)=>!best || trade.pnl > best.pnl ? trade : best
+            }["AccountDetailsView.useMemo[derived].bestTrade"], null);
+            const worstTrade = trades.reduce({
+                "AccountDetailsView.useMemo[derived].worstTrade": (worst, trade)=>!worst || trade.pnl < worst.pnl ? trade : worst
+            }["AccountDetailsView.useMemo[derived].worstTrade"], null);
+            const bestDay = dailyData.reduce({
+                "AccountDetailsView.useMemo[derived].bestDay": (best, day)=>!best || day.pnl > best.pnl ? day : best
+            }["AccountDetailsView.useMemo[derived].bestDay"], null);
+            const worstDay = dailyData.reduce({
+                "AccountDetailsView.useMemo[derived].worstDay": (worst, day)=>!worst || day.pnl < worst.pnl ? day : worst
+            }["AccountDetailsView.useMemo[derived].worstDay"], null);
+            const baseBalance = Math.max(0, account.balance - account.totalPnl);
+            const equityDelta = account.equity - account.balance;
+            let runningBalance = baseBalance;
+            let runningPnL = 0;
+            const seriesSource = dailyData.length ? dailyData : [
+                {
+                    date: toDateKey(new Date()),
+                    pnl: 0,
+                    tradeCount: 0,
+                    winPct: 0,
+                    wins: 0,
+                    losses: 0
+                }
+            ];
+            const balanceSeries = seriesSource.map({
+                "AccountDetailsView.useMemo[derived].balanceSeries": (day)=>{
+                    runningBalance += day.pnl;
+                    runningPnL += day.pnl;
+                    return {
+                        date: day.date,
+                        balance: runningBalance,
+                        equity: runningBalance + equityDelta,
+                        pnl: day.pnl,
+                        cumulative: runningPnL
+                    };
+                }
+            }["AccountDetailsView.useMemo[derived].balanceSeries"]);
+            const cumulativeSeries = seriesSource.reduce({
+                "AccountDetailsView.useMemo[derived].cumulativeSeries": (arr, day)=>{
+                    const prev = arr[arr.length - 1]?.pnl ?? 0;
+                    arr.push({
+                        date: day.date,
+                        pnl: prev + day.pnl
+                    });
+                    return arr;
+                }
+            }["AccountDetailsView.useMemo[derived].cumulativeSeries"], []);
+            const netDailySeries = seriesSource.map({
+                "AccountDetailsView.useMemo[derived].netDailySeries": (day)=>({
+                        date: day.date,
+                        pnl: day.pnl
+                    })
+            }["AccountDetailsView.useMemo[derived].netDailySeries"]);
+            const direction = trades.reduce({
+                "AccountDetailsView.useMemo[derived].direction": (acc, trade)=>{
+                    if (trade.side === "LONG") acc.long += 1;
+                    if (trade.side === "SHORT") acc.short += 1;
+                    return acc;
+                }
+            }["AccountDetailsView.useMemo[derived].direction"], {
+                long: 0,
+                short: 0
+            });
+            const directionPct = {
+                long: totalTrades ? direction.long / totalTrades * 100 : 0,
+                short: totalTrades ? direction.short / totalTrades * 100 : 0
+            };
+            const totalLots = trades.reduce({
+                "AccountDetailsView.useMemo[derived].totalLots": (sum, t)=>sum + (t.qty ?? 0)
+            }["AccountDetailsView.useMemo[derived].totalLots"], 0);
+            const bestDayProfitPct = grossProfit > 0 && bestDay ? bestDay.pnl / grossProfit * 100 : 0;
+            const zellaScore = totalTrades >= 3 ? clamp(tradeWinRate * 0.35 + Math.min(profitFactor, 4) / 4 * 25 + dayWinRate * 0.2 + Math.min(avgWin / (Math.abs(avgLoss) || 1), 3) / 3 * 20, 0, 100) : null;
+            const radarData = [
+                {
+                    label: "Consistency",
+                    value: Math.round(dayWinRate)
+                },
+                {
+                    label: "SL usage",
+                    value: Math.round(clamp(70 - avgLossDuration + avgDuration * 0.2, 15, 95))
+                },
+                {
+                    label: "WR",
+                    value: Math.round(tradeWinRate)
+                },
+                {
+                    label: "RR",
+                    value: Math.round(clamp(avgWin / (Math.abs(avgLoss) || 1) * 33, 10, 95))
+                }
+            ];
+            return {
+                netPnl,
+                tradeWinRate,
+                profitFactor,
+                dayWinRate,
+                avgWin,
+                avgLoss,
+                avgDuration,
+                avgWinDuration,
+                avgLossDuration,
+                bestTrade,
+                worstTrade,
+                bestDay,
+                worstDay,
+                balanceSeries,
+                cumulativeSeries,
+                netDailySeries,
+                totalLots,
+                directionPct,
+                direction,
+                bestDayProfitPct,
+                zellaScore,
+                radarData
+            };
+        }
+    }["AccountDetailsView.useMemo[derived]"], [
+        account.balance,
+        account.equity,
+        account.totalPnl,
+        dailyData,
+        trades
+    ]);
+    const calendarDays = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[calendarDays]": ()=>{
+            const start = new Date(month.getFullYear(), month.getMonth(), 1);
+            const startOffset = start.getDay();
+            const gridStart = new Date(start);
+            gridStart.setDate(start.getDate() - startOffset);
+            return Array.from({
+                length: 42
+            }).map({
+                "AccountDetailsView.useMemo[calendarDays]": (_, idx)=>{
+                    const date = new Date(gridStart);
+                    date.setDate(gridStart.getDate() + idx);
+                    const dateKey = toDateKey(date);
+                    const dayData = dayGroups.get(dateKey);
+                    const pnl = dayData?.pnl ?? 0;
+                    const tradeCount = dayData?.trades.length ?? 0;
+                    const winPct = tradeCount ? (dayData?.wins ?? 0) / tradeCount * 100 : 0;
+                    return {
+                        date,
+                        label: date.getDate(),
+                        inCurrentMonth: date.getMonth() === month.getMonth(),
+                        pnl,
+                        tradeCount,
+                        winPct
+                    };
+                }
+            }["AccountDetailsView.useMemo[calendarDays]"]);
+        }
+    }["AccountDetailsView.useMemo[calendarDays]"], [
+        dayGroups,
+        month
+    ]);
+    const altCalendarDays = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[altCalendarDays]": ()=>{
+            const start = new Date(altMonth.getFullYear(), altMonth.getMonth(), 1);
+            const startOffset = start.getDay();
+            const gridStart = new Date(start);
+            gridStart.setDate(start.getDate() - startOffset);
+            return Array.from({
+                length: 42
+            }).map({
+                "AccountDetailsView.useMemo[altCalendarDays]": (_, idx)=>{
+                    const date = new Date(gridStart);
+                    date.setDate(gridStart.getDate() + idx);
+                    const dateKey = toDateKey(date);
+                    const dayData = dayGroups.get(dateKey);
+                    const pnl = dayData?.pnl ?? 0;
+                    const tradeCount = dayData?.trades.length ?? 0;
+                    const winPct = tradeCount ? (dayData?.wins ?? 0) / tradeCount * 100 : 0;
+                    return {
+                        date,
+                        label: date.getDate(),
+                        inCurrentMonth: date.getMonth() === altMonth.getMonth(),
+                        pnl,
+                        tradeCount,
+                        winPct
+                    };
+                }
+            }["AccountDetailsView.useMemo[altCalendarDays]"]);
+        }
+    }["AccountDetailsView.useMemo[altCalendarDays]"], [
+        altMonth,
+        dayGroups
+    ]);
+    const monthlyPnl = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[monthlyPnl]": ()=>calendarDays.filter({
+                "AccountDetailsView.useMemo[monthlyPnl]": (d)=>d.inCurrentMonth
+            }["AccountDetailsView.useMemo[monthlyPnl]"]).reduce({
+                "AccountDetailsView.useMemo[monthlyPnl]": (sum, d)=>sum + d.pnl
+            }["AccountDetailsView.useMemo[monthlyPnl]"], 0)
+    }["AccountDetailsView.useMemo[monthlyPnl]"], [
+        calendarDays
+    ]);
+    const weeklySummaries = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[weeklySummaries]": ()=>{
+            const weeks = [];
+            for(let i = 0; i < calendarDays.length; i += 7){
+                const slice = calendarDays.slice(i, i + 7);
+                const active = slice.filter({
+                    "AccountDetailsView.useMemo[weeklySummaries].active": (d)=>d.inCurrentMonth && d.tradeCount > 0
+                }["AccountDetailsView.useMemo[weeklySummaries].active"]);
+                const pnl = slice.filter({
+                    "AccountDetailsView.useMemo[weeklySummaries].pnl": (d)=>d.inCurrentMonth
+                }["AccountDetailsView.useMemo[weeklySummaries].pnl"]).reduce({
+                    "AccountDetailsView.useMemo[weeklySummaries].pnl": (sum, d)=>sum + d.pnl
+                }["AccountDetailsView.useMemo[weeklySummaries].pnl"], 0);
+                weeks.push({
+                    label: formatRange(slice[0].date, slice[slice.length - 1].date),
+                    pnl,
+                    activeDays: active.length
+                });
+            }
+            return weeks;
+        }
+    }["AccountDetailsView.useMemo[weeklySummaries]"], [
+        calendarDays
+    ]);
+    const balanceStats = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[balanceStats]": ()=>{
+            if (!derived.balanceSeries.length) {
+                return {
+                    min: account.balance,
+                    max: account.balance,
+                    latest: account.balance
+                };
+            }
+            const values = derived.balanceSeries.map({
+                "AccountDetailsView.useMemo[balanceStats].values": (d)=>d.balance
+            }["AccountDetailsView.useMemo[balanceStats].values"]);
+            return {
+                min: Math.min(...values),
+                max: Math.max(...values),
+                latest: values[values.length - 1]
+            };
+        }
+    }["AccountDetailsView.useMemo[balanceStats]"], [
+        account.balance,
+        derived.balanceSeries
+    ]);
+    const durationData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "AccountDetailsView.useMemo[durationData]": ()=>{
+            return durationBuckets.map({
+                "AccountDetailsView.useMemo[durationData]": (bucket)=>{
+                    const bucketTrades = trades.filter({
+                        "AccountDetailsView.useMemo[durationData].bucketTrades": (t)=>(t.durationMinutes ?? 0) >= bucket.min && (t.durationMinutes ?? 0) < bucket.max
+                    }["AccountDetailsView.useMemo[durationData].bucketTrades"]);
+                    const wins = bucketTrades.filter({
+                        "AccountDetailsView.useMemo[durationData].wins": (t)=>t.pnl > 0
+                    }["AccountDetailsView.useMemo[durationData].wins"]);
+                    const losses = bucketTrades.filter({
+                        "AccountDetailsView.useMemo[durationData].losses": (t)=>t.pnl < 0
+                    }["AccountDetailsView.useMemo[durationData].losses"]);
+                    const winRate = bucketTrades.length ? wins.length / bucketTrades.length * 100 : 0;
+                    return {
+                        label: bucket.label,
+                        trades: bucketTrades.length,
+                        winRate,
+                        pnl: bucketTrades.reduce({
+                            "AccountDetailsView.useMemo[durationData]": (sum, t)=>sum + t.pnl
+                        }["AccountDetailsView.useMemo[durationData]"], 0),
+                        avgDuration: bucketTrades.length ? bucketTrades.reduce({
+                            "AccountDetailsView.useMemo[durationData]": (sum, t)=>sum + (t.durationMinutes ?? 0)
+                        }["AccountDetailsView.useMemo[durationData]"], 0) / bucketTrades.length : 0,
+                        wins: wins.length,
+                        losses: losses.length
+                    };
+                }
+            }["AccountDetailsView.useMemo[durationData]"]);
+        }
+    }["AccountDetailsView.useMemo[durationData]"], [
+        trades
+    ]);
+    const selectedTrade = trades.find((t)=>t.id === journalTradeId) ?? trades[0];
+    const summaryCards = [
+        {
+            label: "Net P&L",
+            value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.netPnl),
+            tone: derived.netPnl >= 0 ? "positive" : "negative"
+        },
+        {
+            label: "Trade Win %",
+            value: `${derived.tradeWinRate.toFixed(1)}%`
+        },
+        {
+            label: "Profit Factor",
+            value: Number.isFinite(derived.profitFactor) ? derived.profitFactor.toFixed(2) : "Infinity"
+        },
+        {
+            label: "Day Win %",
+            value: `${derived.dayWinRate.toFixed(1)}%`
+        },
+        {
+            label: "Avg Win / Loss Trade",
+            value: `${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.avgWin)} / ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(Math.abs(derived.avgLoss))}`
+        }
+    ];
+    const performanceOverview = [
+        {
+            label: "Total P&L",
+            value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.netPnl),
+            tone: derived.netPnl >= 0 ? "positive" : "negative"
+        },
+        {
+            label: "Trade Win %",
+            value: `${derived.tradeWinRate.toFixed(1)}%`
+        },
+        {
+            label: "Avg Win / Avg Loss",
+            value: `${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.avgWin)} / ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(Math.abs(derived.avgLoss))}`
+        },
+        {
+            label: "Day Win %",
+            value: `${derived.dayWinRate.toFixed(1)}%`
+        },
+        {
+            label: "Profit Factor",
+            value: Number.isFinite(derived.profitFactor) ? derived.profitFactor.toFixed(2) : "Infinity"
+        },
+        {
+            label: "Best Day % of Total Profit",
+            value: `${derived.bestDayProfitPct.toFixed(1)}%`
+        }
+    ];
+    const activityBreakdown = [
+        {
+            label: "Most Active Day",
+            value: derived.bestDay ? new Date(derived.bestDay.date).toLocaleDateString("en-US", {
+                weekday: "long"
+            }) : "-",
+            helper: derived.bestDay ? `${derived.bestDay.tradeCount} trades` : ""
+        },
+        {
+            label: "Most Profitable Day",
+            value: derived.bestDay ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.bestDay.pnl) : "-",
+            helper: derived.bestDay ? new Date(derived.bestDay.date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric"
+            }) : "",
+            tone: "positive"
+        },
+        {
+            label: "Least Profitable Day",
+            value: derived.worstDay ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.worstDay.pnl) : "-",
+            helper: derived.worstDay ? new Date(derived.worstDay.date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric"
+            }) : "",
+            tone: "negative"
+        }
+    ];
+    const tradeStats = [
+        {
+            label: "Total Trades",
+            value: trades.length.toString()
+        },
+        {
+            label: "Total Lots Traded",
+            value: derived.totalLots.toString()
+        },
+        {
+            label: "Average Trade Duration",
+            value: `${derived.avgDuration.toFixed(1)}m`
+        },
+        {
+            label: "Average Win Duration",
+            value: `${derived.avgWinDuration.toFixed(1)}m`
+        },
+        {
+            label: "Average Loss Duration",
+            value: `${derived.avgLossDuration.toFixed(1)}m`
+        }
+    ];
+    const tradeValueMetrics = [
+        {
+            label: "Average Winning Trade",
+            value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.avgWin),
+            tone: "positive"
+        },
+        {
+            label: "Average Losing Trade",
+            value: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(derived.avgLoss),
+            tone: "negative"
+        },
+        {
+            label: "Trade Direction %",
+            value: `Long ${derived.directionPct.long.toFixed(0)}% / Short ${derived.directionPct.short.toFixed(0)}%`
+        }
+    ];
+    const bestWorst = [
+        {
+            label: "Best Trade",
+            trade: derived.bestTrade,
+            tone: "positive"
+        },
+        {
+            label: "Worst Trade",
+            trade: derived.worstTrade,
+            tone: "negative"
+        }
+    ];
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-6 min-w-0",
         children: [
@@ -415,21 +946,21 @@ function AccountDetailsView({ account, trades, journalEntries, rules, credential
                                 className: "h-4 w-4"
                             }, void 0, false, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 86,
+                                lineNumber: 437,
                                 columnNumber: 11
                             }, this),
                             "Back to My Accounts"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 85,
+                        lineNumber: 436,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                         children: "/"
                     }, void 0, false, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 89,
+                        lineNumber: 440,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -437,1466 +968,2832 @@ function AccountDetailsView({ account, trades, journalEntries, rules, credential
                         children: account.label
                     }, void 0, false, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 90,
+                        lineNumber: 441,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 84,
+                lineNumber: 435,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex flex-col gap-3",
+                className: "flex flex-wrap items-center justify-between gap-3",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center justify-between",
+                        className: "space-y-1",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "space-y-1",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-2xl text-white flex items-center gap-2",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                        className: "text-2xl text-white",
-                                        children: account.label
+                                    account.label,
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-sm text-zinc-500 font-normal",
+                                        children: account.id
                                     }, void 0, false, {
                                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 96,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-sm text-zinc-400",
-                                        children: account.type
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 97,
+                                        lineNumber: 448,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 95,
+                                lineNumber: 446,
                                 columnNumber: 11
                             }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-sm text-zinc-400",
+                                children: account.type
+                            }, void 0, false, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 450,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                        lineNumber: 445,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center gap-2",
+                        children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: `px-3 py-1.5 rounded-full text-xs font-semibold border ${account.status === "active" ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"}`,
                                 children: account.phase
                             }, void 0, false, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 99,
+                                lineNumber: 453,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "px-3 py-1.5 rounded-lg text-xs border border-zinc-800 bg-zinc-900/60 text-zinc-300",
+                                children: [
+                                    "Start ",
+                                    account.startDate
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 462,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 94,
+                        lineNumber: 452,
                         columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3",
-                        children: kpis.map((kpi)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "bg-zinc-950 border border-zinc-900 rounded-lg p-4",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "text-xs text-zinc-500",
-                                        children: kpi.label
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 113,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: `text-white text-lg ${kpi.positive === false ? "text-red-400" : kpi.positive ? "text-emerald-400" : "text-white"}`,
-                                        children: kpi.value
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 114,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, kpi.label, true, {
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/accounts/account-details-view.tsx",
+                lineNumber: 444,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3",
+                children: summaryCards.map((card)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-xs text-zinc-500 mb-1",
+                                children: card.label
+                            }, void 0, false, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 112,
+                                lineNumber: 471,
                                 columnNumber: 13
-                            }, this))
-                    }, void 0, false, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 110,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 93,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "grid lg:grid-cols-3 gap-6 min-w-0",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "lg:col-span-2 space-y-6 min-w-0",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PnLCalendar, {
-                                trades: trades,
-                                selectedDate: selectedDate,
-                                onSelectDate: setSelectedDate
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 124,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradesTable, {
-                                trades: trades,
-                                selectedDate: selectedDate
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 125,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Journal, {
-                                accountId: account.id,
-                                entries: journal,
-                                onAdd: handleAddJournal
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 126,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 123,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "space-y-4",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FundingCard, {
-                                rules: rules
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 129,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AccountInfoCard, {
-                                account: account,
-                                credentials: credentials
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 130,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(RiskCard, {
-                                account: account,
-                                rules: rules
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 131,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 128,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 122,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 83,
-        columnNumber: 5
-    }, this);
-}
-_s(AccountDetailsView, "IKzblz8FaNDjBTmDS/8hxLRj86c=");
-_c = AccountDetailsView;
-function PnLCalendar({ trades, selectedDate, onSelectDate }) {
-    _s1();
-    const [month, setMonth] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        "PnLCalendar.useState": ()=>{
-            const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), 1);
-        }
-    }["PnLCalendar.useState"]);
-    const calendarDays = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "PnLCalendar.useMemo[calendarDays]": ()=>{
-            const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
-            const startDay = startOfMonth.getDay();
-            const startDate = new Date(startOfMonth);
-            startDate.setDate(startOfMonth.getDate() - startDay);
-            return Array.from({
-                length: 42
-            }).map({
-                "PnLCalendar.useMemo[calendarDays]": (_, idx)=>{
-                    const date = new Date(startDate);
-                    date.setDate(startDate.getDate() + idx);
-                    const dateStr = date.toISOString().slice(0, 10);
-                    const dayTrades = trades.filter({
-                        "PnLCalendar.useMemo[calendarDays].dayTrades": (t)=>t.entryTime.slice(0, 10) === dateStr
-                    }["PnLCalendar.useMemo[calendarDays].dayTrades"]);
-                    const pnl = dayTrades.reduce({
-                        "PnLCalendar.useMemo[calendarDays].pnl": (sum, t)=>sum + t.pnl
-                    }["PnLCalendar.useMemo[calendarDays].pnl"], 0);
-                    return {
-                        date,
-                        label: date.getDate(),
-                        inCurrentMonth: date.getMonth() === month.getMonth(),
-                        trades: dayTrades,
-                        pnl
-                    };
-                }
-            }["PnLCalendar.useMemo[calendarDays]"]);
-        }
-    }["PnLCalendar.useMemo[calendarDays]"], [
-        month,
-        trades
-    ]);
-    const monthlyPnl = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "PnLCalendar.useMemo[monthlyPnl]": ()=>{
-            return calendarDays.filter({
-                "PnLCalendar.useMemo[monthlyPnl]": (d)=>d.inCurrentMonth
-            }["PnLCalendar.useMemo[monthlyPnl]"]).reduce({
-                "PnLCalendar.useMemo[monthlyPnl]": (sum, d)=>sum + d.pnl
-            }["PnLCalendar.useMemo[monthlyPnl]"], 0);
-        }
-    }["PnLCalendar.useMemo[monthlyPnl]"], [
-        calendarDays
-    ]);
-    const handleChangeMonth = (delta)=>{
-        setMonth((prev)=>new Date(prev.getFullYear(), prev.getMonth() + delta, 1));
-        onSelectDate(null);
-    };
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex items-center justify-between flex-wrap gap-3",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-white text-lg",
-                                children: "P&L Calendar"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 189,
-                                columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-sm text-zinc-500",
-                                children: [
-                                    month.toLocaleString("default", {
-                                        month: "long",
-                                        year: "numeric"
-                                    }),
-                                    " · Monthly P&L",
-                                    " ",
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: monthlyPnl >= 0 ? "text-emerald-400" : "text-red-400",
-                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(monthlyPnl)
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 192,
-                                        columnNumber: 13
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 190,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 188,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-2",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>handleChangeMonth(-1),
-                                className: "h-9 w-9 inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
-                                "aria-label": "Previous month",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
-                                    className: "h-4 w-4"
-                                }, void 0, false, {
-                                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 201,
-                                    columnNumber: 13
-                                }, this)
+                                className: `text-xl ${card.tone === "positive" ? "text-emerald-400" : card.tone === "negative" ? "text-red-400" : "text-white"}`,
+                                children: card.value
                             }, void 0, false, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 196,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>setMonth(new Date()),
-                                className: "px-3 h-9 inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-200 hover:text-white",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2d$days$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CalendarDays$3e$__["CalendarDays"], {
-                                        className: "h-4 w-4"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 207,
-                                        columnNumber: 13
-                                    }, this),
-                                    "This month"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 203,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>handleChangeMonth(1),
-                                className: "h-9 w-9 inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
-                                "aria-label": "Next month",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
-                                    className: "h-4 w-4"
-                                }, void 0, false, {
-                                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 215,
-                                    columnNumber: 13
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 210,
-                                columnNumber: 11
+                                lineNumber: 472,
+                                columnNumber: 13
                             }, this)
                         ]
-                    }, void 0, true, {
+                    }, card.label, true, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 195,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 187,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "grid grid-cols-7 gap-2 text-xs text-zinc-500",
-                children: [
-                    "Sun",
-                    "Mon",
-                    "Tue",
-                    "Wed",
-                    "Thu",
-                    "Fri",
-                    "Sat"
-                ].map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "text-center",
-                        children: d
-                    }, d, false, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 222,
+                        lineNumber: 470,
                         columnNumber: 11
                     }, this))
-            }, void 0, false, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 220,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "grid grid-cols-7 gap-2",
-                children: calendarDays.map((day)=>{
-                    const dateKey = day.date.toISOString().slice(0, 10);
-                    const isSelected = selectedDate === dateKey;
-                    const hasTrades = day.trades.length > 0;
-                    const pnlClass = day.pnl > 0 ? "text-emerald-400" : day.pnl < 0 ? "text-red-400" : "text-zinc-500";
-                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                        onClick: ()=>onSelectDate(isSelected ? null : dateKey),
-                        className: `p-2 rounded-lg border text-left transition-colors ${isSelected ? "border-emerald-500 bg-emerald-500/10" : "border-zinc-900 bg-zinc-900/40 hover:border-zinc-800"} ${day.inCurrentMonth ? "opacity-100" : "opacity-50"}`,
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center justify-between text-xs text-zinc-400",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: day.label
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 242,
-                                        columnNumber: 17
-                                    }, this),
-                                    hasTrades && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: pnlClass,
-                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(day.pnl, {
-                                            minimumFractionDigits: 0,
-                                            maximumFractionDigits: 0
-                                        })
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 243,
-                                        columnNumber: 31
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 241,
-                                columnNumber: 15
-                            }, this),
-                            hasTrades && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mt-2 text-[11px] text-zinc-500",
-                                children: [
-                                    day.trades.length,
-                                    " trades"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 246,
-                                columnNumber: 17
-                            }, this)
-                        ]
-                    }, dateKey, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 234,
-                        columnNumber: 13
-                    }, this);
-                })
-            }, void 0, false, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 227,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 186,
-        columnNumber: 5
-    }, this);
-}
-_s1(PnLCalendar, "OSld8466ZhkOR2RykQjEQ0AEVLo=");
-_c1 = PnLCalendar;
-function TradesTable({ trades, selectedDate }) {
-    _s2();
-    const [symbol, setSymbol] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [side, setSide] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [tag, setTag] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [start, setStart] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [end, setEnd] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const filtered = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "TradesTable.useMemo[filtered]": ()=>{
-            return trades.filter({
-                "TradesTable.useMemo[filtered]": (t)=>{
-                    const entryDate = t.entryTime.slice(0, 10);
-                    if (selectedDate && entryDate !== selectedDate) return false;
-                    if (symbol && t.symbol.toLowerCase() !== symbol.toLowerCase()) return false;
-                    if (side && t.side !== side) return false;
-                    if (tag && !t.setupTag.toLowerCase().includes(tag.toLowerCase())) return false;
-                    if (start && entryDate < start) return false;
-                    if (end && entryDate > end) return false;
-                    return true;
-                }
-            }["TradesTable.useMemo[filtered]"]);
-        }
-    }["TradesTable.useMemo[filtered]"], [
-        trades,
-        selectedDate,
-        symbol,
-        side,
-        tag,
-        start,
-        end
-    ]);
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4 min-w-0",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex flex-wrap items-center gap-3 justify-between",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-white text-lg",
-                                children: "Trades"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 282,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-sm text-zinc-500",
-                                children: "Filtered list by date, symbol, side, setup"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 283,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 281,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex flex-wrap gap-2",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                value: symbol,
-                                onChange: (e)=>setSymbol(e.target.value),
-                                placeholder: "Symbol",
-                                className: "h-9 w-28 rounded-lg bg-zinc-900 border border-zinc-800 px-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 286,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                value: side,
-                                onChange: (e)=>setSide(e.target.value),
-                                className: "h-9 rounded-lg bg-zinc-900 border border-zinc-800 px-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                        value: "",
-                                        children: "Side"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 297,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                        value: "LONG",
-                                        children: "Long"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 298,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                        value: "SHORT",
-                                        children: "Short"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 299,
-                                        columnNumber: 13
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 292,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                value: tag,
-                                onChange: (e)=>setTag(e.target.value),
-                                placeholder: "Setup",
-                                className: "h-9 w-32 rounded-lg bg-zinc-900 border border-zinc-800 px-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 301,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                type: "date",
-                                value: start,
-                                onChange: (e)=>setStart(e.target.value),
-                                className: "h-9 rounded-lg bg-zinc-900 border border-zinc-800 px-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 307,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                type: "date",
-                                value: end,
-                                onChange: (e)=>setEnd(e.target.value),
-                                className: "h-9 rounded-lg bg-zinc-900 border border-zinc-800 px-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 313,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 285,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 280,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "overflow-x-auto",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                    className: "w-full min-w-[900px] text-sm",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                className: "text-left text-zinc-500 border-b border-zinc-800",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "ID"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 326,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Symbol"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 327,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Side"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 328,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Size"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 329,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Entry Time"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 330,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Exit Time"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 331,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Duration"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 332,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Entry"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 333,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Exit"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 334,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "P&L"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 335,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Comms"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 336,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Fees"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 337,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                        className: "py-2 pr-3",
-                                        children: "Setup"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 338,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 325,
-                                columnNumber: 13
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                            lineNumber: 324,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                            className: "divide-y divide-zinc-800",
-                            children: filtered.map((trade)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                    className: "text-white",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: trade.id
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 344,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3",
-                                            children: trade.symbol
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 345,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3",
-                                            children: trade.side
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 346,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3",
-                                            children: trade.qty
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 347,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: new Date(trade.entryTime).toLocaleString()
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 348,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: new Date(trade.exitTime).toLocaleString()
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 349,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: [
-                                                trade.durationMinutes,
-                                                "m"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 350,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3",
-                                            children: trade.entryPrice
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 351,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3",
-                                            children: trade.exitPrice
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 352,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: `py-2 pr-3 ${trade.pnl >= 0 ? "text-emerald-400" : "text-red-400"}`,
-                                            children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.pnl)
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 353,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.commissions)
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 354,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.fees)
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 355,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                            className: "py-2 pr-3 text-zinc-400",
-                                            children: trade.setupTag
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 356,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, trade.id, true, {
-                                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 343,
-                                    columnNumber: 15
-                                }, this))
-                        }, void 0, false, {
-                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                            lineNumber: 341,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                    lineNumber: 323,
-                    columnNumber: 9
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 322,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 279,
-        columnNumber: 5
-    }, this);
-}
-_s2(TradesTable, "rC446SJ6A8KjDB8DYlTyly8+FF4=");
-_c2 = TradesTable;
-function Journal({ accountId, entries, onAdd }) {
-    _s3();
-    const [content, setContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [mood, setMood] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("Calm");
-    const handleSubmit = ()=>{
-        if (!content.trim()) return;
-        onAdd({
-            accountId,
-            date: new Date().toISOString().slice(0, 10),
-            content,
-            tags: [],
-            mood
-        });
-        setContent("");
-    };
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex items-center justify-between",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "text-white text-lg",
-                                children: "Journal"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 394,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: "text-sm text-zinc-500",
-                                children: "Log mindset and lessons for this account."
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 395,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 393,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                        onClick: handleSubmit,
-                        className: "inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500 text-black text-sm hover:bg-emerald-600 transition-colors",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
-                                className: "h-4 w-4"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 401,
-                                columnNumber: 11
-                            }, this),
-                            "New Entry"
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 397,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 392,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "space-y-2",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                        value: content,
-                        onChange: (e)=>setContent(e.target.value),
-                        placeholder: "What did you learn from today's session?",
-                        className: "w-full rounded-lg bg-zinc-900 border border-zinc-800 text-sm text-white p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500",
-                        rows: 3
-                    }, void 0, false, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 407,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-2",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                className: "text-sm text-zinc-400",
-                                children: "Mood"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 415,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                value: mood,
-                                onChange: (e)=>setMood(e.target.value),
-                                className: "h-9 rounded-lg bg-zinc-900 border border-zinc-800 px-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500",
-                                children: [
-                                    "Calm",
-                                    "Focused",
-                                    "Stressed",
-                                    "Confident"
-                                ].map((m)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                        value: m,
-                                        children: m
-                                    }, m, false, {
-                                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                                        lineNumber: 422,
-                                        columnNumber: 15
-                                    }, this))
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 416,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 414,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 406,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "space-y-3",
-                children: [
-                    entries.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "text-sm text-zinc-500",
-                        children: "No journal entries yet."
-                    }, void 0, false, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 431,
-                        columnNumber: 34
-                    }, this),
-                    entries.map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3 space-y-1",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex items-center justify-between text-sm text-zinc-500",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            children: entry.date
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 435,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "text-emerald-400",
-                                            children: entry.mood
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                                            lineNumber: 436,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 434,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-white text-sm",
-                                    children: entry.content
-                                }, void 0, false, {
-                                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 438,
-                                    columnNumber: 13
-                                }, this),
-                                entry.notes && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-xs text-zinc-500",
-                                    children: entry.notes
-                                }, void 0, false, {
-                                    fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 439,
-                                    columnNumber: 29
-                                }, this)
-                            ]
-                        }, entry.id, true, {
-                            fileName: "[project]/components/accounts/account-details-view.tsx",
-                            lineNumber: 433,
-                            columnNumber: 11
-                        }, this))
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 430,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 391,
-        columnNumber: 5
-    }, this);
-}
-_s3(Journal, "JIQh+BZQajEGOfEW6dsOTtqtn2o=");
-_c3 = Journal;
-function FundingCard({ rules }) {
-    if (!rules) return null;
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                className: "text-white text-lg",
-                children: "Path to Funding"
-            }, void 0, false, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 451,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                className: "space-y-2 text-sm text-zinc-400",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Profit Target: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.profitTarget
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 453,
-                                columnNumber: 28
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 453,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Max Daily Loss: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.maxDailyLoss
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 454,
-                                columnNumber: 29
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 454,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Max Total Loss: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.maxTotalLoss
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 455,
-                                columnNumber: 29
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 455,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Min Trading Days: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.minTradingDays
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 456,
-                                columnNumber: 31
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 456,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Consistency: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.consistencyRule
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 457,
-                                columnNumber: 26
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 457,
-                        columnNumber: 9
-                    }, this),
-                    rules.trailingDrawdown && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Trailing Drawdown: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.trailingDrawdown
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 458,
-                                columnNumber: 59
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 458,
-                        columnNumber: 36
-                    }, this),
-                    rules.payoutSplit && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Payout Split: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules.payoutSplit
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 459,
-                                columnNumber: 49
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 459,
-                        columnNumber: 31
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 452,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 450,
-        columnNumber: 5
-    }, this);
-}
-_c4 = FundingCard;
-function AccountInfoCard({ account, credentials }) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                className: "text-white text-lg",
-                children: "Account Info"
             }, void 0, false, {
                 fileName: "[project]/components/accounts/account-details-view.tsx",
                 lineNumber: 468,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "text-sm text-zinc-400 space-y-1",
+                className: "grid grid-cols-1 xl:grid-cols-3 gap-6",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "xl:col-span-2 space-y-6",
                         children: [
-                            "ID: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: account.id
-                            }, void 0, false, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between flex-wrap gap-3",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-white text-lg",
+                                                        children: "Monthly Calendar"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 488,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-sm text-zinc-500",
+                                                        children: [
+                                                            month.toLocaleString("default", {
+                                                                month: "long",
+                                                                year: "numeric"
+                                                            }),
+                                                            " - Monthly P&L",
+                                                            " ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: monthlyPnl >= 0 ? "text-emerald-400" : "text-red-400",
+                                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(monthlyPnl)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 491,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 489,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 487,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>{
+                                                            const next = new Date(month);
+                                                            next.setMonth(month.getMonth() - 1);
+                                                            setMonth(next);
+                                                            setSelectedDate(null);
+                                                        },
+                                                        className: "h-9 w-9 inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
+                                                        "aria-label": "Previous month",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 505,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 495,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>setMonth(new Date()),
+                                                        className: "px-3 h-9 inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-200 hover:text-white",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2d$days$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CalendarDays$3e$__["CalendarDays"], {
+                                                                className: "h-4 w-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 511,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            "This month"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 507,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>{
+                                                            const next = new Date(month);
+                                                            next.setMonth(month.getMonth() + 1);
+                                                            setMonth(next);
+                                                            setSelectedDate(null);
+                                                        },
+                                                        className: "h-9 w-9 inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
+                                                        "aria-label": "Next month",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 524,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 514,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 494,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 486,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-7 gap-2 text-xs text-zinc-500",
+                                        children: [
+                                            "Sun",
+                                            "Mon",
+                                            "Tue",
+                                            "Wed",
+                                            "Thu",
+                                            "Fri",
+                                            "Sat"
+                                        ].map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-center",
+                                                children: d
+                                            }, d, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 531,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 529,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-7 gap-2",
+                                        children: calendarDays.map((day)=>{
+                                            const dateKey = toDateKey(day.date);
+                                            const isSelected = selectedDate === dateKey;
+                                            const pnlClass = day.pnl > 0 ? "text-emerald-400" : day.pnl < 0 ? "text-red-400" : "text-zinc-500";
+                                            const highlight = day.pnl > 0 ? "border-emerald-500/50 bg-emerald-500/5" : day.pnl < 0 ? "border-red-500/40 bg-red-500/5" : "border-zinc-900 bg-zinc-900/40";
+                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>setSelectedDate(isSelected ? null : dateKey),
+                                                className: `p-2 rounded-lg border text-left transition-colors ${highlight} ${isSelected ? "ring-2 ring-emerald-500/50" : ""} ${day.inCurrentMonth ? "opacity-100" : "opacity-50"}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between text-[11px] text-zinc-400",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: day.label
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 552,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            day.tradeCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: pnlClass,
+                                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(day.pnl, {
+                                                                    maximumFractionDigits: 0
+                                                                })
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 553,
+                                                                columnNumber: 46
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 551,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    day.tradeCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "mt-1 text-[11px] text-zinc-500 leading-tight",
+                                                        children: [
+                                                            day.tradeCount,
+                                                            " trades",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-[10px]",
+                                                                children: [
+                                                                    day.winPct.toFixed(0),
+                                                                    "% win"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 558,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 556,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                ]
+                                            }, dateKey, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 544,
+                                                columnNumber: 19
+                                            }, this);
+                                        })
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 536,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-3",
+                                        children: weeklySummaries.map((week)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 px-3 py-2 text-sm text-white",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-zinc-500 flex items-center gap-2",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: "Weekly Summary"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 570,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-[10px] px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800",
+                                                                children: week.label
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 571,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 569,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: `text-lg ${week.pnl >= 0 ? "text-emerald-400" : "text-red-400"}`,
+                                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(week.pnl)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 573,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-zinc-500",
+                                                        children: [
+                                                            week.activeDays,
+                                                            " active days"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 574,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, week.label, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 568,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 566,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 470,
-                                columnNumber: 18
+                                lineNumber: 485,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                        className: "text-white text-lg",
+                                                        children: "Daily Account Balance"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 583,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-sm text-zinc-500",
+                                                        children: "Balance & equity progression"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 584,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 582,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: "px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300",
+                                                children: "Pick date range"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 586,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 581,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-full h-[320px]",
+                                        style: {
+                                            minWidth: 0
+                                        },
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                            width: "100%",
+                                            height: "100%",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$LineChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LineChart"], {
+                                                data: derived.balanceSeries,
+                                                margin: {
+                                                    top: 10,
+                                                    right: 10,
+                                                    left: 0,
+                                                    bottom: 0
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$CartesianGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CartesianGrid"], {
+                                                        stroke: "#1f1f1f",
+                                                        vertical: false
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 593,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["XAxis"], {
+                                                        dataKey: "date",
+                                                        stroke: "#52525b",
+                                                        tick: {
+                                                            fill: "#71717a",
+                                                            fontSize: 12
+                                                        }
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 594,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["YAxis"], {
+                                                        stroke: "#52525b",
+                                                        tick: {
+                                                            fill: "#71717a",
+                                                            fontSize: 12
+                                                        },
+                                                        tickFormatter: (value)=>`$${(value / 1000).toFixed(1)}k`
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 595,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
+                                                        contentStyle: {
+                                                            backgroundColor: "#0c0c0f",
+                                                            border: "1px solid #27272a",
+                                                            borderRadius: 8
+                                                        },
+                                                        labelStyle: {
+                                                            color: "#a1a1aa"
+                                                        },
+                                                        formatter: (value)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(value),
+                                                        cursor: {
+                                                            fill: "transparent"
+                                                        }
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 600,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Legend$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Legend"], {}, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 606,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Line$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Line"], {
+                                                        type: "monotone",
+                                                        dataKey: "balance",
+                                                        stroke: "#10b981",
+                                                        strokeWidth: 2.5,
+                                                        dot: {
+                                                            r: 2.5,
+                                                            fill: "#10b981"
+                                                        },
+                                                        name: "Balance"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 607,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Line$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Line"], {
+                                                        type: "monotone",
+                                                        dataKey: "equity",
+                                                        stroke: "#9ca3af",
+                                                        strokeWidth: 2,
+                                                        dot: false,
+                                                        strokeDasharray: "4 4",
+                                                        name: "Equity"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 608,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 592,
+                                                columnNumber: 17
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 591,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 590,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3",
+                                        children: performanceOverview.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-zinc-500",
+                                                        children: item.label
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 615,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: `text-lg ${item.tone === "positive" ? "text-emerald-400" : item.tone === "negative" ? "text-red-400" : "text-white"}`,
+                                                        children: item.value
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 616,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, item.label, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 614,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 612,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 580,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                        className: "text-white text-lg",
+                                                        children: "P&L Charts"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 631,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-zinc-500",
+                                                        children: "Daily Net & Cumulative"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 632,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 630,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-full h-[260px]",
+                                                style: {
+                                                    minWidth: 0
+                                                },
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$LineChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LineChart"], {
+                                                        data: derived.cumulativeSeries,
+                                                        margin: {
+                                                            top: 10,
+                                                            right: 10,
+                                                            left: -10,
+                                                            bottom: 0
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$CartesianGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CartesianGrid"], {
+                                                                stroke: "#1f1f1f",
+                                                                vertical: false
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 637,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["XAxis"], {
+                                                                dataKey: "date",
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a",
+                                                                    fontSize: 12
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 638,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["YAxis"], {
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a",
+                                                                    fontSize: 12
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 639,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
+                                                                contentStyle: {
+                                                                    backgroundColor: "#0c0c0f",
+                                                                    border: "1px solid #27272a",
+                                                                    borderRadius: 8
+                                                                },
+                                                                labelStyle: {
+                                                                    color: "#a1a1aa"
+                                                                },
+                                                                formatter: (value)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(value),
+                                                                cursor: {
+                                                                    fill: "transparent"
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 640,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Line$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Line"], {
+                                                                type: "monotone",
+                                                                dataKey: "pnl",
+                                                                stroke: "#10b981",
+                                                                strokeWidth: 2,
+                                                                dot: false,
+                                                                name: "Cumulative P&L"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 646,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 636,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 635,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 634,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-full h-[180px]",
+                                                style: {
+                                                    minWidth: 0
+                                                },
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$BarChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BarChart"], {
+                                                        data: derived.netDailySeries,
+                                                        margin: {
+                                                            top: 0,
+                                                            right: 10,
+                                                            left: -10,
+                                                            bottom: 0
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$CartesianGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CartesianGrid"], {
+                                                                stroke: "#1f1f1f",
+                                                                vertical: false
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 653,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["XAxis"], {
+                                                                dataKey: "date",
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a",
+                                                                    fontSize: 12
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 654,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["YAxis"], {
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a",
+                                                                    fontSize: 12
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 655,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
+                                                                contentStyle: {
+                                                                    backgroundColor: "#0c0c0f",
+                                                                    border: "1px solid #27272a",
+                                                                    borderRadius: 8
+                                                                },
+                                                                labelStyle: {
+                                                                    color: "#a1a1aa"
+                                                                },
+                                                                formatter: (value)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(value),
+                                                                cursor: {
+                                                                    fill: "transparent"
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 656,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Bar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Bar"], {
+                                                                dataKey: "pnl",
+                                                                fill: "#10b981",
+                                                                radius: [
+                                                                    4,
+                                                                    4,
+                                                                    0,
+                                                                    0
+                                                                ]
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 662,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 652,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 651,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 650,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 629,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-6",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                className: "text-white text-lg",
+                                                                children: "Activity & Performance Breakdown"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 671,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
+                                                                className: "h-4 w-4 text-emerald-400"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 672,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 670,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "grid grid-cols-1 sm:grid-cols-3 gap-3",
+                                                        children: activityBreakdown.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-xs text-zinc-500",
+                                                                        children: item.label
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 677,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: `text-lg ${item.tone === "positive" ? "text-emerald-400" : item.tone === "negative" ? "text-red-400" : "text-white"}`,
+                                                                        children: item.value
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 678,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    item.helper && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-xs text-zinc-500",
+                                                                        children: item.helper
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 689,
+                                                                        columnNumber: 39
+                                                                    }, this)
+                                                                ]
+                                                            }, item.label, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 676,
+                                                                columnNumber: 21
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 674,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 669,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-white text-lg",
+                                                        children: "Trade Statistics"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 696,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                                                        children: tradeStats.map((stat)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-xs text-zinc-500",
+                                                                        children: stat.label
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 700,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-lg text-white",
+                                                                        children: stat.value
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 701,
+                                                                        columnNumber: 23
+                                                                    }, this)
+                                                                ]
+                                                            }, stat.label, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 699,
+                                                                columnNumber: 21
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 697,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 695,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-white text-lg",
+                                                        children: "Trade Value Metrics"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 708,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "grid grid-cols-1 sm:grid-cols-3 gap-3",
+                                                        children: tradeValueMetrics.map((stat)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-xs text-zinc-500",
+                                                                        children: stat.label
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 712,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: `text-lg ${stat.tone === "positive" ? "text-emerald-400" : stat.tone === "negative" ? "text-red-400" : "text-white"}`,
+                                                                        children: stat.value
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 713,
+                                                                        columnNumber: 23
+                                                                    }, this)
+                                                                ]
+                                                            }, stat.label, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 711,
+                                                                columnNumber: 21
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 709,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 707,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 668,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 628,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-white text-lg",
+                                                            children: "Trade Duration Analysis"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 735,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-sm text-zinc-500",
+                                                            children: "Trade counts by duration range"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 736,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 734,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 733,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-full h-[240px]",
+                                                style: {
+                                                    minWidth: 0
+                                                },
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$BarChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BarChart"], {
+                                                        data: durationData,
+                                                        margin: {
+                                                            top: 0,
+                                                            right: 10,
+                                                            left: -10,
+                                                            bottom: 20
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$CartesianGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CartesianGrid"], {
+                                                                stroke: "#1f1f1f",
+                                                                vertical: false
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 742,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["XAxis"], {
+                                                                dataKey: "label",
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a"
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 743,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["YAxis"], {
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a"
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 744,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
+                                                                contentStyle: {
+                                                                    backgroundColor: "#0c0c0f",
+                                                                    border: "1px solid #27272a",
+                                                                    borderRadius: 8
+                                                                },
+                                                                labelStyle: {
+                                                                    color: "#a1a1aa"
+                                                                },
+                                                                cursor: {
+                                                                    fill: "transparent"
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 745,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Bar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Bar"], {
+                                                                dataKey: "trades",
+                                                                fill: "#10b981",
+                                                                radius: [
+                                                                    4,
+                                                                    4,
+                                                                    0,
+                                                                    0
+                                                                ],
+                                                                name: "Trades"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 750,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 741,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 740,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 739,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 732,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-white text-lg",
+                                                            children: "Win Rate Analysis"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 759,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-sm text-zinc-500",
+                                                            children: "Win percentage by duration"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 760,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 758,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 757,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-full h-[240px]",
+                                                style: {
+                                                    minWidth: 0
+                                                },
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$BarChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BarChart"], {
+                                                        data: durationData,
+                                                        margin: {
+                                                            top: 0,
+                                                            right: 10,
+                                                            left: -10,
+                                                            bottom: 20
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$CartesianGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CartesianGrid"], {
+                                                                stroke: "#1f1f1f",
+                                                                vertical: false
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 766,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["XAxis"], {
+                                                                dataKey: "label",
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a"
+                                                                }
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 767,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["YAxis"], {
+                                                                stroke: "#52525b",
+                                                                tick: {
+                                                                    fill: "#71717a"
+                                                                },
+                                                                domain: [
+                                                                    0,
+                                                                    100
+                                                                ]
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 768,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
+                                                                contentStyle: {
+                                                                    backgroundColor: "#0c0c0f",
+                                                                    border: "1px solid #27272a",
+                                                                    borderRadius: 8
+                                                                },
+                                                                labelStyle: {
+                                                                    color: "#a1a1aa"
+                                                                },
+                                                                formatter: (value)=>`${value.toFixed(1)}%`
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 769,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Bar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Bar"], {
+                                                                dataKey: "winRate",
+                                                                fill: "#10b981",
+                                                                radius: [
+                                                                    4,
+                                                                    4,
+                                                                    0,
+                                                                    0
+                                                                ],
+                                                                name: "Win %"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 774,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 765,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 764,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 763,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 756,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 731,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                className: "text-white text-lg",
+                                                children: "Trades Table"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 783,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>setJournalOpen(true),
+                                                className: "inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500 text-black text-sm hover:bg-emerald-600 transition-colors",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$notebook$2d$pen$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__NotebookPen$3e$__["NotebookPen"], {
+                                                        className: "h-4 w-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 788,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    "Trade Journal"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 784,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 782,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "overflow-x-auto",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                                            className: "w-full min-w-[900px] text-sm",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                        className: "text-left text-zinc-500 border-b border-zinc-800",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Trade ID"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 796,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Symbol"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 797,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Size"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 798,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Entry Time"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 799,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Exit Time"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 800,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Duration"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 801,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Entry"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 802,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Exit"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 803,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "P&L"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 804,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Commissions"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 805,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Fees"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 806,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Direction"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 807,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Setup"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 808,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                className: "py-2 pr-3",
+                                                                children: "Journal"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 809,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 795,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 794,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                                                    className: "divide-y divide-zinc-800",
+                                                    children: trades.map((trade)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                            className: "text-white",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: trade.id
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 815,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3",
+                                                                    children: trade.symbol
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 816,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3",
+                                                                    children: trade.qty
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 817,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: new Date(trade.entryTime).toLocaleString()
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 818,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: new Date(trade.exitTime).toLocaleString()
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 819,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: [
+                                                                        trade.durationMinutes,
+                                                                        "m"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 820,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3",
+                                                                    children: trade.entryPrice
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 821,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3",
+                                                                    children: trade.exitPrice
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 822,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: `py-2 pr-3 ${trade.pnl >= 0 ? "text-emerald-400" : "text-red-400"}`,
+                                                                    children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.pnl)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 823,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.commissions)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 824,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.fees)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 825,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: trade.side
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 826,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3 text-zinc-400",
+                                                                    children: trade.setupTag
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 827,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                    className: "py-2 pr-3",
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                        onClick: ()=>{
+                                                                            setJournalTradeId(trade.id);
+                                                                            setJournalOpen(true);
+                                                                        },
+                                                                        className: "text-xs px-2 py-1 rounded-md bg-zinc-900 border border-zinc-800 hover:border-emerald-500/40",
+                                                                        children: "Add Note"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                        lineNumber: 829,
+                                                                        columnNumber: 25
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 828,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, trade.id, true, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 814,
+                                                            columnNumber: 21
+                                                        }, this))
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 812,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 793,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 792,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm text-zinc-500",
+                                                children: "Saved Journal Entries"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 845,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "grid grid-cols-1 md:grid-cols-2 gap-3",
+                                                children: [
+                                                    journal.map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3 space-y-1",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center justify-between text-xs text-zinc-500",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: entry.date
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                            lineNumber: 850,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "text-emerald-400",
+                                                                            children: entry.mood
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                            lineNumber: 851,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 849,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-white text-sm leading-snug",
+                                                                    children: entry.content
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 853,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                entry.tradeId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-xs text-zinc-500",
+                                                                    children: [
+                                                                        "Trade: ",
+                                                                        entry.tradeId
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                    lineNumber: 854,
+                                                                    columnNumber: 39
+                                                                }, this)
+                                                            ]
+                                                        }, entry.id, true, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 848,
+                                                            columnNumber: 19
+                                                        }, this)),
+                                                    journal.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-sm text-zinc-500",
+                                                        children: "No journal entries yet. Add your first note from the table."
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 858,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 846,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 844,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 781,
+                                columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 470,
+                        lineNumber: 484,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "space-y-6",
                         children: [
-                            "Size: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.size, {
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0
-                                })
-                            }, void 0, false, {
+                            derived.zellaScore !== null && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-gradient-to-br from-emerald-500/15 via-emerald-500/10 to-transparent border border-emerald-500/30 rounded-xl p-6 space-y-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-white text-lg flex items-center gap-2",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
+                                                                className: "h-4 w-4 text-emerald-400"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 871,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            "Velocity Score"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 870,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-sm text-zinc-700",
+                                                        children: "Performance score from trading activity"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 874,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 869,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-4xl text-white font-semibold",
+                                                children: Math.round(derived.zellaScore)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 876,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 868,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-full h-[220px]",
+                                        style: {
+                                            minWidth: 0
+                                        },
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                            width: "100%",
+                                            height: "100%",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$RadarChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["RadarChart"], {
+                                                data: derived.radarData,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$polar$2f$PolarGrid$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PolarGrid"], {
+                                                        stroke: "#1f1f1f"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 881,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$polar$2f$PolarAngleAxis$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PolarAngleAxis"], {
+                                                        dataKey: "label",
+                                                        stroke: "#a1a1aa"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 882,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$polar$2f$Radar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Radar"], {
+                                                        name: "Score",
+                                                        dataKey: "value",
+                                                        stroke: "#10b981",
+                                                        fill: "#10b981",
+                                                        fillOpacity: 0.3
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 883,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 880,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 879,
+                                            columnNumber: 17
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 878,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 471,
-                                columnNumber: 20
+                                lineNumber: 867,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-white text-lg",
+                                                    children: "Account Balance Panel"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 893,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-sm text-zinc-500",
+                                                    children: "Min/Max balance overview"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 894,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 892,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 891,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-3",
+                                        children: [
+                                            {
+                                                label: "Balance",
+                                                value: balanceStats.latest,
+                                                min: balanceStats.min,
+                                                max: balanceStats.max
+                                            },
+                                            {
+                                                label: "Equity",
+                                                value: balanceStats.latest + (account.equity - account.balance),
+                                                min: balanceStats.min,
+                                                max: balanceStats.max
+                                            }
+                                        ].map((item)=>{
+                                            const span = item.max - item.min || 1;
+                                            const pct = clamp((item.value - item.min) / span * 100, 0, 100);
+                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "space-y-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between text-sm text-zinc-400",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: item.label
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 907,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(item.value)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 908,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 906,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "h-3 rounded-full bg-zinc-900 border border-zinc-800 overflow-hidden",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "h-full bg-gradient-to-r from-emerald-500 to-emerald-400",
+                                                            style: {
+                                                                width: `${pct}%`
+                                                            }
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 911,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 910,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between text-xs text-zinc-500",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: [
+                                                                    "Min ",
+                                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(item.min)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 914,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-emerald-400",
+                                                                children: [
+                                                                    "Max ",
+                                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(item.max)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 915,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 913,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, item.label, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 905,
+                                                columnNumber: 19
+                                            }, this);
+                                        })
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 897,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 890,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-white text-lg",
+                                                    children: "Performance Overview"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 926,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-sm text-zinc-500",
+                                                    children: "Key ratios at a glance"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 927,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 925,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 924,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                                        children: performanceOverview.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-zinc-500",
+                                                        children: item.label
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 933,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: `text-lg ${item.tone === "positive" ? "text-emerald-400" : item.tone === "negative" ? "text-red-400" : "text-white"}`,
+                                                        children: item.value
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 934,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, item.label, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 932,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 930,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 923,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-white text-lg",
+                                        children: "Best & Worst Trades"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 947,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                                        children: bestWorst.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3 space-y-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-sm text-zinc-500",
+                                                                children: item.label
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 952,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            item.trade && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: `text-xs px-2 py-1 rounded-full border ${item.tone === "positive" ? "text-emerald-400 border-emerald-500/30" : "text-red-400 border-red-500/30"}`,
+                                                                children: item.trade.side
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 954,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 951,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    item.trade ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: `text-xl ${item.tone === "positive" ? "text-emerald-400" : "text-red-400"}`,
+                                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(item.trade.pnl)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 963,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-xs text-zinc-500",
+                                                                children: [
+                                                                    item.trade.symbol,
+                                                                    " | ",
+                                                                    item.trade.qty,
+                                                                    " contracts | ",
+                                                                    new Date(item.trade.entryTime).toLocaleString()
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 966,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-sm text-zinc-500",
+                                                        children: "No trades yet."
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 971,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, item.label, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 950,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 948,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 946,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-white text-lg",
+                                                        children: "Monthly P&L Calendar (Alt View)"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 981,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-sm text-zinc-500",
+                                                        children: altMonth.toLocaleString("default", {
+                                                            month: "long",
+                                                            year: "numeric"
+                                                        })
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 982,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 980,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>setAltMonth(new Date(altMonth.getFullYear(), altMonth.getMonth() - 1, 1)),
+                                                        className: "h-8 w-8 inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 991,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 987,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>setAltMonth(new Date(altMonth.getFullYear(), altMonth.getMonth() + 1, 1)),
+                                                        className: "h-8 w-8 inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 997,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 993,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 986,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 979,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-7 gap-1 text-[11px] text-zinc-500",
+                                        children: [
+                                            "Sun",
+                                            "Mon",
+                                            "Tue",
+                                            "Wed",
+                                            "Thu",
+                                            "Fri",
+                                            "Sat"
+                                        ].map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-center py-1",
+                                                children: d
+                                            }, d, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1003,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1001,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-7 gap-1",
+                                        children: altCalendarDays.map((day)=>{
+                                            const pnlClass = day.pnl > 0 ? "text-emerald-400" : day.pnl < 0 ? "text-red-400" : "text-zinc-500";
+                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: `p-2 rounded-md border ${day.inCurrentMonth ? "border-zinc-900 bg-zinc-900/40" : "border-zinc-900/50 bg-zinc-900/20"}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between text-[11px] text-zinc-400",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: day.label
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1017,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            day.tradeCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: pnlClass,
+                                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(day.pnl, {
+                                                                    maximumFractionDigits: 0
+                                                                })
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1018,
+                                                                columnNumber: 46
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1016,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    day.tradeCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-[10px] text-zinc-500",
+                                                        children: [
+                                                            day.tradeCount,
+                                                            " trades"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1020,
+                                                        columnNumber: 44
+                                                    }, this)
+                                                ]
+                                            }, toDateKey(day.date), true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1012,
+                                                columnNumber: 19
+                                            }, this);
+                                        })
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1008,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 978,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-white text-lg",
+                                        children: "Account Info"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1028,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-sm text-zinc-400 space-y-1",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    "ID: ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-white",
+                                                        children: account.id
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1030,
+                                                        columnNumber: 24
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1030,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    "Size: ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-white",
+                                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.size, {
+                                                            minimumFractionDigits: 0,
+                                                            maximumFractionDigits: 0
+                                                        })
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1031,
+                                                        columnNumber: 26
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1031,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    "Start: ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-white",
+                                                        children: account.startDate
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1032,
+                                                        columnNumber: 27
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1032,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1029,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "pt-2 space-y-2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm text-zinc-500",
+                                                children: "Broker Connections"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1035,
+                                                columnNumber: 15
+                                            }, this),
+                                            credentials?.map((cred)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex items-center justify-between text-sm text-white bg-zinc-900/60 border border-zinc-900 rounded-lg px-3 py-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: cred.provider
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 1038,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: cred.status === "connected" ? "text-emerald-400" : "text-yellow-400",
+                                                            children: cred.status
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 1039,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, cred.provider, true, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 1037,
+                                                    columnNumber: 17
+                                                }, this)),
+                                            !credentials?.length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm text-zinc-500",
+                                                children: "No connections yet."
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1042,
+                                                columnNumber: 40
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1034,
+                                        columnNumber: 13
+                                    }, this),
+                                    rules && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "pt-4 space-y-2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm text-zinc-500",
+                                                children: "Funding Rules"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1046,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                className: "space-y-1 text-sm text-zinc-400",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Profit Target: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.profitTarget
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1048,
+                                                                columnNumber: 38
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1048,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Max Daily Loss: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.maxDailyLoss
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1049,
+                                                                columnNumber: 39
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1049,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Max Total Loss: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.maxTotalLoss
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1050,
+                                                                columnNumber: 39
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1050,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Min Trading Days: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.minTradingDays
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1051,
+                                                                columnNumber: 41
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1051,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Consistency: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.consistencyRule
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1052,
+                                                                columnNumber: 36
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1052,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    rules.trailingDrawdown && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Trailing Drawdown: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.trailingDrawdown
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1053,
+                                                                columnNumber: 69
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1053,
+                                                        columnNumber: 46
+                                                    }, this),
+                                                    rules.payoutSplit && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            "Payout Split: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white",
+                                                                children: rules.payoutSplit
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                                lineNumber: 1054,
+                                                                columnNumber: 59
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                        lineNumber: 1054,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                lineNumber: 1047,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1045,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/accounts/account-details-view.tsx",
+                                lineNumber: 1027,
+                                columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 471,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        children: [
-                            "Start: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: account.startDate
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 472,
-                                columnNumber: 21
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 472,
+                        lineNumber: 865,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 469,
+                lineNumber: 483,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "pt-2 space-y-2",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "text-sm text-zinc-500",
-                        children: "Broker Connections"
-                    }, void 0, false, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 475,
-                        columnNumber: 9
-                    }, this),
-                    credentials?.map((cred)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center justify-between text-sm text-white bg-zinc-900/60 border border-zinc-900 rounded-lg px-3 py-2",
+            journalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center px-4",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "bg-zinc-950 border border-zinc-900 rounded-xl p-6 w-full max-w-2xl space-y-4",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-center justify-between",
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    children: cred.provider
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                    className: "text-white text-lg",
+                                    children: "Trade Journal"
                                 }, void 0, false, {
                                     fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 478,
-                                    columnNumber: 13
+                                    lineNumber: 1066,
+                                    columnNumber: 15
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: cred.status === "connected" ? "text-emerald-400" : "text-yellow-400",
-                                    children: cred.status
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>setJournalOpen(false),
+                                    className: "px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white",
+                                    children: "Close"
                                 }, void 0, false, {
                                     fileName: "[project]/components/accounts/account-details-view.tsx",
-                                    lineNumber: 479,
-                                    columnNumber: 13
+                                    lineNumber: 1067,
+                                    columnNumber: 15
                                 }, this)
                             ]
-                        }, cred.provider, true, {
+                        }, void 0, true, {
                             fileName: "[project]/components/accounts/account-details-view.tsx",
-                            lineNumber: 477,
-                            columnNumber: 11
-                        }, this)),
-                    !credentials?.length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "text-sm text-zinc-500",
-                        children: "No connections yet."
-                    }, void 0, false, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 482,
-                        columnNumber: 34
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 474,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 467,
-        columnNumber: 5
-    }, this);
-}
-_c5 = AccountInfoCard;
-function RiskCard({ account, rules }) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-3",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                className: "text-white text-lg",
-                children: "Risk Controls"
+                            lineNumber: 1065,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "grid grid-cols-1 md:grid-cols-2 gap-4",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "text-sm text-zinc-400",
+                                            children: "Select Trade"
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 1076,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                            value: journalTradeId,
+                                            onChange: (e)=>setJournalTradeId(e.target.value),
+                                            className: "w-full h-10 rounded-lg bg-zinc-900 border border-zinc-800 px-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500",
+                                            children: trades.map((trade)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: trade.id,
+                                                    children: [
+                                                        trade.id,
+                                                        " | ",
+                                                        trade.symbol,
+                                                        " | ",
+                                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(trade.pnl)
+                                                    ]
+                                                }, trade.id, true, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 1083,
+                                                    columnNumber: 21
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 1077,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                    lineNumber: 1075,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "text-sm text-zinc-400",
+                                            children: "Trade Snapshot"
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 1090,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "rounded-lg border border-zinc-900 bg-zinc-900/40 p-3 text-sm text-white space-y-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex items-center justify-between",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: selectedTrade?.symbol
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 1093,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: selectedTrade?.pnl && selectedTrade.pnl > 0 ? "text-emerald-400" : "text-red-400",
+                                                            children: selectedTrade ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(selectedTrade.pnl) : "-"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 1094,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                    lineNumber: 1092,
+                                                    columnNumber: 19
+                                                }, this),
+                                                selectedTrade && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-xs text-zinc-500",
+                                                            children: [
+                                                                selectedTrade.side,
+                                                                " | ",
+                                                                selectedTrade.qty,
+                                                                " contracts | ",
+                                                                selectedTrade.durationMinutes,
+                                                                "m"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 1100,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-xs text-zinc-500",
+                                                            children: [
+                                                                "Entry ",
+                                                                selectedTrade.entryPrice,
+                                                                " / Exit ",
+                                                                selectedTrade.exitPrice
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                                            lineNumber: 1103,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                                            lineNumber: 1091,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                    lineNumber: 1089,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                            lineNumber: 1074,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "space-y-2",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "text-sm text-zinc-400",
+                                    children: "Notes"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                    lineNumber: 1110,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "rounded-lg border border-zinc-800 bg-zinc-900",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                        value: journalContent,
+                                        onChange: (e)=>setJournalContent(e.target.value),
+                                        placeholder: "Rich text friendly - add reflections, execution notes, and follow-ups.",
+                                        className: "w-full p-3 text-sm text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded-lg",
+                                        rows: 4
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/accounts/account-details-view.tsx",
+                                        lineNumber: 1112,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                    lineNumber: 1111,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                            lineNumber: 1109,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-center justify-end gap-3",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>setJournalOpen(false),
+                                    className: "px-4 py-2 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-300 hover:text-white",
+                                    children: "Cancel"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                    lineNumber: 1122,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: handleSaveJournal,
+                                    className: "px-4 py-2 rounded-lg bg-emerald-500 text-black hover:bg-emerald-600",
+                                    children: "Save Entry"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                                    lineNumber: 1128,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/accounts/account-details-view.tsx",
+                            lineNumber: 1121,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/accounts/account-details-view.tsx",
+                    lineNumber: 1064,
+                    columnNumber: 11
+                }, this)
             }, void 0, false, {
                 fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 491,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                className: "space-y-2 text-sm text-zinc-400",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Current Balance: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(account.balance)
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 493,
-                                columnNumber: 30
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 493,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Daily P&L Limit: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules?.maxDailyLoss ?? "$—"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 494,
-                                columnNumber: 30
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 494,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Total Loss Limit: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: rules?.maxTotalLoss ?? "$—"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 495,
-                                columnNumber: 31
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 495,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Max Contracts: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: "5"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 496,
-                                columnNumber: 28
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 496,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                        children: [
-                            "Do not trade past: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-white",
-                                children: "3:45 PM ET"
-                            }, void 0, false, {
-                                fileName: "[project]/components/accounts/account-details-view.tsx",
-                                lineNumber: 497,
-                                columnNumber: 32
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/accounts/account-details-view.tsx",
-                        lineNumber: 497,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/components/accounts/account-details-view.tsx",
-                lineNumber: 492,
-                columnNumber: 7
+                lineNumber: 1063,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/accounts/account-details-view.tsx",
-        lineNumber: 490,
+        lineNumber: 434,
         columnNumber: 5
     }, this);
 }
-_c6 = RiskCard;
-var _c, _c1, _c2, _c3, _c4, _c5, _c6;
+_s(AccountDetailsView, "RtfqEeJzfcxo32MSDdH4w5/OWs4=");
+_c = AccountDetailsView;
+var _c;
 __turbopack_context__.k.register(_c, "AccountDetailsView");
-__turbopack_context__.k.register(_c1, "PnLCalendar");
-__turbopack_context__.k.register(_c2, "TradesTable");
-__turbopack_context__.k.register(_c3, "Journal");
-__turbopack_context__.k.register(_c4, "FundingCard");
-__turbopack_context__.k.register(_c5, "AccountInfoCard");
-__turbopack_context__.k.register(_c6, "RiskCard");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }

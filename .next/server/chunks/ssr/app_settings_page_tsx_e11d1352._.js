@@ -1,3 +1,0 @@
-module.exports=[45343,a=>{"use strict";var b=a.i(87924);function c(){return(0,b.jsxs)("div",{className:"p-6 space-y-2",children:[(0,b.jsx)("h1",{className:"text-white text-2xl font-semibold",children:"Settings"}),(0,b.jsx)("p",{className:"text-zinc-400",children:"Manage your profile, preferences, and notifications."})]})}a.s(["default",()=>c])}];
-
-//# sourceMappingURL=app_settings_page_tsx_e11d1352._.js.map
