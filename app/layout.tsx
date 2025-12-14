@@ -3,8 +3,6 @@ import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Sidebar } from "@/components/sidebar";
-import { Topbar } from "@/components/topbar";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -26,17 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           fontSans.variable,
         )}
       >
-        <div className="h-screen flex bg-black overflow-hidden">
-          <Sidebar />
-          <div className="flex-1 flex flex-col bg-black min-w-0 h-screen overflow-hidden">
-            <Topbar />
-            <main className="flex-1 overflow-y-auto bg-black min-w-0">
-              <div className="min-h-full bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.08),_transparent_35%)] min-w-0">
-                {children}
-              </div>
-            </main>
-          </div>
-        </div>
+        {children}
       </body>
     </html>
   );
