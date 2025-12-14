@@ -1,43 +1,36 @@
-import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+export async function middleware(req: NextRequest) {
+  let res = NextResponse.next();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
-          return request.cookies.get(name)?.value;
+        getAll() {
+          return req.cookies.getAll();
         },
-        set(name, value, options) {
-          response.cookies.set(name, value, options);
-        },
-        remove(name, options) {
-          response.cookies.delete(name, options);
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            res.cookies.set(name, value, options);
+          });
         },
       },
     }
   );
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const { data } = await supabase.auth.getSession();
 
-  if (!session && request.nextUrl.pathname.startsWith('/dashboard')) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = '/login';
-    redirectUrl.search = '';
-    return NextResponse.redirect(redirectUrl);
+  // protect dashboard
+  if (!data.session && req.nextUrl.pathname.startsWith('/dashboard')) {
+    const url = req.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
   }
 
-  return response;
+  return res;
 }
 
 export const config = {
