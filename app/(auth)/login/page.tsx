@@ -9,11 +9,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    setResetMessage(null);
     setLoading(true);
 
     const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -28,6 +30,27 @@ export default function LoginPage() {
     }
 
     router.push('/dashboard');
+  };
+
+  const handlePasswordReset = async () => {
+    setError(null);
+    setResetMessage(null);
+
+    if (!email) {
+      setError('Please enter your email to reset your password.');
+      return;
+    }
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    });
+
+    if (resetError) {
+      setError(resetError.message);
+      return;
+    }
+
+    setResetMessage('Password reset email sent. Check your inbox.');
   };
 
   return (
@@ -62,7 +85,17 @@ export default function LoginPage() {
               className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={handlePasswordReset}
+              className="text-sm font-medium text-black hover:underline"
+            >
+              Forgot password?
+            </button>
+          </div>
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          {resetMessage ? <p className="text-sm text-green-600">{resetMessage}</p> : null}
           <button
             type="submit"
             disabled={loading}
