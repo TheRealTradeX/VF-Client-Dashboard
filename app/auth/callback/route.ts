@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
         set(name, value, options) {
           response.cookies.set(name, value, options);
         },
-        remove(name, options) {
-          response.cookies.delete(name, options);
+        remove(name) {
+          response.cookies.delete(name);
         },
       },
     },
