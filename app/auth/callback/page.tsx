@@ -2,10 +2,11 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     const handleRedirect = async () => {
