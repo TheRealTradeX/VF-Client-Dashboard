@@ -21,10 +21,10 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  const { data } = await supabase.auth.getSession();
+  const { data } = await supabase.auth.getUser();
 
   // protect dashboard
-  if (!data.session && req.nextUrl.pathname.startsWith('/dashboard')) {
+  if (!data.user && req.nextUrl.pathname.startsWith('/dashboard')) {
     const url = req.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
