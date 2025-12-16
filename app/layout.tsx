@@ -11,7 +11,7 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VF Client Dashboard",
+  title: "Velocity Funds",
   description: "Dark baseline dashboard scaffold for VF clients.",
 };
 
