@@ -12,12 +12,13 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
+  Shield,
   Trophy,
   TrendingUp,
   Users,
   Wallet,
 } from "lucide-react";
-import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -39,6 +40,8 @@ const STORAGE_KEY = "vf-sidebar-collapsed";
 export function Sidebar() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isAdmin, setIsAdmin] = React.useState(false);
+  const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -47,6 +50,31 @@ export function Sidebar() {
       setIsCollapsed(saved === "true");
     }
   }, []);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const loadRole = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userData.user.id)
+        .single();
+
+      if (isMounted) {
+        setIsAdmin(profile?.role === "admin");
+      }
+    };
+
+    void loadRole();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [supabase]);
 
   const toggleCollapsed = () => {
     setIsCollapsed((prev) => {
@@ -124,6 +152,20 @@ export function Sidebar() {
               {!isCollapsed && <span>{item.name}</span>}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                pathname.startsWith("/admin")
+                  ? "bg-blue-500 text-black"
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+              }`}
+              title={isCollapsed ? "Admin Console" : undefined}
+            >
+              <Shield className="w-5 h-5 flex-shrink-0" />
+              {!isCollapsed && <span>Admin Console</span>}
+            </Link>
+          )}
         </div>
       </nav>
 
