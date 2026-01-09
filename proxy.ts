@@ -81,6 +81,10 @@ export async function proxy(req: NextRequest) {
       .select("role")
       .eq("id", data.user.id)
       .single();
+    const role =
+      profile && typeof profile === "object" && "role" in profile
+        ? profile.role
+        : null;
 
     if (profileError || !profile) {
       const url = req.nextUrl.clone();
@@ -90,12 +94,12 @@ export async function proxy(req: NextRequest) {
         allowed: false,
         reason: profileError ? "profile_error" : "no_profile",
         userId: data.user.id,
-        role: profile?.role ?? null,
+        role,
         profileError: profileError?.message,
       });
     }
 
-    if (profile?.role !== "admin") {
+    if (role !== "admin") {
       const url = req.nextUrl.clone();
       url.pathname = "/dashboard";
       const redirect = withCookies(res, NextResponse.redirect(url));
@@ -103,7 +107,7 @@ export async function proxy(req: NextRequest) {
         allowed: false,
         reason: "not_admin",
         userId: data.user.id,
-        role: profile?.role ?? null,
+        role,
       });
     }
 
@@ -111,7 +115,7 @@ export async function proxy(req: NextRequest) {
       allowed: true,
       reason: "ok",
       userId: data.user.id,
-      role: profile?.role ?? null,
+      role,
     });
   }
 
