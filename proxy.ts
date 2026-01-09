@@ -11,7 +11,6 @@ function withCookies(from: NextResponse, to: NextResponse): NextResponse {
 }
 
 type AdminDebugReason = "no_session" | "no_profile" | "profile_error" | "not_admin" | "ok";
-type ProfileRole = { role: string | null };
 
 function withAdminDebugHeaders(
   response: NextResponse,
@@ -77,13 +76,13 @@ export async function proxy(req: NextRequest) {
 
   if (data.user && pathname.startsWith("/admin")) {
     const { data: profile, error: profileError } = await supabase
-      .from<ProfileRole>("profiles")
+      .from("profiles")
       .select("role")
       .eq("id", data.user.id)
       .single();
     const role =
       profile && typeof profile === "object" && "role" in profile
-        ? profile.role
+        ? (profile as { role: string | null }).role
         : null;
 
     if (profileError || !profile) {
