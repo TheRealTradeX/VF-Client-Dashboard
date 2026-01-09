@@ -143,3 +143,23 @@ alter table volumetrica_positions enable row level security;
 alter table volumetrica_trades enable row level security;
 alter table volumetrica_users enable row level security;
 alter table admin_audit_log enable row level security;
+
+alter table if exists profiles enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'profiles'
+      and policyname = 'Profiles can read own profile'
+  ) then
+    create policy "Profiles can read own profile"
+      on public.profiles
+      for select
+      to authenticated
+      using (id = auth.uid());
+  end if;
+end
+$$;
