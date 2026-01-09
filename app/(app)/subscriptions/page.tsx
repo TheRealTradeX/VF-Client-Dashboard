@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getDataMode } from "@/lib/data-mode";
 import { getAuthenticatedSupabaseUser, listSubscriptionsByUserIds, listTraderAccounts } from "@/lib/volumetrica/trader-data";
+import { TRADING_PLATFORM_LABEL } from "@/lib/platform-labels";
 
 export default async function SubscriptionsPage() {
   const mode = getDataMode();
@@ -38,15 +39,15 @@ export default async function SubscriptionsPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-white text-2xl mb-1">Subscriptions</h1>
-        <p className="text-zinc-400">Your current data subscription status from Volumetrica projections</p>
+        <p className="text-zinc-400">Your current data subscription status from {TRADING_PLATFORM_LABEL} updates</p>
       </div>
 
       {subscriptions.length === 0 ? (
         <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-6 text-zinc-300">
           <div className="text-white mb-2">No subscriptions found.</div>
           <div className="text-sm text-zinc-500">
-            Waiting for subscription webhooks. If you have accounts but no subscriptions, confirm Volumetrica is sending the
-            `Subscriptions` webhook category.
+            Waiting for subscription updates. If you have accounts but no subscriptions, confirm your {TRADING_PLATFORM_LABEL} is
+            sending subscription updates.
           </div>
         </div>
       ) : (
@@ -62,9 +63,9 @@ export default async function SubscriptionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subscriptions.map((sub) => (
+              {subscriptions.map((sub, index) => (
                 <TableRow key={sub.subscription_id} className="border-zinc-900">
-                  <TableCell className="text-white">{sub.subscription_id}</TableCell>
+                  <TableCell className="text-white">{`Subscription ${index + 1}`}</TableCell>
                   <TableCell className="text-zinc-300">{sub.status ?? "—"}</TableCell>
                   <TableCell className="text-zinc-300">{sub.activation?.slice(0, 16).replace("T", " ") ?? "—"}</TableCell>
                   <TableCell className="text-zinc-300">
@@ -92,4 +93,3 @@ export default async function SubscriptionsPage() {
     </div>
   );
 }
-

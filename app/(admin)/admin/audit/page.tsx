@@ -3,21 +3,40 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type AuditRow = {
   id: string;
-  action: string;
-  actor_user_id: string | null;
+  action: string | null;
   actor_email: string | null;
   target_type: string | null;
-  target_id: string | null;
   created_at: string;
 };
 
 const formatTimestamp = (value: string) => value.replace("T", " ").slice(0, 19);
+const actionLabels: Record<string, string> = {
+  "volumetrica.reconcile": "Reconciliation completed",
+  "volumetrica.reconcile.failed": "Reconciliation failed",
+};
+const toTitleCase = (value: string) =>
+  value
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+const formatAction = (action: string | null) => {
+  if (!action) return "Admin action";
+  const known = actionLabels[action];
+  if (known) return known;
+  const normalized = action.replace(/^volumetrica\./, "").replace(/[_.]/g, " ").trim();
+  return normalized ? toTitleCase(normalized) : "Admin action";
+};
+const formatTargetType = (value: string | null) => {
+  if (!value) return "General";
+  return toTitleCase(value.replace(/_/g, " ").trim());
+};
 
 export default async function AdminAuditLogPage() {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("admin_audit_log")
-    .select("id, action, actor_user_id, actor_email, target_type, target_id, created_at")
+    .select("id, action, actor_email, target_type, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 
@@ -43,16 +62,11 @@ export default async function AdminAuditLogPage() {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.id} className="border-zinc-900">
-                <TableCell className="text-white">{row.action}</TableCell>
-                <TableCell className="text-zinc-300">
-                  <div>{row.actor_email ?? "—"}</div>
-                  <div className="text-xs text-zinc-500">{row.actor_user_id ?? ""}</div>
-                </TableCell>
-                <TableCell className="text-zinc-300">
-                  {row.target_type ?? "—"} {row.target_id ? `(${row.target_id})` : ""}
-                </TableCell>
+                <TableCell className="text-white">{formatAction(row.action)}</TableCell>
+                <TableCell className="text-zinc-300">{row.actor_email ?? "Unknown"}</TableCell>
+                <TableCell className="text-zinc-300">{formatTargetType(row.target_type)}</TableCell>
                 <TableCell className="text-right text-zinc-300">
-                  {row.created_at ? formatTimestamp(row.created_at) : "—"}
+                  {row.created_at ? formatTimestamp(row.created_at) : "N/A"}
                 </TableCell>
               </TableRow>
             ))}
@@ -69,4 +83,3 @@ export default async function AdminAuditLogPage() {
     </div>
   );
 }
-

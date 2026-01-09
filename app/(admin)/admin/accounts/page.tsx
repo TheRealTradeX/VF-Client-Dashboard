@@ -35,7 +35,8 @@ export default async function AdminAccountsPage() {
     .limit(50);
 
   const rows = (data as AccountRow[] | null)?.map((row) => ({
-    id: row.account_number ?? row.id,
+    id: row.id,
+    displayId: row.account_number ?? "Pending",
     user: row.profiles?.full_name ?? "Unknown",
     email: row.profiles?.email ?? "-",
     program: row.program ?? "-",
@@ -97,7 +98,7 @@ export default async function AdminAccountsPage() {
           <TableBody>
             {rows.map((account) => (
               <TableRow key={account.id} className="border-zinc-900">
-                <TableCell className="text-white">{account.id}</TableCell>
+                <TableCell className="text-white">{account.displayId}</TableCell>
                 <TableCell>
                   <div className="text-white text-sm">{account.user}</div>
                   <div className="text-xs text-zinc-500">{account.email}</div>
@@ -131,7 +132,7 @@ export default async function AdminAccountsPage() {
             {!rows.length && (
               <TableRow className="border-zinc-900">
                 <TableCell className="text-zinc-400" colSpan={6}>
-                  {error ? "Unable to load accounts. Check your Supabase connection." : "No accounts found yet."}
+                  {error ? "Unable to load accounts. Check your data connection." : "No accounts found yet."}
                 </TableCell>
               </TableRow>
             )}

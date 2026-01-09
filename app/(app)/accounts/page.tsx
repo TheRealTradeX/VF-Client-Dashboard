@@ -2,6 +2,7 @@ import { AccountCard } from "@/components/accounts/AccountCard";
 import { Filter, Plus, Search } from "lucide-react";
 import { getDataMode } from "@/lib/data-mode";
 import { getAuthenticatedSupabaseUser, listTraderAccounts } from "@/lib/volumetrica/trader-data";
+import { TRADING_PLATFORM_LABEL } from "@/lib/platform-labels";
 
 export default async function AccountsPage() {
   const mode = getDataMode();
@@ -93,8 +94,8 @@ export default async function AccountsPage() {
         <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-6 text-zinc-300">
           <div className="text-white mb-2">No accounts found.</div>
           <div className="text-sm text-zinc-500">
-            Waiting for Volumetrica webhooks to populate projections. Your Supabase user id is{" "}
-            <span className="font-mono text-zinc-300">{user.id}</span>.
+            Waiting for {TRADING_PLATFORM_LABEL} updates to populate your accounts. If you recently created an account,
+            check back in a few minutes.
           </div>
         </div>
       )}

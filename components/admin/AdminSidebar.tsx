@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { EVENT_LEDGER_LABEL } from "@/lib/platform-labels";
 import {
   Activity,
   BadgeCheck,
@@ -23,7 +24,7 @@ const primaryNavigation = [
 ];
 
 const secondaryNavigation = [
-  { name: "Webhook Ledger", href: "/admin/webhooks", icon: Activity },
+  { name: EVENT_LEDGER_LABEL, href: "/admin/webhooks", icon: Activity },
   { name: "Reconciliation", href: "/admin/reconcile", icon: RefreshCw },
   { name: "Audit Log", href: "/admin/audit", icon: FileText },
   { name: "Settings", href: "/admin/settings", icon: Settings },
