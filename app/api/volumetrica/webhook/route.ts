@@ -75,19 +75,14 @@ export async function POST(request: Request) {
       targetId: eventId,
       metadata: { error: verification.error ?? "Unauthorized." },
     });
-    const isDev = process.env.NODE_ENV !== "production";
-    const expectedHeaderName =
-      authConfig.mode === "shared_secret_header"
-        ? authConfig.sharedSecretHeaderName ?? "x-webhook-secret"
-        : authConfig.signatureHeaderName ?? "x-webhook-signature";
+    const isProd = process.env.VERCEL_ENV === "production";
+    const expectedHeaderName = authConfig.sharedSecretHeaderName ?? "x-webhook-secret";
     const headerPresent = request.headers.get(expectedHeaderName) !== null;
-    if (isDev) {
+    if (!isProd) {
       const response = NextResponse.json(
         {
           ok: false,
-          eventId,
           error: "unauthorized",
-          reason: verification.error ?? "Unauthorized.",
           debug: {
             mode: authConfig.mode,
             expectedHeaderName,
