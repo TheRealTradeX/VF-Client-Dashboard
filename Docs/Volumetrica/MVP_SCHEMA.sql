@@ -163,3 +163,42 @@ begin
   end if;
 end
 $$;
+
+create table if not exists public.admin_users (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+alter table public.admin_users enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'admin_users'
+      and policyname = 'admin_users can read self'
+  ) then
+    create policy "admin_users can read self"
+      on public.admin_users
+      for select
+      to authenticated
+      using (user_id = auth.uid());
+  end if;
+end
+$$;
+
+drop policy if exists "Admins can read all profiles" on public.profiles;
+
+create policy "Admins can read all profiles"
+  on public.profiles
+  for select
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.admin_users admin_users
+      where admin_users.user_id = auth.uid()
+    )
+  );
