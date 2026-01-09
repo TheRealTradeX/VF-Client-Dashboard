@@ -27,7 +27,7 @@ const verificationStyles: Record<string, string> = {
 const defaultStatus = "bg-zinc-900 text-zinc-300 border border-zinc-800";
 
 export default async function AdminAccountsPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("accounts")
     .select("id, account_number, program, status, verification_status, profiles(full_name, email)")

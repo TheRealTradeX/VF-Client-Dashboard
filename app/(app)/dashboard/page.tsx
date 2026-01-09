@@ -1,33 +1,250 @@
-"use client";
-
 import { AccountsOverview } from "@/components/dashboard/AccountsOverview";
 import { LiveTrades } from "@/components/dashboard/LiveTrades";
 import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { StatsGrid } from "@/components/dashboard/StatsGrid";
+import type { StatsGridItem } from "@/components/dashboard/StatsGrid";
+import { formatCurrency } from "@/lib/mockData";
+import { getDataMode } from "@/lib/data-mode";
+import {
+  computeTradeNetPnl,
+  getAuthenticatedSupabaseUser,
+  getSnapshotNumber,
+  listRecentEventsByAccountIds,
+  listTradesByAccountIds,
+  listTraderAccounts,
+} from "@/lib/volumetrica/trader-data";
+import { Activity, DollarSign, Percent, Target } from "lucide-react";
 
-export default function DashboardPage() {
+const formatSignedCurrency = (value: number | null) => {
+  if (value === null || !Number.isFinite(value)) return "-";
+  if (value >= 0) return `+${formatCurrency(value)}`;
+  return formatCurrency(value);
+};
+
+const formatPct = (value: number | null) => {
+  if (value === null || !Number.isFinite(value)) return "-";
+  return `${value.toFixed(1)}%`;
+};
+
+const toDateKeyUtc = (iso: string) => {
+  const date = new Date(iso);
+  const key = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  return key.toISOString().slice(0, 10);
+};
+
+const formatTimeAgo = (iso: string) => {
+  const value = new Date(iso).getTime();
+  const diffMs = Date.now() - value;
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return `${diffSec}s ago`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 48) return `${diffHr}h ago`;
+  const diffDay = Math.floor(diffHr / 24);
+  return `${diffDay}d ago`;
+};
+
+export default async function DashboardPage() {
+  const mode = getDataMode();
+  if (mode === "mock") {
+    return (
+      <div className="p-6 space-y-6">
+        <div>
+          <h1 className="text-white text-2xl mb-1">Welcome back</h1>
+          <p className="text-zinc-400">Here&apos;s what&apos;s happening with your accounts today</p>
+        </div>
+
+        <StatsGrid />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <PerformanceChart />
+          </div>
+          <div>
+            <AccountsOverview />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <LiveTrades />
+          <RecentActivity />
+        </div>
+      </div>
+    );
+  }
+
+  const user = await getAuthenticatedSupabaseUser();
+  const userLabel = user?.email ? user.email.split("@")[0] : "Trader";
+
+  if (!user) {
+    return (
+      <div className="p-6">
+        <div className="text-white">Not signed in.</div>
+      </div>
+    );
+  }
+
+  const accounts = await listTraderAccounts(user);
+  const accountIds = accounts.map((account) => account.account_id);
+
+  const now = new Date();
+  const thirtyDaysAgo = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 30));
+  const startDateUtc = thirtyDaysAgo.toISOString();
+
+  const trades = await listTradesByAccountIds(accountIds, { startDateUtc, limit: 500 });
+  const recentEvents = await listRecentEventsByAccountIds(accountIds, { limit: 6 });
+
+  const totalBalance = accounts.reduce((sum, account) => sum + (getSnapshotNumber(account.snapshot, "balance") ?? 0), 0);
+  const todayNetPnl = accounts.reduce(
+    (sum, account) =>
+      sum +
+      (getSnapshotNumber(account.snapshot, "dailyNetPL") ??
+        getSnapshotNumber(account.snapshot, "dailyPL") ??
+        0),
+    0,
+  );
+
+  const netPnlTrades = trades.map(computeTradeNetPnl);
+  const wins = netPnlTrades.filter((pnl) => pnl > 0);
+  const losses = netPnlTrades.filter((pnl) => pnl < 0);
+  const grossProfit = wins.reduce((sum, pnl) => sum + pnl, 0);
+  const grossLoss = Math.abs(losses.reduce((sum, pnl) => sum + pnl, 0));
+  const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : null;
+  const winRate = netPnlTrades.length ? (wins.length / netPnlTrades.length) * 100 : null;
+
+  const changePercent =
+    totalBalance > 0 && Number.isFinite(todayNetPnl) ? `${((todayNetPnl / totalBalance) * 100).toFixed(2)}%` : "—";
+  const changePercentDisplay =
+    changePercent === "—" ? "—" : changePercent.startsWith("-") ? changePercent : `+${changePercent}`;
+
+  const stats: StatsGridItem[] = [
+    {
+      label: "Total Balance",
+      value: accounts.length ? formatCurrency(totalBalance) : "-",
+      change: `Across ${accounts.length} account${accounts.length === 1 ? "" : "s"}`,
+      changePercent: changePercentDisplay,
+      trend: todayNetPnl >= 0 ? "up" : "down",
+      icon: DollarSign,
+    },
+    {
+      label: "Today's P&L",
+      value: formatSignedCurrency(todayNetPnl),
+      change: "Net P&L (snapshot)",
+      changePercent: "—",
+      trend: todayNetPnl >= 0 ? "up" : "down",
+      icon: Activity,
+    },
+    {
+      label: "Win Rate",
+      value: formatPct(winRate),
+      change: `${wins.length} / ${netPnlTrades.length} trades (30D)`,
+      changePercent: "—",
+      trend: (winRate ?? 0) >= 50 ? "up" : "down",
+      icon: Target,
+    },
+    {
+      label: "Profit Factor",
+      value: profitFactor === null ? "-" : profitFactor.toFixed(2),
+      change: "Last 30 days",
+      changePercent: "—",
+      trend: (profitFactor ?? 0) >= 1 ? "up" : "down",
+      icon: Percent,
+    },
+  ];
+
+  const overviewAccounts = accounts.slice(0, 5).map((account) => {
+    const balance = getSnapshotNumber(account.snapshot, "balance");
+    const startBalance = getSnapshotNumber(account.snapshot, "startBalance");
+    const pnl = balance !== null && startBalance !== null ? balance - startBalance : null;
+    const status = account.enabled ? "active" : "in-progress";
+    const phase = account.rule_name ?? account.status ?? "Account";
+
+    return {
+      id: account.account_id,
+      type: account.rule_name ?? "Trading Account",
+      balance: balance === null ? "-" : formatCurrency(balance),
+      pnl: pnl === null ? "-" : formatSignedCurrency(pnl),
+      status,
+      phase,
+    };
+  });
+
+  const performanceMap = new Map<string, number>();
+  trades.forEach((trade) => {
+    const dt = trade.exit_date ?? trade.entry_date;
+    if (!dt) return;
+    const key = toDateKeyUtc(dt);
+    performanceMap.set(key, (performanceMap.get(key) ?? 0) + computeTradeNetPnl(trade));
+  });
+
+  const startBalanceSum = accounts.reduce(
+    (sum, account) => sum + (getSnapshotNumber(account.snapshot, "startBalance") ?? 0),
+    0,
+  );
+
+  const dailyKeys = Array.from(performanceMap.keys()).sort((a, b) => a.localeCompare(b));
+  let running = startBalanceSum;
+  const performanceData = dailyKeys.map((key) => {
+    running += performanceMap.get(key) ?? 0;
+    const [year, month, day] = key.split("-").map((s) => Number(s));
+    const label = `${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`;
+    return { date: label, balance: running, equity: running };
+  });
+
+  const recentTrades = trades.slice(0, 6).map((trade) => {
+    const dt = trade.exit_date ?? trade.entry_date ?? trade.updated_at;
+    const time = dt ? new Date(dt).toISOString().slice(11, 19) : "--:--:--";
+    return {
+      id: trade.trade_key,
+      time,
+      symbol: trade.symbol_name ?? trade.contract_id?.toString() ?? "—",
+      entry: trade.open_price ?? null,
+      current: trade.close_price ?? null,
+      size: trade.quantity ?? null,
+      pnl: computeTradeNetPnl(trade),
+      status: "closed" as const,
+    };
+  });
+
+  const activityItems = recentEvents.map((evt) => {
+    const category = evt.category ?? "Event";
+    const eventType = evt.event ?? "";
+    const title = `${category} ${eventType}`.trim();
+    const description = evt.account_id ? `Account ${evt.account_id}` : "Update received";
+    return {
+      id: evt.event_id,
+      type: category.toLowerCase(),
+      title,
+      description,
+      time: formatTimeAgo(evt.received_at),
+      icon: Activity,
+      color: "emerald" as const,
+    };
+  });
+
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-white text-2xl mb-1">Welcome back, Jefrey</h1>
+        <h1 className="text-white text-2xl mb-1">Welcome back, {userLabel}</h1>
         <p className="text-zinc-400">Here&apos;s what&apos;s happening with your accounts today</p>
       </div>
 
-      <StatsGrid />
+      <StatsGrid stats={stats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <PerformanceChart />
+          <PerformanceChart data={performanceData} rangeLabel="Last 30 days (realized net P&L)" />
         </div>
         <div>
-          <AccountsOverview />
+          <AccountsOverview accounts={overviewAccounts} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <LiveTrades />
-        <RecentActivity />
+        <LiveTrades trades={recentTrades} />
+        <RecentActivity activities={activityItems} />
       </div>
     </div>
   );

@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Activity,
   BadgeCheck,
   DollarSign,
+  FileText,
   LayoutDashboard,
+  RefreshCw,
   Settings,
   Users,
   Wallet,
@@ -20,6 +23,9 @@ const primaryNavigation = [
 ];
 
 const secondaryNavigation = [
+  { name: "Webhook Ledger", href: "/admin/webhooks", icon: Activity },
+  { name: "Reconciliation", href: "/admin/reconcile", icon: RefreshCw },
+  { name: "Audit Log", href: "/admin/audit", icon: FileText },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ];
 

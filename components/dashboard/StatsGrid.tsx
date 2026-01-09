@@ -1,6 +1,16 @@
-import { TrendingUp, TrendingDown, DollarSign, Activity, Target, Percent } from 'lucide-react';
+import type { LucideIcon } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Activity, Target, Percent } from "lucide-react";
 
-const stats = [
+export type StatsGridItem = {
+  label: string;
+  value: string;
+  change: string;
+  changePercent: string;
+  trend: "up" | "down";
+  icon: LucideIcon;
+};
+
+const fallbackStats: StatsGridItem[] = [
   {
     label: 'Total Balance',
     value: '$245,832.00',
@@ -35,10 +45,11 @@ const stats = [
   },
 ];
 
-export function StatsGrid() {
+export function StatsGrid({ stats }: { stats?: StatsGridItem[] }) {
+  const rows = stats ?? fallbackStats;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat) => (
+      {rows.map((stat) => (
         <div
           key={stat.label}
           className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 hover:border-emerald-500/30 transition-colors"

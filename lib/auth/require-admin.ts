@@ -9,7 +9,7 @@ export type AdminSession = {
 };
 
 export async function requireAdmin(): Promise<AdminSession | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const { url, anonKey } = getSupabaseConfig();
 
   const supabase = createServerClient(url, anonKey, {
@@ -35,5 +35,5 @@ export async function requireAdmin(): Promise<AdminSession | null> {
     return null;
   }
 
-  return { userId: user.id, email: user.email };
+  return { userId: user.id, email: user.email ?? null };
 }

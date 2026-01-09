@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
+  CreditCard,
   DollarSign,
   FileText,
   LayoutDashboard,
@@ -23,6 +24,7 @@ import { createClient } from "@/lib/supabase/client";
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "My Accounts", href: "/accounts", icon: Wallet },
+  { name: "Subscriptions", href: "/subscriptions", icon: CreditCard },
   { name: "Trading Journal", href: "/journal", icon: BookOpen },
   { name: "Challenges", href: "/challenges", icon: Trophy },
   { name: "Payouts", href: "/payouts", icon: DollarSign },

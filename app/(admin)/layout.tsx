@@ -1,8 +1,15 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
+import { requireAdmin } from "@/lib/auth/require-admin";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const admin = await requireAdmin();
+  if (!admin) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="h-screen flex bg-black overflow-hidden">
       <AdminSidebar />
