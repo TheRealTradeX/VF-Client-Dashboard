@@ -127,12 +127,18 @@ create table if not exists volumetrica_users (
 
 create table if not exists volumetrica_rules (
   rule_id text primary key,
+  reference_id text null,
   rule_name text null,
   description text null,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table volumetrica_rules add column if not exists reference_id text null;
+
+create unique index if not exists volumetrica_rules_reference_idx
+  on volumetrica_rules (reference_id);
 
 create table if not exists admin_audit_log (
   id uuid primary key default gen_random_uuid(),
@@ -242,3 +248,18 @@ create policy "Admins can read all profiles"
       where admin_users.user_id = auth.uid()
     )
   );
+insert into volumetrica_rules (reference_id, rule_id, rule_name)
+values
+  ('VF_STARTER_EVAL_25K', '9019e393-ae5f-417e-9870-4781f87c639d', 'VF_STARTER_EVAL_25K'),
+  ('VF_STARTER_EVAL_50K', '0d43fa3f-d77c-4e41-8e42-226d7c07fc57', 'VF_STARTER_EVAL_50K'),
+  ('VF_STARTER_EVAL_100K', '9ab350b4-7c8e-4d84-b3f9-d06fa243b64d', 'VF_STARTER_EVAL_100K'),
+  ('VF_FUNDED_FUND_25K', '9ef406c8-3266-489b-b44e-87739fa63d92', 'VF_FUNDED_FUND_25K'),
+  ('VF_FUNDED_FUND_50K', '647250cb-93e1-4b24-a313-444e46846cb2', 'VF_FUNDED_FUND_50K'),
+  ('VF_FUNDED_FUND_100K', 'e56a15e4-d807-4bda-90b1-a7cb91f7c3a8', 'VF_FUNDED_FUND_100K'),
+  ('VF_FUNDED_25K', '09201b2b-1cec-4850-ae5f-28f635cb4dfe', 'VF_FUNDED_25K'),
+  ('VF_FUNDED_50K', 'd5a54833-153a-4aac-82db-940d4ad36119', 'VF_FUNDED_50K'),
+  ('VF_FUNDED_100K', '9227ad6c-a792-4f1f-9ffe-0892fbb9f826', 'VF_FUNDED_100K')
+on conflict (rule_id) do update
+set reference_id = excluded.reference_id,
+    rule_name = excluded.rule_name,
+    updated_at = now();

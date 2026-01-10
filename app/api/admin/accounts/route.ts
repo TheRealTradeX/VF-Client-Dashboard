@@ -63,6 +63,17 @@ export async function POST(request: Request) {
     );
   }
 
+  const ruleInput = payload.accountRuleId?.trim() || null;
+  let resolvedRuleId = ruleInput;
+  if (ruleInput && !/^[0-9a-f-]{36}$/i.test(ruleInput)) {
+    const { data: ruleRow } = await supabase
+      .from("volumetrica_rules")
+      .select("rule_id")
+      .or(`reference_id.eq.${ruleInput},rule_name.eq.${ruleInput}`)
+      .maybeSingle();
+    resolvedRuleId = ruleRow?.rule_id ?? null;
+  }
+
   try {
     const result = (await volumetricaClient.createTradingAccount({
       userId: resolvedUserId,
@@ -71,7 +82,7 @@ export async function POST(request: Request) {
       currency: payload.currency,
       header: payload.header?.trim() || undefined,
       description: payload.description?.trim() || undefined,
-      accountRuleId: payload.accountRuleId?.trim() || undefined,
+      accountRuleId: resolvedRuleId || undefined,
       enabled: payload.enabled ?? true,
     })) as { accountId?: string | null };
 

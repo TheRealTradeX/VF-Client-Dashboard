@@ -2,10 +2,17 @@ import Link from "next/link";
 import { Filter, Search } from "lucide-react";
 import { AccountCreateForm, AccountRowActions } from "@/components/admin/AccountActions";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatCurrency } from "@/lib/mockData";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getSnapshotNumber } from "@/lib/volumetrica/trader-data";
-import { formatDateTime } from "@/lib/time";
+import {
+  getUserDetailsFromAccountRaw,
+  getUserDetailsFromUserRaw,
+  resolveAccountHeader,
+  resolveBalance,
+  resolveCreatedAt,
+  resolveMode,
+  resolvePermission,
+  resolveStatus,
+} from "@/lib/volumetrica/admin-format";
 
 type AccountRow = {
   account_id: string;
@@ -24,6 +31,7 @@ type AccountRow = {
 type RuleRow = {
   rule_id: string;
   rule_name: string | null;
+  reference_id: string | null;
   is_active: boolean;
 };
 
@@ -32,80 +40,6 @@ type UserRow = {
   external_id: string | null;
   raw: Record<string, unknown> | null;
 };
-
-const getUserDetailsFromRaw = (raw: Record<string, unknown> | null) => {
-  const user = raw?.user;
-  if (!user || typeof user !== "object") return null;
-  const record = user as Record<string, unknown>;
-  const fullName = typeof record.fullName === "string" ? record.fullName : null;
-  const username = typeof record.username === "string" ? record.username : null;
-  const email = typeof record.email === "string" ? record.email : null;
-  return { name: fullName ?? username ?? email ?? null, email };
-};
-
-const getUserDetailsFromUserRow = (user: UserRow | null) => {
-  const raw = user?.raw;
-  if (!raw || typeof raw !== "object") return null;
-  const fullName = typeof raw.fullName === "string" ? raw.fullName : null;
-  const username = typeof raw.username === "string" ? raw.username : null;
-  const email = typeof raw.email === "string" ? raw.email : null;
-  return { name: fullName ?? username ?? email ?? null, email };
-};
-
-const normalizeLabel = (value: string | null, map: Record<string, string>) => {
-  if (!value) return "-";
-  const trimmed = value.trim();
-  const normalized = trimmed.toLowerCase();
-  return map[trimmed] ?? map[normalized] ?? trimmed;
-};
-
-const resolveMode = (account: AccountRow) => {
-  const snapshot = account.snapshot ?? {};
-  const raw = account.raw ?? {};
-  const candidates = [
-    snapshot["mode"],
-    snapshot["accountMode"],
-    snapshot["phase"],
-    raw["mode"],
-    raw["accountMode"],
-    raw["phase"],
-  ];
-  const mode = candidates.find((value) => typeof value === "string" || typeof value === "number");
-  if (mode === undefined || mode === null) return "-";
-  return normalizeLabel(String(mode), MODE_LABELS);
-};
-
-const resolveBalance = (snapshot: Record<string, unknown> | null) => {
-  const balance =
-    getSnapshotNumber(snapshot, "balance") ??
-    getSnapshotNumber(snapshot, "equity") ??
-    getSnapshotNumber(snapshot, "startBalance");
-  return balance === null ? "-" : formatCurrency(balance);
-};
-
-const resolveCreatedAt = (account: AccountRow) => {
-  const raw = account.raw ?? {};
-  const snapshot = account.snapshot ?? {};
-  const candidate =
-    (typeof raw["creationUtc"] === "string" && raw["creationUtc"]) ||
-    (typeof raw["creationDate"] === "string" && raw["creationDate"]) ||
-    (typeof raw["startDate"] === "string" && raw["startDate"]) ||
-    (typeof snapshot["startDate"] === "string" && snapshot["startDate"]) ||
-    account.updated_at;
-  return formatDateTime(candidate ?? null);
-};
-
-const resolveAccountHeader = (account: AccountRow) => {
-  const raw = account.raw ?? {};
-  const header =
-    (typeof raw["header"] === "string" && raw["header"]) ||
-    (typeof raw["displayId"] === "string" && raw["displayId"]) ||
-    null;
-  return header ?? account.account_id;
-};
-
-const resolveStatus = (value: string | null) => normalizeLabel(value, STATUS_LABELS);
-const resolvePermission = (value: string | null) => normalizeLabel(value, PERMISSION_LABELS);
 
 const normalizeQuery = (value: string | string[] | undefined) =>
   typeof value === "string" ? value.trim() : "";
@@ -126,7 +60,7 @@ export default async function AdminAccountsPage({
 
   const { data: rulesData } = await supabase
     .from("volumetrica_rules")
-    .select("rule_id,rule_name,is_active")
+    .select("rule_id,rule_name,reference_id,is_active")
     .order("rule_name", { ascending: true });
 
   const { data: usersData } = await supabase
@@ -142,8 +76,15 @@ export default async function AdminAccountsPage({
   });
 
   const ruleMap = new Map<string, RuleRow>();
+  const ruleRefMap = new Map<string, RuleRow>();
   rules.forEach((rule) => {
     ruleMap.set(rule.rule_id, rule);
+    if (rule.reference_id) {
+      ruleRefMap.set(rule.reference_id, rule);
+    }
+    if (rule.rule_name) {
+      ruleRefMap.set(rule.rule_name, rule);
+    }
   });
 
   const query = normalizeQuery(searchParams?.q);
@@ -157,13 +98,18 @@ export default async function AdminAccountsPage({
   const page = Math.max(1, Number.parseInt(normalizeQuery(searchParams?.page) || "1", 10));
 
   const accountsView = rows.map((account) => {
-    const rawUser = getUserDetailsFromRaw(account.raw);
-    const mappedUser = account.user_id ? getUserDetailsFromUserRow(userMap.get(account.user_id) ?? null) : null;
+    const rawUser = getUserDetailsFromAccountRaw(account.raw);
+    const mappedUser = account.user_id ? getUserDetailsFromUserRaw(userMap.get(account.user_id)?.raw ?? null) : null;
     const displayName = rawUser?.name ?? mappedUser?.name ?? account.user_id ?? "Unassigned";
     const displayEmail = rawUser?.email ?? mappedUser?.email ?? "-";
+    const ruleRow =
+      (account.rule_id ? ruleMap.get(account.rule_id) : null) ??
+      (account.rule_name ? ruleRefMap.get(account.rule_name) : null) ??
+      null;
     const ruleLabel =
       account.rule_name ??
-      (account.rule_id ? ruleMap.get(account.rule_id)?.rule_name : null) ??
+      ruleRow?.rule_name ??
+      ruleRow?.reference_id ??
       account.rule_id ??
       "-";
     const modeLabel = resolveMode(account);
@@ -223,7 +169,9 @@ export default async function AdminAccountsPage({
   const statusOptions = uniqueValues(accountsView.map((row) => row.statusLabel));
   const permissionOptions = uniqueValues(accountsView.map((row) => row.permissionLabel));
   const ruleOptions = uniqueValues(
-    rules.map((rule) => rule.rule_name ?? rule.rule_id).concat(accountsView.map((row) => row.ruleLabel)),
+    rules
+      .map((rule) => rule.rule_name ?? rule.reference_id ?? rule.rule_id)
+      .concat(accountsView.map((row) => row.ruleLabel)),
   );
 
   const total = filtered.length;
@@ -465,48 +413,3 @@ export default async function AdminAccountsPage({
     </div>
   );
 }
-const STATUS_LABELS: Record<string, string> = {
-  "0": "Initialized",
-  "1": "Enabled",
-  "2": "Challenge Success",
-  "4": "Challenge Failed",
-  "8": "Disabled",
-  initialized: "Initialized",
-  enabled: "Enabled",
-  challengesuccess: "Challenge Success",
-  "challenge success": "Challenge Success",
-  challengefailed: "Challenge Failed",
-  "challenge failed": "Challenge Failed",
-  disabled: "Disabled",
-};
-
-const PERMISSION_LABELS: Record<string, string> = {
-  "0": "Trading",
-  "1": "Read Only",
-  "2": "Risk Pause",
-  "3": "Liquidate Only",
-  trading: "Trading",
-  readonly: "Read Only",
-  "read only": "Read Only",
-  riskpause: "Risk Pause",
-  "risk pause": "Risk Pause",
-  liquidateonly: "Liquidate Only",
-  "liquidate only": "Liquidate Only",
-};
-
-const MODE_LABELS: Record<string, string> = {
-  "0": "Evaluation",
-  "1": "Sim Funded",
-  "2": "Funded",
-  "3": "Live",
-  "4": "Trial",
-  "5": "Contest",
-  "100": "Training",
-  evaluation: "Evaluation",
-  simfunded: "Sim Funded",
-  funded: "Funded",
-  live: "Live",
-  trial: "Trial",
-  contest: "Contest",
-  training: "Training",
-};

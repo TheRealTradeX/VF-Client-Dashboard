@@ -13,6 +13,10 @@ type UserProvisionPayload = {
   username?: string | null;
   password?: string;
   role?: string;
+  userType?: number | null;
+  systemAccess?: number | null;
+  mobilePhone?: string | null;
+  language?: string | null;
 };
 
 const normalizeRole = (role?: string) => (role === "admin" ? "admin" : "trader");
@@ -37,6 +41,16 @@ export async function POST(request: Request) {
   const username = payload.username?.trim() || null;
   const password = payload.password?.trim();
   const role = normalizeRole(payload.role);
+  const userType =
+    payload.userType === null || payload.userType === undefined
+      ? null
+      : Number.parseInt(String(payload.userType), 10);
+  const systemAccess =
+    payload.systemAccess === null || payload.systemAccess === undefined
+      ? null
+      : Number.parseInt(String(payload.systemAccess), 10);
+  const mobilePhone = payload.mobilePhone?.trim() || null;
+  const language = payload.language?.trim() || null;
 
   if (!email || !firstName || !lastName || !country) {
     return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
@@ -124,9 +138,13 @@ export async function POST(request: Request) {
       lastName,
       country,
       username: username || undefined,
+      mobilePhone: mobilePhone || undefined,
+      language: language || undefined,
       extEntityId: userId,
       passwordToSet: password || undefined,
       forceNewPassword: false,
+      userType: Number.isNaN(userType ?? NaN) ? undefined : userType ?? undefined,
+      systemAccess: Number.isNaN(systemAccess ?? NaN) ? undefined : systemAccess ?? undefined,
     })) as { userId?: string | null };
     volumetricaUserId = result?.userId ?? null;
   } catch (error) {
@@ -150,9 +168,16 @@ export async function POST(request: Request) {
         volumetrica_user_id: volumetricaUserId,
         external_id: userId,
         raw: {
+          firstName,
+          lastName,
           fullName,
           email,
+          country,
           username,
+          mobilePhone,
+          language,
+          userType,
+          systemAccess,
         },
         updated_at: new Date().toISOString(),
       },

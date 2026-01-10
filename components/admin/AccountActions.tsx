@@ -11,6 +11,11 @@ const statusOptions = [
   { label: "Disabled", value: 8 },
 ];
 
+const parseNumber = (value: string) => {
+  const parsed = Number.parseFloat(value);
+  return Number.isNaN(parsed) ? null : parsed;
+};
+
 type AccountRowActionsProps = {
   accountId: string;
 };
@@ -114,15 +119,19 @@ export function AccountRowActions({ accountId }: AccountRowActionsProps) {
 type RuleOption = {
   rule_id: string;
   rule_name: string | null;
+  reference_id: string | null;
 };
 
 type AccountCreateFormProps = {
   rules: RuleOption[];
+  defaultUserId?: string;
+  lockUserId?: boolean;
 };
 
-export function AccountCreateForm({ rules }: AccountCreateFormProps) {
+export function AccountCreateForm({ rules, defaultUserId, lockUserId }: AccountCreateFormProps) {
   const router = useRouter();
-  const [userId, setUserId] = useState("");
+  const initialUserId = defaultUserId ?? "";
+  const [userId, setUserId] = useState(initialUserId);
   const [balance, setBalance] = useState("");
   const [maxBalance, setMaxBalance] = useState("");
   const [header, setHeader] = useState("");
@@ -130,11 +139,6 @@ export function AccountCreateForm({ rules }: AccountCreateFormProps) {
   const [ruleId, setRuleId] = useState("");
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  const parseNumber = (value: string) => {
-    const parsed = Number.parseFloat(value);
-    return Number.isNaN(parsed) ? null : parsed;
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -161,7 +165,7 @@ export function AccountCreateForm({ rules }: AccountCreateFormProps) {
         throw new Error(message ?? "Request failed.");
       }
 
-      setUserId("");
+      setUserId(initialUserId);
       setBalance("");
       setMaxBalance("");
       setHeader("");
@@ -187,8 +191,11 @@ export function AccountCreateForm({ rules }: AccountCreateFormProps) {
           <label className="text-sm text-zinc-400">User reference (platform id, Supabase id, or email)</label>
           <input
             value={userId}
-            onChange={(event) => setUserId(event.target.value)}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            onChange={(event) => (lockUserId ? null : setUserId(event.target.value))}
+            readOnly={lockUserId}
+            className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white ${
+              lockUserId ? "opacity-70" : ""
+            }`}
             placeholder="User id or email"
           />
         </div>
@@ -230,7 +237,7 @@ export function AccountCreateForm({ rules }: AccountCreateFormProps) {
               <option value="">Select rule</option>
               {rules.map((rule) => (
                 <option key={rule.rule_id} value={rule.rule_id}>
-                  {rule.rule_name ?? rule.rule_id}
+                  {rule.rule_name ?? rule.reference_id ?? rule.rule_id}
                 </option>
               ))}
             </select>
@@ -269,6 +276,192 @@ export function AccountCreateForm({ rules }: AccountCreateFormProps) {
         >
           {loading ? "Creating..." : "Create Account"}
         </button>
+      </div>
+    </form>
+  );
+}
+
+type AccountBulkCreateFormProps = {
+  rules: RuleOption[];
+  defaultUserId?: string;
+  lockUserId?: boolean;
+};
+
+export function AccountBulkCreateForm({
+  rules,
+  defaultUserId,
+  lockUserId,
+}: AccountBulkCreateFormProps) {
+  const router = useRouter();
+  const initialUserId = defaultUserId ?? "";
+  const [userId, setUserId] = useState(initialUserId);
+  const [entries, setEntries] = useState("");
+  const [balance, setBalance] = useState("");
+  const [maxBalance, setMaxBalance] = useState("");
+  const [ruleId, setRuleId] = useState("");
+  const [enabled, setEnabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setNotice(null);
+
+    const userRef = userId.trim();
+    if (!userRef) {
+      setNotice("User reference is required.");
+      setLoading(false);
+      return;
+    }
+
+    const headers = entries
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (!headers.length) {
+      setNotice("Enter at least one account header.");
+      setLoading(false);
+      return;
+    }
+
+    const payloadBase = {
+      userId: userRef,
+      balance: balance ? parseNumber(balance) : undefined,
+      maximumBalance: maxBalance ? parseNumber(maxBalance) : undefined,
+      accountRuleId: ruleId.trim() || undefined,
+      enabled,
+    };
+
+    let successCount = 0;
+    const failures: string[] = [];
+
+    for (const header of headers) {
+      try {
+        const res = await fetch("/api/admin/accounts", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ...payloadBase, header }),
+        });
+
+        const body = (await res.json()) as { error?: string; details?: string };
+        if (!res.ok) {
+          const message = body.details ? `${body.error ?? "Request failed."}\n${body.details}` : body.error;
+          throw new Error(message ?? "Request failed.");
+        }
+
+        successCount += 1;
+      } catch (error) {
+        failures.push(`${header}: ${(error as Error).message}`);
+      }
+    }
+
+    setNotice(
+      failures.length
+        ? `Created ${successCount} of ${headers.length}. ${failures[0]}`
+        : `Created ${successCount} account${successCount === 1 ? "" : "s"}.`,
+    );
+
+    if (!failures.length) {
+      setEntries("");
+    }
+
+    setUserId(initialUserId);
+    router.refresh();
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-4">
+      <div>
+        <h2 className="text-white text-lg mb-1">Bulk Account Create</h2>
+        <p className="text-sm text-zinc-500">
+          Create multiple accounts at once. Enter one account header per line.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm text-zinc-400">User reference (platform id, Supabase id, or email)</label>
+          <input
+            value={userId}
+            onChange={(event) => (lockUserId ? null : setUserId(event.target.value))}
+            readOnly={lockUserId}
+            className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white ${
+              lockUserId ? "opacity-70" : ""
+            }`}
+            placeholder="User id or email"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-zinc-400">Starting balance</label>
+          <input
+            value={balance}
+            onChange={(event) => setBalance(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            placeholder="Balance"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-zinc-400">Maximum balance (optional)</label>
+          <input
+            value={maxBalance}
+            onChange={(event) => setMaxBalance(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            placeholder="Max balance"
+          />
+        </div>
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm text-zinc-400">Account rule (optional)</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <select
+              value={ruleId}
+              onChange={(event) => setRuleId(event.target.value)}
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            >
+              <option value="">Select rule</option>
+              {rules.map((rule) => (
+                <option key={rule.rule_id} value={rule.rule_id}>
+                  {rule.rule_name ?? rule.reference_id ?? rule.rule_id}
+                </option>
+              ))}
+            </select>
+            <input
+              value={ruleId}
+              onChange={(event) => setRuleId(event.target.value)}
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+              placeholder="Rule id (manual)"
+            />
+          </div>
+        </div>
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm text-zinc-400">Account headers</label>
+          <textarea
+            value={entries}
+            onChange={(event) => setEntries(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white min-h-[120px]"
+            placeholder="Velocity Starter - 50K&#10;Velocity Starter - 100K"
+          />
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-sm text-zinc-300">
+          <input
+            type="checkbox"
+            checked={enabled}
+            onChange={(event) => setEnabled(event.target.checked)}
+            className="h-4 w-4 rounded border-zinc-700 bg-zinc-900"
+          />
+          Enabled
+        </label>
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-4 py-2 rounded-lg bg-blue-500 text-black hover:bg-blue-600 disabled:opacity-60"
+        >
+          {loading ? "Creating..." : "Create Accounts"}
+        </button>
+        {notice ? <span className="text-xs text-zinc-400">{notice}</span> : null}
       </div>
     </form>
   );

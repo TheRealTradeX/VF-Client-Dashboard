@@ -13,6 +13,10 @@ export function UserProvisionForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("trader");
+  const [mobilePhone, setMobilePhone] = useState("");
+  const [language, setLanguage] = useState("");
+  const [userType, setUserType] = useState("");
+  const [systemAccess, setSystemAccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -34,6 +38,10 @@ export function UserProvisionForm() {
           username: username.trim() || undefined,
           password: password.trim() || undefined,
           role,
+          mobilePhone: mobilePhone.trim() || null,
+          language: language.trim() || null,
+          userType: userType === "" ? null : Number.parseInt(userType, 10),
+          systemAccess: systemAccess === "" ? null : Number.parseInt(systemAccess, 10),
         }),
       });
 
@@ -51,6 +59,10 @@ export function UserProvisionForm() {
       setUsername("");
       setPassword("");
       setRole("trader");
+      setMobilePhone("");
+      setLanguage("");
+      setUserType("");
+      setSystemAccess("");
       router.refresh();
     } catch (error) {
       setNotice((error as Error).message);
@@ -143,6 +155,49 @@ export function UserProvisionForm() {
             className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
             placeholder="Set initial password"
           />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-zinc-400">Mobile phone</label>
+          <input
+            value={mobilePhone}
+            onChange={(event) => setMobilePhone(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            placeholder="Phone"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-zinc-400">Language</label>
+          <input
+            value={language}
+            onChange={(event) => setLanguage(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            placeholder="en"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-zinc-400">User type</label>
+          <select
+            value={userType}
+            onChange={(event) => setUserType(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+          >
+            <option value="">Select</option>
+            <option value="0">User (0)</option>
+            <option value="1">System (1)</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-zinc-400">System access</label>
+          <select
+            value={systemAccess}
+            onChange={(event) => setSystemAccess(event.target.value)}
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+          >
+            <option value="">Select</option>
+            <option value="0">Read Only (0)</option>
+            <option value="1">Liquidation (1)</option>
+            <option value="2">Full Trading (2)</option>
+          </select>
         </div>
       </div>
       <div className="flex items-center gap-3">

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { UserProvisionForm } from "@/components/admin/UserProvisionForm";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -57,7 +58,8 @@ export default async function AdminUsersPage() {
               <TableHead className="text-zinc-400">User</TableHead>
               <TableHead className="text-zinc-400">Role</TableHead>
               <TableHead className="text-zinc-400">Trading Platform</TableHead>
-              <TableHead className="text-zinc-400 text-right">Updated</TableHead>
+              <TableHead className="text-zinc-400">Updated</TableHead>
+              <TableHead className="text-zinc-400 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,15 +79,21 @@ export default async function AdminUsersPage() {
                     </div>
                     <div className="text-xs text-zinc-500">{linked?.status ?? "-"}</div>
                   </TableCell>
-                  <TableCell className="text-right text-zinc-300">
-                    {formatDateTime(linked?.updated_at ?? null)}
+                  <TableCell className="text-zinc-300">{formatDateTime(linked?.updated_at ?? null)}</TableCell>
+                  <TableCell className="text-right">
+                    <Link
+                      href={`/admin/users/${user.id}`}
+                      className="px-3 py-1.5 text-xs text-white border border-zinc-700 rounded-lg hover:border-blue-500/50"
+                    >
+                      Manage
+                    </Link>
                   </TableCell>
                 </TableRow>
               );
             })}
             {!rows.length && (
               <TableRow className="border-zinc-900">
-                <TableCell className="text-zinc-400" colSpan={4}>
+                <TableCell className="text-zinc-400" colSpan={5}>
                   {profilesError ? "Unable to load users." : "No users available yet."}
                 </TableCell>
               </TableRow>
