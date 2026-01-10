@@ -1,6 +1,7 @@
 import { UserProvisionForm } from "@/components/admin/UserProvisionForm";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { formatDateTime } from "@/lib/time";
 
 type ProfileRow = {
   id: string;
@@ -17,7 +18,6 @@ type VolumetricaUserRow = {
   updated_at: string;
 };
 
-const formatTimestamp = (value: string | null) => (value ? value.replace("T", " ").slice(0, 19) : "-");
 
 export default async function AdminUsersPage() {
   const supabase = createSupabaseAdminClient();
@@ -78,7 +78,7 @@ export default async function AdminUsersPage() {
                     <div className="text-xs text-zinc-500">{linked?.status ?? "-"}</div>
                   </TableCell>
                   <TableCell className="text-right text-zinc-300">
-                    {formatTimestamp(linked?.updated_at ?? null)}
+                    {formatDateTime(linked?.updated_at ?? null)}
                   </TableCell>
                 </TableRow>
               );

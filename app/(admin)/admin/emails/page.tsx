@@ -1,6 +1,7 @@
 import { EmailTemplateCard, EmailTemplateCreateForm } from "@/components/admin/EmailTemplateManager";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { formatDateTime } from "@/lib/time";
 
 type EmailTemplateRow = {
   id: string;
@@ -24,7 +25,6 @@ type OutboxRow = {
   sent_at: string | null;
 };
 
-const formatTimestamp = (value: string | null) => (value ? value.replace("T", " ").slice(0, 19) : "-");
 
 export default async function AdminEmailsPage() {
   const supabase = createSupabaseAdminClient();
@@ -92,8 +92,8 @@ export default async function AdminEmailsPage() {
                   <TableCell className="text-zinc-300">{row.to_email}</TableCell>
                   <TableCell className="text-zinc-300">{row.status}</TableCell>
                   <TableCell className="text-zinc-300">{row.provider}</TableCell>
-                  <TableCell className="text-zinc-300">{formatTimestamp(row.created_at)}</TableCell>
-                  <TableCell className="text-right text-zinc-300">{formatTimestamp(row.sent_at)}</TableCell>
+                  <TableCell className="text-zinc-300">{formatDateTime(row.created_at)}</TableCell>
+                  <TableCell className="text-right text-zinc-300">{formatDateTime(row.sent_at)}</TableCell>
                 </TableRow>
               );
             })}

@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { formatDateTime } from "@/lib/time";
 
 type AuditRow = {
   id: string;
@@ -9,7 +10,6 @@ type AuditRow = {
   created_at: string;
 };
 
-const formatTimestamp = (value: string) => value.replace("T", " ").slice(0, 19);
 const actionLabels: Record<string, string> = {
   "volumetrica.reconcile": "Reconciliation completed",
   "volumetrica.reconcile.failed": "Reconciliation failed",
@@ -66,7 +66,7 @@ export default async function AdminAuditLogPage() {
                 <TableCell className="text-zinc-300">{row.actor_email ?? "Unknown"}</TableCell>
                 <TableCell className="text-zinc-300">{formatTargetType(row.target_type)}</TableCell>
                 <TableCell className="text-right text-zinc-300">
-                  {row.created_at ? formatTimestamp(row.created_at) : "N/A"}
+                  {row.created_at ? formatDateTime(row.created_at) : "N/A"}
                 </TableCell>
               </TableRow>
             ))}

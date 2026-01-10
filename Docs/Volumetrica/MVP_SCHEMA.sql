@@ -125,6 +125,15 @@ create table if not exists volumetrica_users (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists volumetrica_rules (
+  rule_id text primary key,
+  rule_name text null,
+  description text null,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists admin_audit_log (
   id uuid primary key default gen_random_uuid(),
   action text not null,
@@ -170,6 +179,7 @@ alter table volumetrica_subscriptions enable row level security;
 alter table volumetrica_positions enable row level security;
 alter table volumetrica_trades enable row level security;
 alter table volumetrica_users enable row level security;
+alter table volumetrica_rules enable row level security;
 alter table admin_audit_log enable row level security;
 alter table email_templates enable row level security;
 alter table email_outbox enable row level security;

@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EVENT_LEDGER_LABEL, EXECUTION_VENUE_LABEL } from "@/lib/platform-labels";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { formatDateTime } from "@/lib/time";
 
 type WebhookEventRow = {
   event_id: string;
@@ -13,7 +14,6 @@ type WebhookEventRow = {
   headers: Record<string, unknown> | null;
 };
 
-const formatTimestamp = (value: string) => value.replace("T", " ").slice(0, 19);
 
 const redactSensitive = (value: unknown): unknown => {
   if (Array.isArray(value)) {
@@ -110,7 +110,7 @@ export default async function AdminWebhookLedgerPage({
                 <TableCell className="text-zinc-300">{row.account_id ?? "-"}</TableCell>
                 <TableCell className="text-zinc-300">{row.user_id ?? "-"}</TableCell>
                 <TableCell className="text-right text-zinc-300">
-                  {row.received_at ? formatTimestamp(row.received_at) : "-"}
+                  {row.received_at ? formatDateTime(row.received_at) : "-"}
                 </TableCell>
               </TableRow>
             ))}
@@ -132,7 +132,7 @@ export default async function AdminWebhookLedgerPage({
             {rows.slice(0, 6).map((row) => (
               <details key={`${row.event_id}-payload`} className="rounded-lg border border-zinc-900 bg-zinc-950 p-4">
                 <summary className="cursor-pointer text-sm text-white">
-                  {row.event ?? "Event"} · {row.account_id ?? "-"} · {formatTimestamp(row.received_at)}
+                  {row.event ?? "Event"} · {row.account_id ?? "-"} · {formatDateTime(row.received_at)}
                 </summary>
                 <pre className="mt-3 text-xs text-zinc-400 whitespace-pre-wrap break-all max-h-72 overflow-auto">
                   {toPrettyJson(row.payload ?? {})}

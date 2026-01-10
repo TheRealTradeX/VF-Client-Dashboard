@@ -111,7 +111,16 @@ export function AccountRowActions({ accountId }: AccountRowActionsProps) {
   );
 }
 
-export function AccountCreateForm() {
+type RuleOption = {
+  rule_id: string;
+  rule_name: string | null;
+};
+
+type AccountCreateFormProps = {
+  rules: RuleOption[];
+};
+
+export function AccountCreateForm({ rules }: AccountCreateFormProps) {
   const router = useRouter();
   const [userId, setUserId] = useState("");
   const [balance, setBalance] = useState("");
@@ -146,9 +155,10 @@ export function AccountCreateForm() {
         }),
       });
 
+      const body = (await res.json()) as { error?: string; details?: string };
       if (!res.ok) {
-        const body = (await res.json()) as { error?: string };
-        throw new Error(body.error ?? "Request failed.");
+        const message = body.details ? `${body.error ?? "Request failed."}\n${body.details}` : body.error;
+        throw new Error(message ?? "Request failed.");
       }
 
       setUserId("");
@@ -174,12 +184,12 @@ export function AccountCreateForm() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm text-zinc-400">User reference</label>
+          <label className="text-sm text-zinc-400">User reference (platform id, Supabase id, or email)</label>
           <input
             value={userId}
             onChange={(event) => setUserId(event.target.value)}
             className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
-            placeholder="Volumetrica user id"
+            placeholder="User id or email"
           />
         </div>
         <div className="space-y-2">
@@ -210,13 +220,27 @@ export function AccountCreateForm() {
           />
         </div>
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm text-zinc-400">Rule id (optional)</label>
-          <input
-            value={ruleId}
-            onChange={(event) => setRuleId(event.target.value)}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
-            placeholder="Rule id"
-          />
+          <label className="text-sm text-zinc-400">Account rule (optional)</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <select
+              value={ruleId}
+              onChange={(event) => setRuleId(event.target.value)}
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+            >
+              <option value="">Select rule</option>
+              {rules.map((rule) => (
+                <option key={rule.rule_id} value={rule.rule_id}>
+                  {rule.rule_name ?? rule.rule_id}
+                </option>
+              ))}
+            </select>
+            <input
+              value={ruleId}
+              onChange={(event) => setRuleId(event.target.value)}
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white"
+              placeholder="Rule id (manual)"
+            />
+          </div>
         </div>
         <div className="space-y-2 md:col-span-2">
           <label className="text-sm text-zinc-400">Description (optional)</label>

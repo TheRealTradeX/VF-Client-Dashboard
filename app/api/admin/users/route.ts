@@ -144,6 +144,22 @@ export async function POST(request: Request) {
     );
   }
 
+  if (volumetricaUserId) {
+    await supabase.from("volumetrica_users").upsert(
+      {
+        volumetrica_user_id: volumetricaUserId,
+        external_id: userId,
+        raw: {
+          fullName,
+          email,
+          username,
+        },
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "volumetrica_user_id" },
+    );
+  }
+
   await logAdminAction({
     action: "volumetrica.user.upsert",
     actorUserId: admin.userId,

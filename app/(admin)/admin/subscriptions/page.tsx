@@ -2,6 +2,7 @@ import { SubscriptionForm, SubscriptionRowActions } from "@/components/admin/Sub
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EXECUTION_VENUE_LABEL } from "@/lib/platform-labels";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { formatDateTime } from "@/lib/time";
 
 type SubscriptionRow = {
   subscription_id: string;
@@ -15,7 +16,6 @@ type SubscriptionRow = {
   updated_at: string;
 };
 
-const formatTimestamp = (value: string | null) => (value ? value.replace("T", " ").slice(0, 19) : "-");
 
 export default async function AdminSubscriptionsPage() {
   const supabase = createSupabaseAdminClient();
@@ -58,8 +58,8 @@ export default async function AdminSubscriptionsPage() {
                 <TableCell className="text-zinc-300">{row.user_id ?? "-"}</TableCell>
                 <TableCell className="text-zinc-300">{row.status ?? "-"}</TableCell>
                 <TableCell className="text-zinc-300">{row.provider_status ?? "-"}</TableCell>
-                <TableCell className="text-zinc-300">{formatTimestamp(row.activation)}</TableCell>
-                <TableCell className="text-zinc-300">{formatTimestamp(row.expiration)}</TableCell>
+                <TableCell className="text-zinc-300">{formatDateTime(row.activation)}</TableCell>
+                <TableCell className="text-zinc-300">{formatDateTime(row.expiration)}</TableCell>
                 <TableCell className="text-right">
                   <SubscriptionRowActions subscriptionId={row.subscription_id} />
                 </TableCell>

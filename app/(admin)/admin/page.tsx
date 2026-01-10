@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Clock, RefreshCw } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { formatDateTime } from "@/lib/time";
 
 type AccountRow = {
   account_id: string;
@@ -11,7 +12,6 @@ type AccountRow = {
   updated_at: string;
 };
 
-const formatTimestamp = (value: string | null) => (value ? value.replace("T", " ").slice(0, 19) : "-");
 
 export default async function AdminOverviewPage() {
   const supabase = createSupabaseAdminClient();
@@ -98,7 +98,7 @@ export default async function AdminOverviewPage() {
                   <TableCell className="text-zinc-300">{row.user_id ?? "-"}</TableCell>
                   <TableCell className="text-zinc-300">{row.status ?? "-"}</TableCell>
                   <TableCell className="text-right text-zinc-300">
-                    {formatTimestamp(row.updated_at)}
+                    {formatDateTime(row.updated_at)}
                   </TableCell>
                 </TableRow>
               ))}
