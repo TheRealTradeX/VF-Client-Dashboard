@@ -41,7 +41,7 @@ The target UI/UX and module scope are defined by the reference screens in `Docs/
 
 - Trader pages: `/dashboard`, `/accounts`, `/accounts/[id]`, `/journal`, `/challenges`, `/payouts`, `/leaderboard`, `/resources`, `/community`, `/settings`.
 - Admin pages: `/admin` (overview), `/admin/accounts`, `/admin/users`, `/admin/verifications`, `/admin/payouts`, `/admin/settings` (mostly mocked/static).
-- Data is currently mocked (see `lib/mockData.ts` and `data/mockData.ts`).
+- Data is currently mocked (see `lib/mockData.ts`).
 
 ### Key Gaps vs Reference UI
 

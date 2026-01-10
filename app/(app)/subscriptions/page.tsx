@@ -66,10 +66,10 @@ export default async function SubscriptionsPage() {
               {subscriptions.map((sub, index) => (
                 <TableRow key={sub.subscription_id} className="border-zinc-900">
                   <TableCell className="text-white">{`Subscription ${index + 1}`}</TableCell>
-                  <TableCell className="text-zinc-300">{sub.status ?? "—"}</TableCell>
-                  <TableCell className="text-zinc-300">{sub.activation?.slice(0, 16).replace("T", " ") ?? "—"}</TableCell>
+                  <TableCell className="text-zinc-300">{sub.status ?? "-"}</TableCell>
+                  <TableCell className="text-zinc-300">{sub.activation?.slice(0, 16).replace("T", " ") ?? "-"}</TableCell>
                   <TableCell className="text-zinc-300">
-                    {sub.expiration?.slice(0, 16).replace("T", " ") ?? "—"}
+                    {sub.expiration?.slice(0, 16).replace("T", " ") ?? "-"}
                   </TableCell>
                   <TableCell className="text-zinc-300">
                     {sub.volumetrica_download_link ? (
@@ -81,7 +81,7 @@ export default async function SubscriptionsPage() {
                         Download
                       </Link>
                     ) : (
-                      "—"
+                      "-"
                     )}
                   </TableCell>
                 </TableRow>

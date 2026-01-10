@@ -40,10 +40,10 @@ export default async function AdminWebhookLedgerPage() {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.event_id} className="border-zinc-900">
-                <TableCell className="text-zinc-300">{row.category ?? "—"}</TableCell>
-                <TableCell className="text-zinc-300">{row.event ?? "—"}</TableCell>
+                <TableCell className="text-zinc-300">{row.category ?? "-"}</TableCell>
+                <TableCell className="text-zinc-300">{row.event ?? "-"}</TableCell>
                 <TableCell className="text-right text-zinc-300">
-                  {row.received_at ? formatTimestamp(row.received_at) : "—"}
+                  {row.received_at ? formatTimestamp(row.received_at) : "-"}
                 </TableCell>
               </TableRow>
             ))}

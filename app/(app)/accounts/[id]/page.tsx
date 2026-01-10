@@ -100,13 +100,14 @@ export default async function AccountDetailsPage({ params }: AccountDetailsPageP
           <div className="text-zinc-400 text-sm">Account</div>
           <h1 className="text-white text-2xl">{account.account_id}</h1>
           <div className="text-sm text-zinc-500">
-            {account.rule_name ? `Rule: ${account.rule_name}` : account.rule_id ? `Rule ID: ${account.rule_id}` : "—"}
+            {account.rule_name ? `Rule: ${account.rule_name}` : account.rule_id ? `Rule ID: ${account.rule_id}` : "-"}
           </div>
         </div>
         <div className="text-right">
           <div className="text-zinc-400 text-sm">Status</div>
-          <div className="text-white">{account.status ?? "—"}</div>
+          <div className="text-white">{account.status ?? "-"}</div>
           <div className="text-zinc-500 text-sm">{account.enabled ? "Enabled" : "Disabled"}</div>
+          <div className="text-zinc-500 text-sm">Permission: {account.trading_permission ?? "-"}</div>
         </div>
       </div>
 
@@ -160,8 +161,8 @@ export default async function AccountDetailsPage({ params }: AccountDetailsPageP
               <TableBody>
                 {positions.slice(0, 25).map((pos) => (
                   <TableRow key={pos.position_key} className="border-zinc-900">
-                    <TableCell className="text-white">{pos.symbol_name ?? pos.contract_id ?? "—"}</TableCell>
-                    <TableCell className="text-zinc-300 text-right">{pos.quantity ?? "—"}</TableCell>
+                    <TableCell className="text-white">{pos.symbol_name ?? pos.contract_id ?? "-"}</TableCell>
+                    <TableCell className="text-zinc-300 text-right">{pos.quantity ?? "-"}</TableCell>
                     <TableCell className="text-right">
                       <span className={(pos.daily_pl ?? 0) >= 0 ? "text-emerald-500" : "text-red-500"}>
                         {pos.daily_pl === null ? "-" : formatSignedCurrency(pos.daily_pl)}
@@ -204,8 +205,8 @@ export default async function AccountDetailsPage({ params }: AccountDetailsPageP
                       <TableCell className="text-zinc-300">
                         {(trade.exit_date ?? trade.entry_date ?? trade.updated_at).slice(0, 16).replace("T", " ")}
                       </TableCell>
-                      <TableCell className="text-white">{trade.symbol_name ?? trade.contract_id ?? "—"}</TableCell>
-                      <TableCell className="text-zinc-300 text-right">{trade.quantity ?? "—"}</TableCell>
+                      <TableCell className="text-white">{trade.symbol_name ?? trade.contract_id ?? "-"}</TableCell>
+                      <TableCell className="text-zinc-300 text-right">{trade.quantity ?? "-"}</TableCell>
                       <TableCell className="text-right">
                         <span className={net >= 0 ? "text-emerald-500" : "text-red-500"}>
                           {formatSignedCurrency(net)}

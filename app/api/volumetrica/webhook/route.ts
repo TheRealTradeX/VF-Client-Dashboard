@@ -76,7 +76,8 @@ export async function POST(request: Request) {
       metadata: { error: verification.error ?? "Unauthorized." },
     });
     const isProd = process.env.VERCEL_ENV === "production";
-    const expectedHeaderName = authConfig.sharedSecretHeaderName ?? "x-webhook-secret";
+    const expectedHeaderName =
+  authConfig.sharedSecretHeaderName?.trim() || "x-webhook-secret";
     const headerPresent = request.headers.get(expectedHeaderName) !== null;
     if (!isProd) {
       const response = NextResponse.json(

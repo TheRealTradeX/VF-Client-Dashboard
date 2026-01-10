@@ -3,6 +3,7 @@ import { LiveTrades } from "@/components/dashboard/LiveTrades";
 import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { StatsGrid } from "@/components/dashboard/StatsGrid";
+import { TradeNowButton } from "@/components/dashboard/TradeNowButton";
 import type { StatsGridItem } from "@/components/dashboard/StatsGrid";
 import { formatCurrency } from "@/lib/mockData";
 import { getDataMode } from "@/lib/data-mode";
@@ -90,22 +91,13 @@ export default async function DashboardPage() {
   const accountIds = accounts.map((account) => account.account_id);
 
   const now = new Date();
-  const thirtyDaysAgo = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 30));
-  const startDateUtc = thirtyDaysAgo.toISOString();
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const startDateUtc = monthStart.toISOString();
 
   const trades = await listTradesByAccountIds(accountIds, { startDateUtc, limit: 500 });
   const recentEvents = await listRecentEventsByAccountIds(accountIds, { limit: 6 });
 
   const totalBalance = accounts.reduce((sum, account) => sum + (getSnapshotNumber(account.snapshot, "balance") ?? 0), 0);
-  const todayNetPnl = accounts.reduce(
-    (sum, account) =>
-      sum +
-      (getSnapshotNumber(account.snapshot, "dailyNetPL") ??
-        getSnapshotNumber(account.snapshot, "dailyPL") ??
-        0),
-    0,
-  );
-
   const netPnlTrades = trades.map(computeTradeNetPnl);
   const wins = netPnlTrades.filter((pnl) => pnl > 0);
   const losses = netPnlTrades.filter((pnl) => pnl < 0);
@@ -113,11 +105,12 @@ export default async function DashboardPage() {
   const grossLoss = Math.abs(losses.reduce((sum, pnl) => sum + pnl, 0));
   const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : null;
   const winRate = netPnlTrades.length ? (wins.length / netPnlTrades.length) * 100 : null;
+  const mtdNetPnl = netPnlTrades.reduce((sum, pnl) => sum + pnl, 0);
 
   const changePercent =
-    totalBalance > 0 && Number.isFinite(todayNetPnl) ? `${((todayNetPnl / totalBalance) * 100).toFixed(2)}%` : "—";
+    totalBalance > 0 && Number.isFinite(mtdNetPnl) ? `${((mtdNetPnl / totalBalance) * 100).toFixed(2)}%` : "-";
   const changePercentDisplay =
-    changePercent === "—" ? "—" : changePercent.startsWith("-") ? changePercent : `+${changePercent}`;
+    changePercent === "-" ? "-" : changePercent.startsWith("-") ? changePercent : `+${changePercent}`;
 
   const stats: StatsGridItem[] = [
     {
@@ -125,30 +118,30 @@ export default async function DashboardPage() {
       value: accounts.length ? formatCurrency(totalBalance) : "-",
       change: `Across ${accounts.length} account${accounts.length === 1 ? "" : "s"}`,
       changePercent: changePercentDisplay,
-      trend: todayNetPnl >= 0 ? "up" : "down",
+      trend: mtdNetPnl >= 0 ? "up" : "down",
       icon: DollarSign,
     },
     {
-      label: "Today's P&L",
-      value: formatSignedCurrency(todayNetPnl),
-      change: "Net P&L (snapshot)",
-      changePercent: "—",
-      trend: todayNetPnl >= 0 ? "up" : "down",
+      label: "MTD Net P&L",
+      value: formatSignedCurrency(mtdNetPnl),
+      change: `${netPnlTrades.length} closed trade${netPnlTrades.length === 1 ? "" : "s"}`,
+      changePercent: "-",
+      trend: mtdNetPnl >= 0 ? "up" : "down",
       icon: Activity,
     },
     {
-      label: "Win Rate",
+      label: "Win Rate (MTD)",
       value: formatPct(winRate),
-      change: `${wins.length} / ${netPnlTrades.length} trades (30D)`,
-      changePercent: "—",
+      change: `${wins.length} / ${netPnlTrades.length} trades`,
+      changePercent: "-",
       trend: (winRate ?? 0) >= 50 ? "up" : "down",
       icon: Target,
     },
     {
-      label: "Profit Factor",
+      label: "Profit Factor (MTD)",
       value: profitFactor === null ? "-" : profitFactor.toFixed(2),
-      change: "Last 30 days",
-      changePercent: "—",
+      change: "Trade report",
+      changePercent: "-",
       trend: (profitFactor ?? 0) >= 1 ? "up" : "down",
       icon: Percent,
     },
@@ -188,7 +181,7 @@ export default async function DashboardPage() {
   let running = startBalanceSum;
   const performanceData = dailyKeys.map((key) => {
     running += performanceMap.get(key) ?? 0;
-    const [year, month, day] = key.split("-").map((s) => Number(s));
+    const [, month, day] = key.split("-").map((s) => Number(s));
     const label = `${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`;
     return { date: label, balance: running, equity: running };
   });
@@ -199,7 +192,7 @@ export default async function DashboardPage() {
     return {
       id: trade.trade_key,
       time,
-      symbol: trade.symbol_name ?? trade.contract_id?.toString() ?? "—",
+      symbol: trade.symbol_name ?? trade.contract_id?.toString() ?? "-",
       entry: trade.open_price ?? null,
       current: trade.close_price ?? null,
       size: trade.quantity ?? null,
@@ -224,18 +217,23 @@ export default async function DashboardPage() {
     };
   });
 
+  const primaryAccountId = accounts[0]?.account_id ?? null;
+
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-white text-2xl mb-1">Welcome back, {userLabel}</h1>
-        <p className="text-zinc-400">Here&apos;s what&apos;s happening with your accounts today</p>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-white text-2xl mb-1">Welcome back, {userLabel}</h1>
+          <p className="text-zinc-400">Here&apos;s what&apos;s happening with your accounts today</p>
+        </div>
+        <TradeNowButton accountId={primaryAccountId} />
       </div>
 
       <StatsGrid stats={stats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <PerformanceChart data={performanceData} rangeLabel="Last 30 days (realized net P&L)" />
+          <PerformanceChart data={performanceData} rangeLabel="MTD realized net P&L" />
         </div>
         <div>
           <AccountsOverview accounts={overviewAccounts} />
