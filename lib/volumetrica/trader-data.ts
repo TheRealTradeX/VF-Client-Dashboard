@@ -242,7 +242,12 @@ export async function listRecentEventsByAccountIds(
   return (data ?? []) as VolumetricaEventRow[];
 }
 
-export function computeTradeNetPnl(trade: VolumetricaTradeRow) {
+type TradeNetPnlInput = {
+  pl: number | null;
+  commission_paid: number | null;
+};
+
+export function computeTradeNetPnl(trade: TradeNetPnlInput) {
   const pl = typeof trade.pl === "number" ? trade.pl : 0;
   const commission = typeof trade.commission_paid === "number" ? trade.commission_paid : 0;
   return pl - commission;

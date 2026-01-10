@@ -1,53 +1,54 @@
+import { UserProvisionForm } from "@/components/admin/UserProvisionForm";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
-const users = [
-  {
-    id: "U-1001",
-    name: "Arlene McCoy",
-    email: "arlene@example.com",
-    role: "Trader",
-    status: "Active",
-    lastLogin: "2025-12-12 14:10",
-  },
-  {
-    id: "U-1002",
-    name: "Kathryn Murphy",
-    email: "kathryn@example.com",
-    role: "Trader",
-    status: "Flagged",
-    lastLogin: "2025-12-12 12:02",
-  },
-  {
-    id: "U-1003",
-    name: "Jerome Bell",
-    email: "jerome@example.com",
-    role: "Admin",
-    status: "Active",
-    lastLogin: "2025-12-12 09:45",
-  },
-  {
-    id: "U-1004",
-    name: "Robert Fox",
-    email: "robert@example.com",
-    role: "Trader",
-    status: "Suspended",
-    lastLogin: "2025-12-11 19:30",
-  },
-];
-
-const statusStyles: Record<string, string> = {
-  Active: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
-  Flagged: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
-  Suspended: "bg-rose-500/10 text-rose-400 border border-rose-500/30",
+type ProfileRow = {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  role: string | null;
 };
 
-export default function AdminUsersPage() {
+type VolumetricaUserRow = {
+  volumetrica_user_id: string;
+  status: string | null;
+  external_id: string | null;
+  invite_url: string | null;
+  updated_at: string;
+};
+
+const formatTimestamp = (value: string | null) => (value ? value.replace("T", " ").slice(0, 19) : "-");
+
+export default async function AdminUsersPage() {
+  const supabase = createSupabaseAdminClient();
+  const { data: profilesData, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, role")
+    .order("email", { ascending: true })
+    .limit(200);
+
+  const { data: volumetricaData } = await supabase
+    .from("volumetrica_users")
+    .select("volumetrica_user_id, status, external_id, invite_url, updated_at")
+    .limit(200);
+
+  const volumetricaByExternal = new Map<string, VolumetricaUserRow>();
+  (volumetricaData as VolumetricaUserRow[] | null)?.forEach((row) => {
+    if (row.external_id) {
+      volumetricaByExternal.set(row.external_id, row);
+    }
+  });
+
+  const rows = (profilesData as ProfileRow[] | null) ?? [];
+
   return (
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-white text-2xl mb-1">Users</h1>
-        <p className="text-zinc-400">Manage user roles, access, and account status.</p>
+        <p className="text-zinc-400">Provision users and sync with the trading platform.</p>
       </div>
+
+      <UserProvisionForm />
 
       <div className="bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden">
         <Table>
@@ -55,32 +56,40 @@ export default function AdminUsersPage() {
             <TableRow className="border-zinc-900">
               <TableHead className="text-zinc-400">User</TableHead>
               <TableHead className="text-zinc-400">Role</TableHead>
-              <TableHead className="text-zinc-400">Status</TableHead>
-              <TableHead className="text-zinc-400">Last Login</TableHead>
-              <TableHead className="text-zinc-400 text-right">Action</TableHead>
+              <TableHead className="text-zinc-400">Trading Platform</TableHead>
+              <TableHead className="text-zinc-400 text-right">Updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id} className="border-zinc-900">
-                <TableCell>
-                  <div className="text-white text-sm">{user.name}</div>
-                  <div className="text-xs text-zinc-500">{user.email}</div>
-                </TableCell>
-                <TableCell className="text-zinc-300">{user.role}</TableCell>
-                <TableCell>
-                  <span className={`text-xs px-2 py-1 rounded-full ${statusStyles[user.status]}`}>
-                    {user.status}
-                  </span>
-                </TableCell>
-                <TableCell className="text-zinc-300">{user.lastLogin}</TableCell>
-                <TableCell className="text-right">
-                  <button className="px-3 py-1.5 text-xs text-white border border-zinc-700 rounded-lg hover:border-blue-500/50">
-                    Manage
-                  </button>
+            {rows.map((user) => {
+              const linked = volumetricaByExternal.get(user.id);
+              return (
+                <TableRow key={user.id} className="border-zinc-900">
+                  <TableCell>
+                    <div className="text-white text-sm">{user.full_name ?? "Unnamed"}</div>
+                    <div className="text-xs text-zinc-500">{user.email ?? "-"}</div>
+                    <div className="text-[11px] text-zinc-600">{user.id}</div>
+                  </TableCell>
+                  <TableCell className="text-zinc-300">{user.role ?? "trader"}</TableCell>
+                  <TableCell>
+                    <div className="text-zinc-300 text-sm">
+                      {linked?.volumetrica_user_id ?? "Not linked"}
+                    </div>
+                    <div className="text-xs text-zinc-500">{linked?.status ?? "-"}</div>
+                  </TableCell>
+                  <TableCell className="text-right text-zinc-300">
+                    {formatTimestamp(linked?.updated_at ?? null)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {!rows.length && (
+              <TableRow className="border-zinc-900">
+                <TableCell className="text-zinc-400" colSpan={4}>
+                  {profilesError ? "Unable to load users." : "No users available yet."}
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>

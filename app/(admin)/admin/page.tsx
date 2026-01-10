@@ -1,64 +1,60 @@
 import Link from "next/link";
-import { ArrowUpRight, CheckCircle2, Clock, ShieldAlert } from "lucide-react";
+import { ArrowUpRight, Clock, RefreshCw } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
-const metrics = [
-  { label: "Active Accounts", value: "1,284", change: "+4.1%" },
-  { label: "KYC Pending", value: "96", change: "-2.5%" },
-  { label: "Open Payouts", value: "$214,320", change: "+8.3%" },
-  { label: "New Users (7d)", value: "312", change: "+12.0%" },
-];
-
-const queue = [
-  {
-    id: "492123",
-    user: "Arlene McCoy",
-    program: "Program 1",
-    status: "Active",
-    verification: "Verified",
-  },
-  {
-    id: "492124",
-    user: "Kathryn Murphy",
-    program: "Program 1",
-    status: "KYC Pending",
-    verification: "Pending",
-  },
-  {
-    id: "492125",
-    user: "Jerome Bell",
-    program: "Program 2",
-    status: "Active",
-    verification: "Verified",
-  },
-  {
-    id: "492126",
-    user: "Robert Fox",
-    program: "Program 1",
-    status: "Breached",
-    verification: "Denied",
-  },
-];
-
-const statusStyles: Record<string, string> = {
-  Active: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
-  "KYC Pending": "bg-amber-500/10 text-amber-400 border border-amber-500/30",
-  Breached: "bg-rose-500/10 text-rose-400 border border-rose-500/30",
+type AccountRow = {
+  account_id: string;
+  user_id: string | null;
+  status: string | null;
+  enabled: boolean | null;
+  updated_at: string;
 };
 
-const verificationStyles: Record<string, string> = {
-  Verified: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
-  Pending: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
-  Denied: "bg-rose-500/10 text-rose-400 border border-rose-500/30",
-};
+const formatTimestamp = (value: string | null) => (value ? value.replace("T", " ").slice(0, 19) : "-");
 
-export default function AdminOverviewPage() {
+export default async function AdminOverviewPage() {
+  const supabase = createSupabaseAdminClient();
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+  const [{ count: activeAccounts }, { count: totalUsers }, { count: activeSubscriptions }, { count: eventCount }] =
+    await Promise.all([
+      supabase
+        .from("volumetrica_accounts")
+        .select("account_id", { count: "exact", head: true })
+        .eq("enabled", true)
+        .eq("is_deleted", false)
+        .eq("is_hidden", false)
+        .eq("is_test", false),
+      supabase.from("volumetrica_users").select("volumetrica_user_id", { count: "exact", head: true }),
+      supabase
+        .from("volumetrica_subscriptions")
+        .select("subscription_id", { count: "exact", head: true })
+        .eq("is_deleted", false),
+      supabase.from("volumetrica_events").select("id", { count: "exact", head: true }).gte("received_at", since),
+    ]);
+
+  const { data: recentAccounts } = await supabase
+    .from("volumetrica_accounts")
+    .select("account_id,user_id,status,enabled,updated_at")
+    .order("updated_at", { ascending: false })
+    .limit(6);
+
+  const metrics = [
+    { label: "Active Accounts", value: String(activeAccounts ?? 0) },
+    { label: "Total Users", value: String(totalUsers ?? 0) },
+    { label: "Active Subscriptions", value: String(activeSubscriptions ?? 0) },
+    { label: "Events (24h)", value: String(eventCount ?? 0) },
+  ];
+
+  const rows = (recentAccounts as AccountRow[] | null) ?? [];
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-white text-2xl mb-1">Admin Overview</h1>
-          <p className="text-zinc-400">Manage accounts, verifications, and payouts.</p>
+          <p className="text-zinc-400">Operational snapshot and recent platform activity.</p>
         </div>
         <Link
           href="/admin/accounts"
@@ -74,7 +70,6 @@ export default function AdminOverviewPage() {
           <div key={metric.label} className="bg-zinc-950 border border-zinc-900 rounded-xl p-5">
             <div className="text-sm text-zinc-400 mb-2">{metric.label}</div>
             <div className="text-2xl text-white mb-1">{metric.value}</div>
-            <div className="text-xs text-blue-400">{metric.change} vs last week</div>
           </div>
         ))}
       </div>
@@ -82,7 +77,7 @@ export default function AdminOverviewPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 bg-zinc-950 border border-zinc-900 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white">Account Queue</h2>
+            <h2 className="text-white">Recent Accounts</h2>
             <Link href="/admin/accounts" className="text-sm text-blue-400 hover:text-blue-300">
               Review all
             </Link>
@@ -92,67 +87,61 @@ export default function AdminOverviewPage() {
               <TableRow className="border-zinc-900">
                 <TableHead className="text-zinc-400">Account</TableHead>
                 <TableHead className="text-zinc-400">User</TableHead>
-                <TableHead className="text-zinc-400">Program</TableHead>
                 <TableHead className="text-zinc-400">Status</TableHead>
-                <TableHead className="text-zinc-400">Verification</TableHead>
+                <TableHead className="text-zinc-400 text-right">Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {queue.map((row) => (
-                <TableRow key={row.id} className="border-zinc-900">
-                  <TableCell className="text-white">{row.id}</TableCell>
-                  <TableCell className="text-zinc-300">{row.user}</TableCell>
-                  <TableCell className="text-zinc-300">{row.program}</TableCell>
-                  <TableCell>
-                    <span className={`text-xs px-2 py-1 rounded-full ${statusStyles[row.status]}`}>{row.status}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className={`text-xs px-2 py-1 rounded-full ${verificationStyles[row.verification]}`}>
-                      {row.verification}
-                    </span>
+              {rows.map((row) => (
+                <TableRow key={row.account_id} className="border-zinc-900">
+                  <TableCell className="text-white">{row.account_id}</TableCell>
+                  <TableCell className="text-zinc-300">{row.user_id ?? "-"}</TableCell>
+                  <TableCell className="text-zinc-300">{row.status ?? "-"}</TableCell>
+                  <TableCell className="text-right text-zinc-300">
+                    {formatTimestamp(row.updated_at)}
                   </TableCell>
                 </TableRow>
               ))}
+              {!rows.length && (
+                <TableRow className="border-zinc-900">
+                  <TableCell className="text-zinc-400" colSpan={4}>
+                    No recent accounts.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
 
         <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-6 space-y-4">
-          <h2 className="text-white">Today</h2>
+          <h2 className="text-white">Operational Notes</h2>
           <div className="space-y-3">
             <div className="flex items-center justify-between rounded-lg border border-zinc-900 p-3">
               <div>
-                <div className="text-sm text-white">KYC Review</div>
-                <div className="text-xs text-zinc-500">12 submissions waiting</div>
+                <div className="text-sm text-white">Recent events</div>
+                <div className="text-xs text-zinc-500">Last 24 hours</div>
               </div>
-              <Clock className="w-4 h-4 text-amber-400" />
+              <Clock className="w-4 h-4 text-blue-400" />
             </div>
             <div className="flex items-center justify-between rounded-lg border border-zinc-900 p-3">
               <div>
-                <div className="text-sm text-white">Risk Alerts</div>
-                <div className="text-xs text-zinc-500">3 accounts flagged</div>
+                <div className="text-sm text-white">Reconciliation</div>
+                <div className="text-xs text-zinc-500">Manual trigger available</div>
               </div>
-              <ShieldAlert className="w-4 h-4 text-rose-400" />
-            </div>
-            <div className="flex items-center justify-between rounded-lg border border-zinc-900 p-3">
-              <div>
-                <div className="text-sm text-white">Payouts Approved</div>
-                <div className="text-xs text-zinc-500">18 requests ready</div>
-              </div>
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <RefreshCw className="w-4 h-4 text-emerald-400" />
             </div>
           </div>
           <div className="rounded-lg border border-zinc-900 p-4">
             <div className="text-sm text-white mb-2">Quick Actions</div>
             <div className="grid grid-cols-1 gap-2">
-              <Link href="/admin/verifications" className="text-sm text-blue-400 hover:text-blue-300">
-                Review KYC queue
-              </Link>
-              <Link href="/admin/payouts" className="text-sm text-blue-400 hover:text-blue-300">
-                Process payouts
+              <Link href="/admin/reconcile" className="text-sm text-blue-400 hover:text-blue-300">
+                Run reconciliation
               </Link>
               <Link href="/admin/users" className="text-sm text-blue-400 hover:text-blue-300">
-                Invite new admin
+                Provision users
+              </Link>
+              <Link href="/admin/emails" className="text-sm text-blue-400 hover:text-blue-300">
+                Manage email templates
               </Link>
             </div>
           </div>

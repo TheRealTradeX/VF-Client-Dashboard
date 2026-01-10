@@ -6,9 +6,11 @@ import { EVENT_LEDGER_LABEL } from "@/lib/platform-labels";
 import {
   Activity,
   BadgeCheck,
+  CreditCard,
   DollarSign,
   FileText,
   LayoutDashboard,
+  Mail,
   RefreshCw,
   Settings,
   Users,
@@ -19,12 +21,14 @@ const primaryNavigation = [
   { name: "Overview", href: "/admin", icon: LayoutDashboard },
   { name: "Account Lists", href: "/admin/accounts", icon: Wallet },
   { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Subscriptions", href: "/admin/subscriptions", icon: CreditCard },
   { name: "Verifications", href: "/admin/verifications", icon: BadgeCheck },
   { name: "Payouts", href: "/admin/payouts", icon: DollarSign },
 ];
 
 const secondaryNavigation = [
   { name: EVENT_LEDGER_LABEL, href: "/admin/webhooks", icon: Activity },
+  { name: "Email Templates", href: "/admin/emails", icon: Mail },
   { name: "Reconciliation", href: "/admin/reconcile", icon: RefreshCw },
   { name: "Audit Log", href: "/admin/audit", icon: FileText },
   { name: "Settings", href: "/admin/settings", icon: Settings },

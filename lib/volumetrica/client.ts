@@ -151,6 +151,37 @@ export const volumetricaClient = {
       path: "/api/Propsite/GetSubscriptionStatus",
       query: { userId, subscriptionId },
     }),
+  newSubscription: (payload: Record<string, unknown>) =>
+    request<Record<string, unknown>>({
+      method: "POST",
+      path: "/api/Propsite/NewSubscription",
+      body: payload,
+    }),
+  updateSubscription: (subscriptionId: string, payload: Record<string, unknown>) =>
+    request<Record<string, unknown>>({
+      method: "POST",
+      path: "/api/Propsite/UpdateSubscription",
+      query: { subcriptionId: subscriptionId },
+      body: payload,
+    }),
+  activateSubscription: (subscriptionId: string) =>
+    request<unknown>({
+      method: "GET",
+      path: "/api/Propsite/ActiveSubscription",
+      query: { subscriptionId },
+    }),
+  deactivateSubscription: (subscriptionId: string) =>
+    request<unknown>({
+      method: "GET",
+      path: "/api/Propsite/DeactiveSubscription",
+      query: { subscriptionId },
+    }),
+  deleteSubscription: (subscriptionId: string) =>
+    request<unknown>({
+      method: "GET",
+      path: "/api/Propsite/DeleteSubscription",
+      query: { subscriptionId },
+    }),
   newUser: (payload: Record<string, unknown>) =>
     request<Record<string, unknown>>({
       method: "POST",

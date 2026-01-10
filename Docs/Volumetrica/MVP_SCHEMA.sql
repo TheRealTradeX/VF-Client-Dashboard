@@ -136,6 +136,34 @@ create table if not exists admin_audit_log (
   created_at timestamptz not null default now()
 );
 
+create table if not exists email_templates (
+  id uuid primary key default gen_random_uuid(),
+  template_key text not null,
+  name text not null,
+  subject text not null,
+  body text not null,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists email_templates_key_idx
+  on email_templates (template_key);
+
+create table if not exists email_outbox (
+  id uuid primary key default gen_random_uuid(),
+  template_id uuid null references email_templates(id) on delete set null,
+  to_email text not null,
+  subject text not null,
+  body text not null,
+  variables jsonb null,
+  status text not null,
+  provider text not null,
+  error text null,
+  created_at timestamptz not null default now(),
+  sent_at timestamptz null
+);
+
 alter table volumetrica_events enable row level security;
 alter table volumetrica_accounts enable row level security;
 alter table volumetrica_subscriptions enable row level security;
@@ -143,6 +171,8 @@ alter table volumetrica_positions enable row level security;
 alter table volumetrica_trades enable row level security;
 alter table volumetrica_users enable row level security;
 alter table admin_audit_log enable row level security;
+alter table email_templates enable row level security;
+alter table email_outbox enable row level security;
 
 alter table if exists profiles enable row level security;
 
