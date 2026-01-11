@@ -34,6 +34,11 @@ type LeaderboardEntry = {
   isCurrentUser: boolean;
 };
 
+type LeaderboardSnapshotEntry = Omit<LeaderboardEntry, "isCurrentUser"> & {
+  userId: string | null;
+  rawUserId: string | null;
+};
+
 const getMonthStartUtc = () => {
   const now = new Date();
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
@@ -93,7 +98,23 @@ const getRawUserId = (account: AccountRow) => {
       : null;
 };
 
-export async function buildLeaderboard(currentUserId?: string | null): Promise<LeaderboardEntry[]> {
+const resolveCurrentUser = (entry: LeaderboardSnapshotEntry, currentUserId?: string | null) => {
+  if (!currentUserId) return false;
+  return entry.userId === currentUserId || entry.rawUserId === currentUserId;
+};
+
+const toPublicEntry = (entry: LeaderboardSnapshotEntry, currentUserId?: string | null): LeaderboardEntry => ({
+  rank: entry.rank,
+  accountId: entry.accountId,
+  displayName: entry.displayName,
+  netPnl: entry.netPnl,
+  progressPct: entry.progressPct,
+  tradingDays: entry.tradingDays,
+  firstTradeAt: entry.firstTradeAt,
+  isCurrentUser: resolveCurrentUser(entry, currentUserId),
+});
+
+const computeLeaderboardSnapshot = async (): Promise<LeaderboardSnapshotEntry[]> => {
   const supabase = createSupabaseAdminClient();
   const { data: accountsData, error: accountsError } = await supabase
     .from("volumetrica_accounts")
@@ -152,9 +173,6 @@ export async function buildLeaderboard(currentUserId?: string | null): Promise<L
     const progressPct = resolveProgressPct(account);
     const displayName = getUserDisplayName(account);
     const rawUserId = getRawUserId(account);
-    const isCurrentUser =
-      Boolean(currentUserId) &&
-      (account.user_id === currentUserId || rawUserId === currentUserId);
 
     return {
       rank: 0,
@@ -164,7 +182,8 @@ export async function buildLeaderboard(currentUserId?: string | null): Promise<L
       progressPct,
       tradingDays,
       firstTradeAt,
-      isCurrentUser,
+      userId: account.user_id ?? null,
+      rawUserId,
     };
   });
 
@@ -180,4 +199,56 @@ export async function buildLeaderboard(currentUserId?: string | null): Promise<L
   });
 
   return sorted.map((entry, index) => ({ ...entry, rank: index + 1 }));
+};
+
+export async function createLeaderboardSnapshot(createdBy?: string | null) {
+  const supabase = createSupabaseAdminClient();
+  const entries = await computeLeaderboardSnapshot();
+  const { data, error } = await supabase
+    .from("leaderboard_snapshots")
+    .insert({
+      entries,
+      created_by: createdBy ?? null,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { id: data?.id ?? null, entries };
+}
+
+export async function buildLeaderboard(currentUserId?: string | null): Promise<LeaderboardEntry[]> {
+  const supabase = createSupabaseAdminClient();
+  const { data: settings } = await supabase
+    .from("leaderboard_settings")
+    .select("is_frozen,frozen_snapshot_id")
+    .eq("id", 1)
+    .maybeSingle();
+
+  if (settings?.is_frozen) {
+    const snapshotQuery = settings.frozen_snapshot_id
+      ? supabase
+          .from("leaderboard_snapshots")
+          .select("entries")
+          .eq("id", settings.frozen_snapshot_id)
+          .maybeSingle()
+      : supabase
+          .from("leaderboard_snapshots")
+          .select("entries")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+    const { data: snapshot } = await snapshotQuery;
+    const snapshotEntries = (snapshot?.entries as LeaderboardSnapshotEntry[] | null) ?? null;
+    if (snapshotEntries && snapshotEntries.length) {
+      return snapshotEntries.map((entry) => toPublicEntry(entry, currentUserId));
+    }
+  }
+
+  const computed = await computeLeaderboardSnapshot();
+  return computed.map((entry) => toPublicEntry(entry, currentUserId));
 }

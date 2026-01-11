@@ -143,6 +143,9 @@ export default async function AdminOverviewPage() {
               <Link href="/admin/emails" className="text-sm text-blue-400 hover:text-blue-300">
                 Manage email templates
               </Link>
+              <Link href="/admin/analytics" className="text-sm text-blue-400 hover:text-blue-300">
+                View analytics
+              </Link>
             </div>
           </div>
         </div>

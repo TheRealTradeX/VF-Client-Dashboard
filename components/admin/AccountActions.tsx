@@ -18,16 +18,17 @@ const parseNumber = (value: string) => {
 
 type AccountRowActionsProps = {
   accountId: string;
+  isHidden?: boolean;
 };
 
-export function AccountRowActions({ accountId }: AccountRowActionsProps) {
+export function AccountRowActions({ accountId, isHidden = false }: AccountRowActionsProps) {
   const router = useRouter();
   const [status, setStatus] = useState(statusOptions[0]?.value ?? 0);
   const [reason, setReason] = useState("");
   const [forceClose, setForceClose] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
 
-  const runAction = async (action: "enable" | "disable" | "status") => {
+  const runAction = async (action: "enable" | "disable" | "status" | "hide" | "unhide") => {
     setLoading(action);
     try {
       const res = await fetch(`/api/admin/accounts/${accountId}`, {
@@ -72,6 +73,18 @@ export function AccountRowActions({ accountId }: AccountRowActionsProps) {
           className="px-3 py-1.5 text-xs text-white border border-zinc-700 rounded-lg hover:border-rose-500/50 disabled:opacity-60"
         >
           {loading === "disable" ? "Disabling..." : "Disable"}
+        </button>
+        <button
+          type="button"
+          onClick={() => runAction(isHidden ? "unhide" : "hide")}
+          disabled={loading !== null}
+          className="px-3 py-1.5 text-xs text-white border border-zinc-700 rounded-lg hover:border-blue-500/50 disabled:opacity-60"
+        >
+          {loading === "hide" || loading === "unhide"
+            ? "Updating..."
+            : isHidden
+              ? "Unhide"
+              : "Hide"}
         </button>
       </div>
       <div className="flex flex-wrap items-center gap-2 justify-end">

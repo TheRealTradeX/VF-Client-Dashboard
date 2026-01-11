@@ -6,6 +6,7 @@ import { EVENT_LEDGER_LABEL } from "@/lib/platform-labels";
 import {
   Activity,
   BadgeCheck,
+  BarChart3,
   CreditCard,
   DollarSign,
   FileText,
@@ -13,6 +14,7 @@ import {
   Mail,
   RefreshCw,
   Settings,
+  Trophy,
   Users,
   Wallet,
 } from "lucide-react";
@@ -28,6 +30,8 @@ const primaryNavigation = [
 
 const secondaryNavigation = [
   { name: EVENT_LEDGER_LABEL, href: "/admin/webhooks", icon: Activity },
+  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+  { name: "Leaderboard", href: "/admin/leaderboard", icon: Trophy },
   { name: "Email Templates", href: "/admin/emails", icon: Mail },
   { name: "Reconciliation", href: "/admin/reconcile", icon: RefreshCw },
   { name: "Audit Log", href: "/admin/audit", icon: FileText },

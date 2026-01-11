@@ -151,6 +151,57 @@ create table if not exists admin_audit_log (
   created_at timestamptz not null default now()
 );
 
+create table if not exists kyc_cases (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  status text not null,
+  notes text null,
+  requested_at timestamptz not null default now(),
+  reviewed_at timestamptz null,
+  reviewed_by uuid null,
+  metadata jsonb null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists kyc_cases_user_idx
+  on kyc_cases (user_id);
+
+create table if not exists payout_requests (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  account_id text null,
+  amount numeric null,
+  currency text null,
+  status text not null,
+  requested_at timestamptz not null default now(),
+  reviewed_at timestamptz null,
+  approved_at timestamptz null,
+  paid_at timestamptz null,
+  notes text null,
+  metadata jsonb null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists payout_requests_user_idx
+  on payout_requests (user_id);
+
+create table if not exists leaderboard_snapshots (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  created_by uuid null,
+  entries jsonb not null
+);
+
+create table if not exists leaderboard_settings (
+  id integer primary key default 1,
+  is_frozen boolean not null default false,
+  frozen_snapshot_id uuid null references leaderboard_snapshots(id) on delete set null,
+  updated_at timestamptz not null default now(),
+  updated_by uuid null
+);
+
 create table if not exists email_templates (
   id uuid primary key default gen_random_uuid(),
   template_key text not null,
@@ -187,6 +238,10 @@ alter table volumetrica_trades enable row level security;
 alter table volumetrica_users enable row level security;
 alter table volumetrica_rules enable row level security;
 alter table admin_audit_log enable row level security;
+alter table kyc_cases enable row level security;
+alter table payout_requests enable row level security;
+alter table leaderboard_snapshots enable row level security;
+alter table leaderboard_settings enable row level security;
 alter table email_templates enable row level security;
 alter table email_outbox enable row level security;
 
@@ -206,6 +261,42 @@ begin
       for select
       to authenticated
       using (id = auth.uid());
+  end if;
+end
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'kyc_cases'
+      and policyname = 'KYC can read own'
+  ) then
+    create policy "KYC can read own"
+      on public.kyc_cases
+      for select
+      to authenticated
+      using (user_id = auth.uid());
+  end if;
+end
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'payout_requests'
+      and policyname = 'Payouts can read own'
+  ) then
+    create policy "Payouts can read own"
+      on public.payout_requests
+      for select
+      to authenticated
+      using (user_id = auth.uid());
   end if;
 end
 $$;
@@ -263,3 +354,7 @@ on conflict (rule_id) do update
 set reference_id = excluded.reference_id,
     rule_name = excluded.rule_name,
     updated_at = now();
+
+insert into leaderboard_settings (id, is_frozen)
+values (1, false)
+on conflict (id) do nothing;

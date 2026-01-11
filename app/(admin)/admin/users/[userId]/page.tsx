@@ -37,6 +37,7 @@ type AccountRow = {
   enabled: boolean | null;
   rule_id: string | null;
   rule_name: string | null;
+  is_hidden: boolean;
   snapshot: Record<string, unknown> | null;
   raw: Record<string, unknown> | null;
   updated_at: string;
@@ -98,7 +99,7 @@ export default async function AdminUserDetailPage({ params }: { params: { userId
     ? await supabase
         .from("volumetrica_accounts")
         .select(
-          "account_id,user_id,status,trading_permission,enabled,rule_id,rule_name,snapshot,raw,updated_at",
+          "account_id,user_id,status,trading_permission,enabled,rule_id,rule_name,is_hidden,snapshot,raw,updated_at",
         )
         .or(ors)
         .order("updated_at", { ascending: false })
@@ -218,6 +219,9 @@ export default async function AdminUserDetailPage({ params }: { params: { userId
                   <TableCell>
                     <div className="text-white text-sm">{resolveAccountHeader(account)}</div>
                     <div className="text-xs text-zinc-500">{account.account_id}</div>
+                    {account.is_hidden ? (
+                      <div className="text-[11px] text-amber-400">Hidden from leaderboard</div>
+                    ) : null}
                   </TableCell>
                   <TableCell className="text-zinc-300">{resolveMode(account)}</TableCell>
                   <TableCell className="text-zinc-300">{resolveStatus(account.status)}</TableCell>
@@ -231,7 +235,7 @@ export default async function AdminUserDetailPage({ params }: { params: { userId
                   </TableCell>
                   <TableCell className="text-zinc-300">{resolveCreatedAt(account)}</TableCell>
                   <TableCell className="text-right">
-                    <AccountRowActions accountId={account.account_id} />
+                    <AccountRowActions accountId={account.account_id} isHidden={account.is_hidden} />
                   </TableCell>
                 </TableRow>
               );

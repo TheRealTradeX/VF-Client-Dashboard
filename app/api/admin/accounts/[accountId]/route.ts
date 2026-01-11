@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { volumetricaClient } from "@/lib/volumetrica/client";
 
 type AccountActionPayload = {
-  action?: "enable" | "disable" | "status";
+  action?: "enable" | "disable" | "status" | "hide" | "unhide";
   status?: number;
   forceClose?: boolean;
   reason?: string;
@@ -74,6 +75,29 @@ export async function POST(
         metadata: { status: payload.status, forceClose: payload.forceClose ?? false, reason: reason ?? null },
       });
       return NextResponse.json({ ok: true });
+    }
+
+    if (action === "hide" || action === "unhide") {
+      const supabase = createSupabaseAdminClient();
+      const isHidden = action === "hide";
+      const { error } = await supabase
+        .from("volumetrica_accounts")
+        .update({ is_hidden: isHidden, updated_at: new Date().toISOString() })
+        .eq("account_id", accountId);
+
+      if (error) {
+        return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      }
+
+      await logAdminAction({
+        action: isHidden ? "leaderboard.hide" : "leaderboard.unhide",
+        actorUserId: admin.userId,
+        actorEmail: admin.email,
+        targetType: "account",
+        targetId: accountId,
+      });
+
+      return NextResponse.json({ ok: true, isHidden });
     }
 
     return NextResponse.json({ ok: false, error: "Unsupported action." }, { status: 400 });

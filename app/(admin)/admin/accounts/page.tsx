@@ -23,6 +23,7 @@ type AccountRow = {
   rule_id: string | null;
   rule_name: string | null;
   account_family_id: string | null;
+  is_hidden: boolean;
   snapshot: Record<string, unknown> | null;
   raw: Record<string, unknown> | null;
   updated_at: string;
@@ -53,7 +54,7 @@ export default async function AdminAccountsPage({
   const { data: accountsData, error } = await supabase
     .from("volumetrica_accounts")
     .select(
-      "account_id,user_id,status,trading_permission,enabled,rule_id,rule_name,account_family_id,snapshot,raw,updated_at",
+      "account_id,user_id,status,trading_permission,enabled,rule_id,rule_name,account_family_id,is_hidden,snapshot,raw,updated_at",
     )
     .order("updated_at", { ascending: false })
     .limit(100);
@@ -136,6 +137,7 @@ export default async function AdminAccountsPage({
       createdAt,
       family: account.account_family_id ?? "-",
       universe,
+      isHidden: account.is_hidden,
     };
   });
 
@@ -358,6 +360,9 @@ export default async function AdminAccountsPage({
                   <TableCell>
                     <div className="text-white text-sm">{row.header}</div>
                     <div className="text-xs text-zinc-500">{row.account.account_id}</div>
+                    {row.isHidden ? (
+                      <div className="text-[11px] text-amber-400">Hidden from leaderboard</div>
+                    ) : null}
                   </TableCell>
                   <TableCell>
                     <div className="text-white text-sm">{row.displayName}</div>
@@ -373,7 +378,7 @@ export default async function AdminAccountsPage({
                   </TableCell>
                   <TableCell className="text-zinc-300">{row.createdAt}</TableCell>
                   <TableCell className="text-right">
-                    <AccountRowActions accountId={row.account.account_id} />
+                    <AccountRowActions accountId={row.account.account_id} isHidden={row.isHidden} />
                   </TableCell>
                 </TableRow>
               );
