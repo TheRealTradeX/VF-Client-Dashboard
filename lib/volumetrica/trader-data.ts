@@ -280,7 +280,12 @@ export async function getTraderAccountById(
   }
 
   if (!fallback) {
-    return null;
+    const accounts = await listTraderAccounts(user);
+    const normalizedRoute = accountId.toLowerCase().trim();
+    const matchedAccount = accounts.find((account) =>
+      getAccountIdentifiers(account).some((id) => id.toLowerCase().trim() === normalizedRoute),
+    );
+    return matchedAccount ?? null;
   }
 
   const accountRow = fallback as VolumetricaAccountRow;
