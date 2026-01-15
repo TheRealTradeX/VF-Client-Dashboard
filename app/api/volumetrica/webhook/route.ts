@@ -15,7 +15,7 @@ import type { WebhookEventPayload } from "@/lib/volumetrica/types";
 
 export const runtime = "nodejs";
 
-const MAX_BODY_BYTES = Number.parseInt(process.env.WEBHOOK_MAX_BODY_BYTES ?? "", 10) || 1_000_000;
+const MAX_BODY_BYTES = Number.parseInt(process.env.WEBHOOK_MAX_BODY_BYTES ?? "", 10) || 5_000_000;
 
 const buildSafeHeaders = (headers: Headers, mode: string, secretHeaderName?: string, signatureHeaderName?: string) => {
   if (mode === "shared_secret_header") {

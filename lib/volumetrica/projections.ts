@@ -10,8 +10,19 @@ import type {
   WebhookEventPayload,
 } from "./types";
 
-const toNullableNumber = (value: unknown) => (typeof value === "number" ? value : null);
+const toNullableNumber = (value: unknown) => {
+  if (typeof value === "number") return value;
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value.replace(/,/g, ""));
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+};
 const toNullableString = (value: unknown) => (typeof value === "string" ? value : null);
+const asArray = (value: unknown) => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+};
 
 const positionKey = (position: TradingPositionViewModel, accountId?: string | null) => {
   if (position.positionId !== null && position.positionId !== undefined) {
@@ -118,9 +129,9 @@ export async function applyWebhookProjections(
   }
 
   const positionPayload = payload.tradingPosition ?? payload.tradingPortfolio;
-  if (positionPayload && typeof positionPayload === "object") {
-    const position = positionPayload as TradingPositionViewModel;
-    const record = {
+  const positionRecords = asArray(positionPayload)
+    .filter((item): item is TradingPositionViewModel => Boolean(item && typeof item === "object"))
+    .map((position) => ({
       position_key: positionKey(position, accountId),
       account_id: accountId,
       position_id: position.positionId ?? null,
@@ -134,11 +145,12 @@ export async function applyWebhookProjections(
       raw: position,
       last_event_id: meta.eventId,
       updated_at: meta.receivedAt,
-    };
+    }));
 
+  if (positionRecords.length) {
     const { error } = await supabase
       .from("volumetrica_positions")
-      .upsert(record, { onConflict: "position_key" });
+      .upsert(positionRecords, { onConflict: "position_key" });
     if (error) {
       errors.push(`positions: ${error.message}`);
     } else {
@@ -146,9 +158,9 @@ export async function applyWebhookProjections(
     }
   }
 
-  if (payload.tradeReport && typeof payload.tradeReport === "object") {
-    const trade = payload.tradeReport as TradingTradeInfoModel;
-    const record = {
+  const tradeRecords = asArray(payload.tradeReport)
+    .filter((item): item is TradingTradeInfoModel => Boolean(item && typeof item === "object"))
+    .map((trade) => ({
       trade_key: tradeKey(trade, accountId),
       trade_id: trade.tradeId ?? null,
       account_id: accountId,
@@ -165,11 +177,12 @@ export async function applyWebhookProjections(
       raw: trade,
       last_event_id: meta.eventId,
       updated_at: meta.receivedAt,
-    };
+    }));
 
+  if (tradeRecords.length) {
     const { error } = await supabase
       .from("volumetrica_trades")
-      .upsert(record, { onConflict: "trade_key" });
+      .upsert(tradeRecords, { onConflict: "trade_key" });
     if (error) {
       errors.push(`trades: ${error.message}`);
     } else {

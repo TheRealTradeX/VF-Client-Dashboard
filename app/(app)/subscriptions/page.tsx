@@ -31,7 +31,13 @@ export default async function SubscriptionsPage() {
   }
 
   const accounts = await listTraderAccounts(user);
-  const userIds = Array.from(new Set(accounts.map((a) => a.user_id).filter((id): id is string => typeof id === "string")));
+  const userIds = Array.from(
+    new Set(
+      accounts
+        .flatMap((account) => [account.user_id, account.owner_organization_user_id])
+        .filter((id): id is string => typeof id === "string"),
+    ),
+  );
 
   const subscriptions = await listSubscriptionsByUserIds(userIds);
 

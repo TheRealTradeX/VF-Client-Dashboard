@@ -7,9 +7,11 @@ import { TradeNowButton } from "@/components/dashboard/TradeNowButton";
 import type { StatsGridItem } from "@/components/dashboard/StatsGrid";
 import { formatCurrency } from "@/lib/mockData";
 import { getDataMode } from "@/lib/data-mode";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import {
   computeTradeNetPnl,
   getAuthenticatedSupabaseUser,
+  getAccountIdentifiers,
   getSnapshotNumber,
   listRecentEventsByAccountIds,
   listTradesByAccountIds,
@@ -77,8 +79,6 @@ export default async function DashboardPage() {
   }
 
   const user = await getAuthenticatedSupabaseUser();
-  const userLabel = user?.email ? user.email.split("@")[0] : "Trader";
-
   if (!user) {
     return (
       <div className="p-6">
@@ -87,8 +87,19 @@ export default async function DashboardPage() {
     );
   }
 
+  const supabase = await createServerSupabaseClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, email")
+    .eq("id", user.id)
+    .maybeSingle();
+  const profileName = typeof profile?.full_name === "string" ? profile.full_name.trim() : "";
+  const profileEmail = typeof profile?.email === "string" ? profile.email.trim() : "";
+  const displayEmail = user.email ?? profileEmail;
+  const userLabel = profileName || (displayEmail ? displayEmail.split("@")[0] : "Trader");
+
   const accounts = await listTraderAccounts(user);
-  const accountIds = accounts.map((account) => account.account_id);
+  const accountIds = Array.from(new Set(accounts.flatMap(getAccountIdentifiers)));
 
   const now = new Date();
   const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
@@ -106,9 +117,20 @@ export default async function DashboardPage() {
   const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : null;
   const winRate = netPnlTrades.length ? (wins.length / netPnlTrades.length) * 100 : null;
   const mtdNetPnl = netPnlTrades.reduce((sum, pnl) => sum + pnl, 0);
+  const snapshotPnl = accounts.reduce((sum, account) => {
+    const balance = getSnapshotNumber(account.snapshot, "balance");
+    const startBalance = getSnapshotNumber(account.snapshot, "startBalance");
+    if (balance !== null && startBalance !== null) {
+      return sum + (balance - startBalance);
+    }
+    return sum;
+  }, 0);
+  const effectivePnl = netPnlTrades.length ? mtdNetPnl : snapshotPnl;
 
   const changePercent =
-    totalBalance > 0 && Number.isFinite(mtdNetPnl) ? `${((mtdNetPnl / totalBalance) * 100).toFixed(2)}%` : "-";
+    totalBalance > 0 && Number.isFinite(effectivePnl)
+      ? `${((effectivePnl / totalBalance) * 100).toFixed(2)}%`
+      : "-";
   const changePercentDisplay =
     changePercent === "-" ? "-" : changePercent.startsWith("-") ? changePercent : `+${changePercent}`;
 
@@ -123,10 +145,12 @@ export default async function DashboardPage() {
     },
     {
       label: "MTD Net P&L",
-      value: formatSignedCurrency(mtdNetPnl),
-      change: `${netPnlTrades.length} closed trade${netPnlTrades.length === 1 ? "" : "s"}`,
+      value: formatSignedCurrency(effectivePnl),
+      change: netPnlTrades.length
+        ? `${netPnlTrades.length} closed trade${netPnlTrades.length === 1 ? "" : "s"}`
+        : "Based on account snapshots",
       changePercent: "-",
-      trend: mtdNetPnl >= 0 ? "up" : "down",
+      trend: effectivePnl >= 0 ? "up" : "down",
       icon: Activity,
     },
     {
@@ -185,6 +209,11 @@ export default async function DashboardPage() {
     const label = `${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`;
     return { date: label, balance: running, equity: running };
   });
+  if (!performanceData.length && totalBalance > 0) {
+    const today = new Date();
+    const label = `${String(today.getUTCMonth() + 1).padStart(2, "0")}/${String(today.getUTCDate()).padStart(2, "0")}`;
+    performanceData.push({ date: label, balance: totalBalance, equity: totalBalance });
+  }
 
   const recentTrades = trades.slice(0, 6).map((trade) => {
     const dt = trade.exit_date ?? trade.entry_date ?? trade.updated_at;

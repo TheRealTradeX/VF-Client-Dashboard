@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BarChart3,
   BookOpen,
   CreditCard,
   DollarSign,
@@ -19,7 +18,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { useUserProfile } from "@/lib/hooks/use-user-profile";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -42,8 +41,7 @@ const STORAGE_KEY = "vf-sidebar-collapsed";
 export function Sidebar() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
-  const [isAdmin, setIsAdmin] = React.useState(false);
-  const supabase = React.useMemo(() => createClient(), []);
+  const { displayName, initials, roleLabel, isAdmin } = useUserProfile();
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -52,31 +50,6 @@ export function Sidebar() {
       setIsCollapsed(saved === "true");
     }
   }, []);
-
-  React.useEffect(() => {
-    let isMounted = true;
-
-    const loadRole = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userData.user.id)
-        .single();
-
-      if (isMounted) {
-        setIsAdmin(profile?.role === "admin");
-      }
-    };
-
-    void loadRole();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [supabase]);
 
   const toggleCollapsed = () => {
     setIsCollapsed((prev) => {
@@ -175,11 +148,11 @@ export function Sidebar() {
         <div className="p-4 border-t border-zinc-900">
           <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
-              <span className="text-black">JP</span>
+              <span className="text-black">{initials}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-white text-sm truncate">Jefrey Peralta</div>
-              <div className="text-xs text-zinc-500">Funded Trader</div>
+              <div className="text-white text-sm truncate">{displayName}</div>
+              <div className="text-xs text-zinc-500">{roleLabel}</div>
             </div>
           </div>
         </div>
@@ -187,7 +160,7 @@ export function Sidebar() {
       {isCollapsed && (
         <div className="p-4 border-t border-zinc-900">
           <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto">
-            <span className="text-black text-sm">JP</span>
+            <span className="text-black text-sm">{initials}</span>
           </div>
         </div>
       )}

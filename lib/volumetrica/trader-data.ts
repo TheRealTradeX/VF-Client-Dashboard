@@ -11,6 +11,8 @@ export type SupabaseUserIdentity = {
 export type VolumetricaAccountRow = {
   account_id: string;
   user_id: string | null;
+  account_family_id: string | null;
+  owner_organization_user_id: string | null;
   status: string | null;
   trading_permission: string | null;
   enabled: boolean | null;
@@ -96,10 +98,18 @@ export async function getAuthenticatedSupabaseUser(): Promise<SupabaseUserIdenti
 
 const allowEmailMatch = () => process.env.VOLUMETRICA_ALLOW_EMAIL_MATCH === "true";
 
-export async function listTraderAccounts(user: SupabaseUserIdentity): Promise<VolumetricaAccountRow[]> {
-  const supabase = createSupabaseAdminClient();
-  const platformUserIds: string[] = [];
+const addFilter = (filters: Set<string>, value: string | null) => {
+  if (value) {
+    filters.add(value);
+  }
+};
 
+const readString = (value: unknown) => (typeof value === "string" ? value.trim() : "");
+
+const getLinkedVolumetricaUserIds = async (
+  supabase: ReturnType<typeof createSupabaseAdminClient>,
+  user: SupabaseUserIdentity,
+) => {
   const { data: linkedUsers } = await supabase
     .from("volumetrica_users")
     .select("volumetrica_user_id")
@@ -112,28 +122,106 @@ export async function listTraderAccounts(user: SupabaseUserIdentity): Promise<Vo
         .join(","),
     );
 
-  (linkedUsers as { volumetrica_user_id?: string | null }[] | null)?.forEach((row) => {
-    if (row?.volumetrica_user_id) {
-      platformUserIds.push(row.volumetrica_user_id);
+  return (linkedUsers as { volumetrica_user_id?: string | null }[] | null)
+    ?.map((row) => readString(row?.volumetrica_user_id))
+    .filter(Boolean) ?? [];
+};
+
+const buildAccountOrFilters = (user: SupabaseUserIdentity, linkedUserIds: string[]) => {
+  const filters = new Set<string>();
+
+  const addUserFilters = (id: string, includeExtEntity: boolean) => {
+    addFilter(filters, `user_id.eq.${id}`);
+    addFilter(filters, `owner_organization_user_id.eq.${id}`);
+    addFilter(filters, `raw->user->>userId.eq.${id}`);
+    addFilter(filters, `raw->>ownerOrganizationUserId.eq.${id}`);
+    if (includeExtEntity) {
+      addFilter(filters, `raw->user->>extEntityId.eq.${id}`);
+    }
+  };
+
+  addUserFilters(user.id, true);
+
+  if (allowEmailMatch() && user.email) {
+    addFilter(filters, `raw->user->>email.eq.${user.email}`);
+    addFilter(filters, `raw->>email.eq.${user.email}`);
+  }
+  linkedUserIds.forEach((id) => {
+    if (id) {
+      addUserFilters(id, false);
     }
   });
 
-  const ors: string[] = [`user_id.eq.${user.id}`, `raw->user->>extEntityId.eq.${user.id}`];
-  platformUserIds.forEach((id) => {
-    ors.push(`user_id.eq.${id}`);
-  });
-  if (allowEmailMatch() && user.email) {
-    ors.push(`raw->user->>email.eq.${user.email}`);
+  return Array.from(filters);
+};
+
+const doesAccountMatchUser = (
+  account: VolumetricaAccountRow,
+  user: SupabaseUserIdentity,
+  linkedUserIds: string[],
+) => {
+  const normalizedEmail = user.email ? user.email.toLowerCase() : null;
+  const accountUserId = readString(account.user_id) || readString(account.owner_organization_user_id);
+  if (accountUserId && (accountUserId === user.id || linkedUserIds.includes(accountUserId))) {
+    return true;
   }
+
+  const rawRecord = account.raw && typeof account.raw === "object" ? (account.raw as Record<string, unknown>) : {};
+  const rawUser = rawRecord.user && typeof rawRecord.user === "object" ? (rawRecord.user as Record<string, unknown>) : {};
+  const rawUserId = readString(rawUser.userId) || readString(rawUser.extEntityId);
+  if (rawUserId && (rawUserId === user.id || linkedUserIds.includes(rawUserId))) {
+    return true;
+  }
+
+  const rawEmail = readString(rawUser.email) || readString(rawRecord.email);
+  if (allowEmailMatch() && normalizedEmail && rawEmail.toLowerCase() === normalizedEmail) {
+    return true;
+  }
+
+  return false;
+};
+
+const addIdentifier = (ids: Set<string>, value: unknown) => {
+  const normalized = readString(value);
+  if (normalized) {
+    ids.add(normalized);
+  }
+};
+
+export const getAccountIdentifiers = (
+  account: Pick<VolumetricaAccountRow, "account_id" | "raw" | "snapshot">,
+) => {
+  const ids = new Set<string>();
+  addIdentifier(ids, account.account_id);
+
+  const rawRecord = account.raw && typeof account.raw === "object" ? (account.raw as Record<string, unknown>) : {};
+  addIdentifier(ids, rawRecord.id);
+  addIdentifier(ids, rawRecord.accountId);
+  addIdentifier(ids, rawRecord.accountHeader);
+  addIdentifier(ids, rawRecord.header);
+  addIdentifier(ids, rawRecord.accountNumber);
+  addIdentifier(ids, rawRecord.tradingAccountId);
+
+  const snapshotRecord =
+    account.snapshot && typeof account.snapshot === "object" ? (account.snapshot as Record<string, unknown>) : {};
+  addIdentifier(ids, snapshotRecord.accountId);
+  addIdentifier(ids, snapshotRecord.accountHeader);
+  addIdentifier(ids, snapshotRecord.header);
+
+  return Array.from(ids);
+};
+
+export async function listTraderAccounts(user: SupabaseUserIdentity): Promise<VolumetricaAccountRow[]> {
+  const supabase = createSupabaseAdminClient();
+  const linkedUserIds = await getLinkedVolumetricaUserIds(supabase, user);
+  const ors = buildAccountOrFilters(user, linkedUserIds);
 
   const { data, error } = await supabase
     .from("volumetrica_accounts")
     .select(
-      "account_id,user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
+      "account_id,user_id,account_family_id,owner_organization_user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
     )
     .eq("is_deleted", false)
-    .eq("is_hidden", false)
-    .eq("is_test", false)
     .or(ors.join(","))
     .order("updated_at", { ascending: false });
 
@@ -149,43 +237,16 @@ export async function getTraderAccountById(
   accountId: string,
 ): Promise<VolumetricaAccountRow | null> {
   const supabase = createSupabaseAdminClient();
-  const platformUserIds: string[] = [];
-
-  const { data: linkedUsers } = await supabase
-    .from("volumetrica_users")
-    .select("volumetrica_user_id")
-    .or(
-      [
-        `external_id.eq.${user.id}`,
-        allowEmailMatch() && user.email ? `raw->>email.eq.${user.email}` : null,
-      ]
-        .filter(Boolean)
-        .join(","),
-    );
-
-  (linkedUsers as { volumetrica_user_id?: string | null }[] | null)?.forEach((row) => {
-    if (row?.volumetrica_user_id) {
-      platformUserIds.push(row.volumetrica_user_id);
-    }
-  });
-
-  const ors: string[] = [`user_id.eq.${user.id}`, `raw->user->>extEntityId.eq.${user.id}`];
-  platformUserIds.forEach((id) => {
-    ors.push(`user_id.eq.${id}`);
-  });
-  if (allowEmailMatch() && user.email) {
-    ors.push(`raw->user->>email.eq.${user.email}`);
-  }
+  const linkedUserIds = await getLinkedVolumetricaUserIds(supabase, user);
+  const ors = buildAccountOrFilters(user, linkedUserIds);
 
   const { data, error } = await supabase
     .from("volumetrica_accounts")
     .select(
-      "account_id,user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
+      "account_id,user_id,account_family_id,owner_organization_user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
     )
     .eq("account_id", accountId)
     .eq("is_deleted", false)
-    .eq("is_hidden", false)
-    .eq("is_test", false)
     .or(ors.join(","))
     .maybeSingle();
 
@@ -193,7 +254,37 @@ export async function getTraderAccountById(
     throw new Error(error.message);
   }
 
-  return (data ?? null) as VolumetricaAccountRow | null;
+  if (data) {
+    return (data ?? null) as VolumetricaAccountRow | null;
+  }
+
+  const { data: fallback, error: fallbackError } = await supabase
+    .from("volumetrica_accounts")
+    .select(
+      "account_id,user_id,account_family_id,owner_organization_user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
+    )
+    .eq("is_deleted", false)
+    .or(
+      [
+        `account_id.eq.${accountId}`,
+        `raw->>id.eq.${accountId}`,
+        `raw->>accountId.eq.${accountId}`,
+        `raw->>accountHeader.eq.${accountId}`,
+        `raw->>header.eq.${accountId}`,
+      ].join(","),
+    )
+    .maybeSingle();
+
+  if (fallbackError) {
+    throw new Error(fallbackError.message);
+  }
+
+  if (!fallback) {
+    return null;
+  }
+
+  const accountRow = fallback as VolumetricaAccountRow;
+  return doesAccountMatchUser(accountRow, user, linkedUserIds) ? accountRow : null;
 }
 
 export async function listPositionsByAccountIds(accountIds: string[]): Promise<VolumetricaPositionRow[]> {

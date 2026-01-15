@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/mockData";
 import {
   computeTradeNetPnl,
   getAuthenticatedSupabaseUser,
+  getAccountIdentifiers,
   getSnapshotNumber,
   getTraderAccountById,
   listPositionsByAccountIds,
@@ -74,8 +75,9 @@ export default async function AccountDetailsPage({ params }: AccountDetailsPageP
   const account = await getTraderAccountById(user, routeId);
   if (!account) notFound();
 
-  const positions = await listPositionsByAccountIds([account.account_id]);
-  const trades = await listTradesByAccountIds([account.account_id], { limit: 200 });
+  const accountIds = getAccountIdentifiers(account);
+  const positions = await listPositionsByAccountIds(accountIds);
+  const trades = await listTradesByAccountIds(accountIds, { limit: 200 });
 
   const snapshotBalance = getSnapshotNumber(account.snapshot, "balance");
   const snapshotEquity = getSnapshotNumber(account.snapshot, "equity") ?? snapshotBalance;

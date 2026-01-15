@@ -7,7 +7,7 @@ interface AccountCardProps {
 }
 
 export function AccountCard({ account }: AccountCardProps) {
-  const routeId = getAccountRouteId(account);
+  const routeId = account?.account_id ?? getAccountRouteId(account);
   const accountId = account?.id ?? account?.account_id ?? routeId ?? "-";
   const snapshot = typeof account?.snapshot === "object" && account.snapshot ? (account.snapshot as any) : null;
 

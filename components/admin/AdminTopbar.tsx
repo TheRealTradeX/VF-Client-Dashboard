@@ -1,8 +1,11 @@
 "use client";
 
 import { Bell, Plus, Search } from "lucide-react";
+import { useUserProfile } from "@/lib/hooks/use-user-profile";
 
 export function AdminTopbar() {
+  const { displayName, initials, roleLabel } = useUserProfile();
+
   return (
     <header className="h-16 bg-zinc-950/95 border-b border-zinc-900 flex items-center justify-between px-6 sticky top-0 z-40 backdrop-blur">
       <div className="flex-1 max-w-xl">
@@ -27,11 +30,11 @@ export function AdminTopbar() {
         </button>
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <div className="text-sm text-white">Jefrey Peralta</div>
-            <div className="text-xs text-zinc-500">Admin</div>
+            <div className="text-sm text-white">{displayName}</div>
+            <div className="text-xs text-zinc-500">{roleLabel}</div>
           </div>
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-black font-medium">
-            JP
+            {initials}
           </div>
         </div>
       </div>

@@ -114,9 +114,9 @@ export const mockAccounts = accounts;
 
 export function getAccountRouteId(a: any): string {
   return (
+    a?.account_id ??
     a?.id ??
     a?.accountId ??
-    a?.account_id ??
     a?.accountNumber ??
     a?.number ??
     a?.code ??
