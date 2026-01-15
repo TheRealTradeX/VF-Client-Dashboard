@@ -16,6 +16,8 @@ type ReconcileSummary = {
     projectionCount?: number;
     missingInProjection?: unknown[];
     missingInApi?: unknown[];
+    backfilled?: number;
+    resolvedUserId?: string;
   };
   account?: {
     api?: {
@@ -136,6 +138,10 @@ export function ReconcilePanel() {
                   <div className="text-white text-sm">User reconciliation</div>
                   <div className="grid grid-cols-2 gap-3 text-xs text-zinc-300">
                     <div>
+                      Resolved user id:{" "}
+                      <span className="text-white">{userSummary.resolvedUserId ?? "N/A"}</span>
+                    </div>
+                    <div>
                       API accounts: <span className="text-white">{formatCount(userSummary.apiCount)}</span>
                     </div>
                     <div>
@@ -147,6 +153,9 @@ export function ReconcilePanel() {
                     </div>
                     <div>
                       Missing in API: <span className="text-white">{formatListCount(userSummary.missingInApi)}</span>
+                    </div>
+                    <div>
+                      Backfilled now: <span className="text-white">{formatCount(userSummary.backfilled)}</span>
                     </div>
                   </div>
                 </div>

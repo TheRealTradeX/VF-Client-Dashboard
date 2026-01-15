@@ -12,6 +12,34 @@ type ReconcileRequest = {
   accountId?: string;
 };
 
+const toNullableString = (value: unknown) => (typeof value === "string" ? value : null);
+
+const toNullableBoolean = (value: unknown) => (typeof value === "boolean" ? value : null);
+
+const normalizeAccountRecord = (account: Record<string, unknown>, receivedAt: string) => {
+  const rawUser = account.user;
+  const rawUserRecord = rawUser && typeof rawUser === "object" ? (rawUser as Record<string, unknown>) : null;
+  return {
+    account_id: toNullableString(account.id) ?? toNullableString(account.accountId) ?? "",
+    user_id: toNullableString(rawUserRecord?.userId) ?? toNullableString(account.userId) ?? null,
+    status: toNullableString(account.status),
+    trading_permission: toNullableString(account.tradingPermission),
+    enabled: toNullableBoolean(account.enabled),
+    reason: toNullableString(account.reason),
+    end_date: toNullableString(account.endDate),
+    rule_id: toNullableString(account.ruleId),
+    rule_name: toNullableString(account.ruleName),
+    account_family_id: toNullableString(account.accountFamilyId),
+    owner_organization_user_id: toNullableString(account.ownerOrganizationUserId),
+    snapshot: account.snapshot && typeof account.snapshot === "object" ? account.snapshot : null,
+    raw: account,
+    last_event_id: null,
+    updated_at: receivedAt,
+    is_deleted: false,
+    deleted_at: null,
+  };
+};
+
 const diffArray = (apiValues: string[], projectionValues: string[]) => {
   const apiSet = new Set(apiValues);
   const projectionSet = new Set(projectionValues);
@@ -44,7 +72,24 @@ export async function POST(request: Request) {
 
   try {
     if (userId) {
-      const apiAccounts = await volumetricaClient.getUserAccounts(userId);
+      const { data: userLink } = await supabase
+        .from("volumetrica_users")
+        .select("volumetrica_user_id, external_id, raw")
+        .or(
+          [
+            `volumetrica_user_id.eq.${userId}`,
+            `external_id.eq.${userId}`,
+            userId.includes("@") ? `raw->>email.eq.${userId}` : null,
+          ]
+            .filter(Boolean)
+            .join(","),
+        )
+        .maybeSingle();
+
+      const resolvedUserId =
+        (userLink as { volumetrica_user_id?: string | null } | null)?.volumetrica_user_id ?? userId;
+
+      const apiAccounts = await volumetricaClient.getUserAccounts(resolvedUserId);
       const apiAccountIds = (apiAccounts ?? [])
         .map((acct) => (typeof acct === "object" && acct ? (acct as Record<string, unknown>).id : null))
         .filter((id): id is string => typeof id === "string");
@@ -62,11 +107,37 @@ export async function POST(request: Request) {
         .map((row) => row.account_id)
         .filter((id): id is string => typeof id === "string");
 
+      const diff = diffArray(apiAccountIds, projectionAccountIds);
+      let backfilled = 0;
+      const receivedAt = new Date().toISOString();
+
+      for (const missingId of diff.missingInProjection) {
+        const apiAccount = await volumetricaClient.getAccountInfo(missingId);
+        const record =
+          typeof apiAccount === "object" && apiAccount
+            ? normalizeAccountRecord(apiAccount as Record<string, unknown>, receivedAt)
+            : null;
+
+        if (!record || !record.account_id) {
+          continue;
+        }
+
+        const { error: upsertError } = await supabase
+          .from("volumetrica_accounts")
+          .upsert(record, { onConflict: "account_id" });
+
+        if (!upsertError) {
+          backfilled += 1;
+        }
+      }
+
       result.user = {
         userId,
+        resolvedUserId,
         apiCount: apiAccountIds.length,
         projectionCount: projectionAccountIds.length,
-        ...diffArray(apiAccountIds, projectionAccountIds),
+        ...diff,
+        backfilled,
       };
     }
 

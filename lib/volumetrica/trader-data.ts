@@ -98,8 +98,30 @@ const allowEmailMatch = () => process.env.VOLUMETRICA_ALLOW_EMAIL_MATCH === "tru
 
 export async function listTraderAccounts(user: SupabaseUserIdentity): Promise<VolumetricaAccountRow[]> {
   const supabase = createSupabaseAdminClient();
+  const platformUserIds: string[] = [];
+
+  const { data: linkedUsers } = await supabase
+    .from("volumetrica_users")
+    .select("volumetrica_user_id")
+    .or(
+      [
+        `external_id.eq.${user.id}`,
+        allowEmailMatch() && user.email ? `raw->>email.eq.${user.email}` : null,
+      ]
+        .filter(Boolean)
+        .join(","),
+    );
+
+  (linkedUsers as { volumetrica_user_id?: string | null }[] | null)?.forEach((row) => {
+    if (row?.volumetrica_user_id) {
+      platformUserIds.push(row.volumetrica_user_id);
+    }
+  });
 
   const ors: string[] = [`user_id.eq.${user.id}`, `raw->user->>extEntityId.eq.${user.id}`];
+  platformUserIds.forEach((id) => {
+    ors.push(`user_id.eq.${id}`);
+  });
   if (allowEmailMatch() && user.email) {
     ors.push(`raw->user->>email.eq.${user.email}`);
   }
@@ -127,8 +149,30 @@ export async function getTraderAccountById(
   accountId: string,
 ): Promise<VolumetricaAccountRow | null> {
   const supabase = createSupabaseAdminClient();
+  const platformUserIds: string[] = [];
+
+  const { data: linkedUsers } = await supabase
+    .from("volumetrica_users")
+    .select("volumetrica_user_id")
+    .or(
+      [
+        `external_id.eq.${user.id}`,
+        allowEmailMatch() && user.email ? `raw->>email.eq.${user.email}` : null,
+      ]
+        .filter(Boolean)
+        .join(","),
+    );
+
+  (linkedUsers as { volumetrica_user_id?: string | null }[] | null)?.forEach((row) => {
+    if (row?.volumetrica_user_id) {
+      platformUserIds.push(row.volumetrica_user_id);
+    }
+  });
 
   const ors: string[] = [`user_id.eq.${user.id}`, `raw->user->>extEntityId.eq.${user.id}`];
+  platformUserIds.forEach((id) => {
+    ors.push(`user_id.eq.${id}`);
+  });
   if (allowEmailMatch() && user.email) {
     ors.push(`raw->user->>email.eq.${user.email}`);
   }
