@@ -173,6 +173,16 @@ const doesAccountMatchUser = (
     return true;
   }
 
+  const rawOwnerId = readString(rawRecord.ownerOrganizationUserId);
+  if (rawOwnerId && (rawOwnerId === user.id || linkedUserIds.includes(rawOwnerId))) {
+    return true;
+  }
+
+  const rawDirectUserId = readString(rawRecord.userId) || readString(rawRecord.externalId);
+  if (rawDirectUserId && (rawDirectUserId === user.id || linkedUserIds.includes(rawDirectUserId))) {
+    return true;
+  }
+
   const rawEmail = readString(rawUser.email) || readString(rawRecord.email);
   if (allowEmailMatch() && normalizedEmail && rawEmail.toLowerCase() === normalizedEmail) {
     return true;
@@ -238,7 +248,6 @@ export async function getTraderAccountById(
 ): Promise<VolumetricaAccountRow | null> {
   const supabase = createSupabaseAdminClient();
   const linkedUserIds = await getLinkedVolumetricaUserIds(supabase, user);
-  const ors = buildAccountOrFilters(user, linkedUserIds);
 
   const { data, error } = await supabase
     .from("volumetrica_accounts")
@@ -247,7 +256,6 @@ export async function getTraderAccountById(
     )
     .eq("account_id", accountId)
     .eq("is_deleted", false)
-    .or(ors.join(","))
     .maybeSingle();
 
   if (error) {
@@ -255,7 +263,8 @@ export async function getTraderAccountById(
   }
 
   if (data) {
-    return (data ?? null) as VolumetricaAccountRow | null;
+    const accountRow = data as VolumetricaAccountRow;
+    return doesAccountMatchUser(accountRow, user, linkedUserIds) ? accountRow : null;
   }
 
   const { data: fallback, error: fallbackError } = await supabase
