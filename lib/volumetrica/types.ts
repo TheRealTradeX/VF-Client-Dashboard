@@ -9,10 +9,10 @@ export type WebhookEventPayload = {
   userId?: string | null;
   accountId?: string | null;
   tradingAccount?: TradingAccountWebhookViewModel;
-  tradingPosition?: TradingPositionViewModel;
-  tradingPortfolio?: TradingPositionViewModel;
+  tradingPosition?: TradingPositionViewModel | TradingPositionViewModel[];
+  tradingPortfolio?: TradingPositionViewModel | TradingPositionViewModel[];
   subscription?: SubscriptionViewModel;
-  tradeReport?: TradingTradeInfoModel;
+  tradeReport?: TradingTradeInfoModel | TradingTradeInfoModel[] | null;
   organizationUser?: OrganizationUserWebhookViewModel;
   [key: string]: unknown;
 };

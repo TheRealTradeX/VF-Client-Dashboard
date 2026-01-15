@@ -121,15 +121,26 @@ export function validateWebhookPayload(payload: unknown) {
   ) {
     errors.push("subscription must be an object.");
   }
-  if (event.tradeReport !== undefined && event.tradeReport !== null && typeof event.tradeReport !== "object") {
-    errors.push("tradeReport must be an object.");
+  if (event.tradeReport !== undefined && event.tradeReport !== null) {
+    const isValid =
+      typeof event.tradeReport === "object" || Array.isArray(event.tradeReport);
+    if (!isValid) {
+      errors.push("tradeReport must be an object or array.");
+    }
   }
-  if (
-    event.tradingPosition !== undefined &&
-    event.tradingPosition !== null &&
-    typeof event.tradingPosition !== "object"
-  ) {
-    errors.push("tradingPosition must be an object.");
+  if (event.tradingPosition !== undefined && event.tradingPosition !== null) {
+    const isValid =
+      typeof event.tradingPosition === "object" || Array.isArray(event.tradingPosition);
+    if (!isValid) {
+      errors.push("tradingPosition must be an object or array.");
+    }
+  }
+  if (event.tradingPortfolio !== undefined && event.tradingPortfolio !== null) {
+    const isValid =
+      typeof event.tradingPortfolio === "object" || Array.isArray(event.tradingPortfolio);
+    if (!isValid) {
+      errors.push("tradingPortfolio must be an object or array.");
+    }
   }
   if (
     event.organizationUser !== undefined &&
