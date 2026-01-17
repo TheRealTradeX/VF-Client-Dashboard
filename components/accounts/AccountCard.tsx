@@ -1,5 +1,6 @@
 import { MoreVertical, Calendar, CheckCircle2, Clock } from 'lucide-react';
-import { getAccountRouteId, formatCurrency } from "@/lib/mockData";
+import { formatCurrency } from "@/lib/mockData";
+import { resolveAccountRouteId } from "@/lib/volumetrica/account-routing";
 import Link from "next/link";
 
 interface AccountCardProps {
@@ -7,7 +8,7 @@ interface AccountCardProps {
 }
 
 export function AccountCard({ account }: AccountCardProps) {
-  const routeId = account?.account_id ?? getAccountRouteId(account);
+  const routeId = resolveAccountRouteId(account);
   const accountId = account?.id ?? account?.account_id ?? routeId ?? "-";
   const snapshot = typeof account?.snapshot === "object" && account.snapshot ? (account.snapshot as any) : null;
 

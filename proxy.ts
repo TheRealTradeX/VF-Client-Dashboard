@@ -60,7 +60,10 @@ export async function proxy(req: NextRequest) {
 
   const { data } = await supabase.auth.getUser();
   const pathname = req.nextUrl.pathname;
-  const isProtected = pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
+  const isProtected =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/accounts");
   const isAdminRoute = pathname.startsWith("/admin");
   const shouldDebug = process.env.NODE_ENV !== "production" && isAdminRoute;
 
@@ -122,5 +125,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/accounts/:path*"],
 };

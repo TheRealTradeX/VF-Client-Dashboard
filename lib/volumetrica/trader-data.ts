@@ -106,89 +106,171 @@ const addFilter = (filters: Set<string>, value: string | null) => {
 
 const readString = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
+const readRuleNameFromRaw = (raw: Record<string, unknown> | null) => {
+  if (!raw) return "";
+  return (
+    readString(raw.ruleName) ||
+    readString(raw.rule) ||
+    readString(raw.tradingRuleOrganizationReferenceId) ||
+    readString(raw.referenceId)
+  );
+};
+
+const isAccountLinkedToUser = (account: VolumetricaAccountRow, linkedUserIds: string[]) => {
+  if (!linkedUserIds.length) return false;
+  const candidateIds = new Set<string>(linkedUserIds.filter(Boolean));
+  const rawRecord = account.raw && typeof account.raw === "object" ? (account.raw as Record<string, unknown>) : null;
+  const rawUser = rawRecord?.user && typeof rawRecord.user === "object"
+    ? (rawRecord.user as Record<string, unknown>)
+    : null;
+
+  const matchesId = (value: unknown) => {
+    const id = readString(value);
+    return id && candidateIds.has(id);
+  };
+
+  return (
+    matchesId(account.user_id) ||
+    matchesId(account.owner_organization_user_id) ||
+    matchesId(rawUser?.userId) ||
+    matchesId(rawRecord?.userId) ||
+    matchesId(rawUser?.externalId) ||
+    matchesId(rawRecord?.externalId)
+  );
+};
+
+const hydrateRuleNames = async (
+  supabase: ReturnType<typeof createSupabaseAdminClient>,
+  accounts: VolumetricaAccountRow[],
+) => {
+  const missingRuleIds = new Set<string>();
+  const missingReferenceIds = new Set<string>();
+
+  accounts.forEach((account) => {
+    if (account.rule_name) return;
+    const rawRecord = account.raw && typeof account.raw === "object" ? (account.raw as Record<string, unknown>) : null;
+    const rawRuleName = readRuleNameFromRaw(rawRecord);
+    if (rawRuleName) {
+      account.rule_name = rawRuleName;
+      return;
+    }
+    if (account.rule_id) {
+      missingRuleIds.add(account.rule_id);
+    }
+    const referenceId = readString(rawRecord?.tradingRuleOrganizationReferenceId);
+    if (referenceId) {
+      missingReferenceIds.add(referenceId);
+    }
+  });
+
+  if (missingRuleIds.size) {
+    const { data } = await supabase
+      .from("volumetrica_rules")
+      .select("rule_id, rule_name, reference_id")
+      .in("rule_id", Array.from(missingRuleIds));
+
+    const rules = (data ?? []) as {
+      rule_id?: string | null;
+      rule_name?: string | null;
+      reference_id?: string | null;
+    }[];
+    const map = new Map<string, string>();
+    rules.forEach((row) => {
+      const key = readString(row.rule_id);
+      const value = readString(row.rule_name) || readString(row.reference_id);
+      if (key && value) {
+        map.set(key, value);
+      }
+    });
+
+    accounts.forEach((account) => {
+      if (!account.rule_name && account.rule_id) {
+        const resolved = map.get(account.rule_id);
+        if (resolved) {
+          account.rule_name = resolved;
+        }
+      }
+    });
+  }
+
+  if (missingReferenceIds.size) {
+    const { data } = await supabase
+      .from("volumetrica_rules")
+      .select("reference_id, rule_name")
+      .in("reference_id", Array.from(missingReferenceIds));
+
+    const rules = (data ?? []) as {
+      reference_id?: string | null;
+      rule_name?: string | null;
+    }[];
+    const map = new Map<string, string>();
+    rules.forEach((row) => {
+      const key = readString(row.reference_id);
+      const value = readString(row.rule_name) || readString(row.reference_id);
+      if (key && value) {
+        map.set(key, value);
+      }
+    });
+
+    accounts.forEach((account) => {
+      if (!account.rule_name) {
+        const rawRecord =
+          account.raw && typeof account.raw === "object" ? (account.raw as Record<string, unknown>) : null;
+        const referenceId = readString(rawRecord?.tradingRuleOrganizationReferenceId);
+        const resolved = referenceId ? map.get(referenceId) : null;
+        if (resolved) {
+          account.rule_name = resolved;
+        }
+      }
+    });
+  }
+
+  return accounts;
+};
+
+const uniqueStrings = (values: string[]) => Array.from(new Set(values.filter(Boolean)));
+
 const getLinkedVolumetricaUserIds = async (
   supabase: ReturnType<typeof createSupabaseAdminClient>,
   user: SupabaseUserIdentity,
 ) => {
-  const { data: linkedUsers } = await supabase
-    .from("volumetrica_users")
-    .select("volumetrica_user_id")
-    .or(
-      [
-        `external_id.eq.${user.id}`,
-        allowEmailMatch() && user.email ? `raw->>email.eq.${user.email}` : null,
-      ]
-        .filter(Boolean)
-        .join(","),
-    );
+  const filters = [`external_id.eq.${user.id}`];
+  if (allowEmailMatch() && user.email) {
+    filters.push(`external_id.eq.${user.email}`);
+    filters.push(`raw->>email.eq.${user.email}`);
+  }
 
-  return (linkedUsers as { volumetrica_user_id?: string | null }[] | null)
-    ?.map((row) => readString(row?.volumetrica_user_id))
-    .filter(Boolean) ?? [];
+  const { data: linkedUsers, error } = await supabase
+    .from("volumetrica_users")
+    .select("volumetrica_user_id, external_id, raw")
+    .or(filters.join(","));
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const ids =
+    (linkedUsers as { volumetrica_user_id?: string | null }[] | null)
+      ?.map((row) => readString(row?.volumetrica_user_id))
+      .filter(Boolean) ?? [];
+  return uniqueStrings(ids);
 };
 
-const buildAccountOrFilters = (user: SupabaseUserIdentity, linkedUserIds: string[]) => {
+const buildAccountOrFilters = (linkedUserIds: string[]) => {
   const filters = new Set<string>();
 
-  const addUserFilters = (id: string, includeExtEntity: boolean) => {
+  const addUserFilters = (id: string) => {
     addFilter(filters, `user_id.eq.${id}`);
     addFilter(filters, `owner_organization_user_id.eq.${id}`);
     addFilter(filters, `raw->user->>userId.eq.${id}`);
-    addFilter(filters, `raw->>ownerOrganizationUserId.eq.${id}`);
-    if (includeExtEntity) {
-      addFilter(filters, `raw->user->>extEntityId.eq.${id}`);
-    }
+    addFilter(filters, `raw->>userId.eq.${id}`);
+    addFilter(filters, `raw->user->>externalId.eq.${id}`);
+    addFilter(filters, `raw->>externalId.eq.${id}`);
   };
 
-  addUserFilters(user.id, true);
-
-  if (allowEmailMatch() && user.email) {
-    addFilter(filters, `raw->user->>email.eq.${user.email}`);
-    addFilter(filters, `raw->>email.eq.${user.email}`);
-  }
-  linkedUserIds.forEach((id) => {
-    if (id) {
-      addUserFilters(id, false);
-    }
-  });
+  linkedUserIds.forEach((id) => addUserFilters(id));
 
   return Array.from(filters);
-};
-
-const doesAccountMatchUser = (
-  account: VolumetricaAccountRow,
-  user: SupabaseUserIdentity,
-  linkedUserIds: string[],
-) => {
-  const normalizedEmail = user.email ? user.email.toLowerCase() : null;
-  const accountUserId = readString(account.user_id) || readString(account.owner_organization_user_id);
-  if (accountUserId && (accountUserId === user.id || linkedUserIds.includes(accountUserId))) {
-    return true;
-  }
-
-  const rawRecord = account.raw && typeof account.raw === "object" ? (account.raw as Record<string, unknown>) : {};
-  const rawUser = rawRecord.user && typeof rawRecord.user === "object" ? (rawRecord.user as Record<string, unknown>) : {};
-  const rawUserId = readString(rawUser.userId) || readString(rawUser.extEntityId);
-  if (rawUserId && (rawUserId === user.id || linkedUserIds.includes(rawUserId))) {
-    return true;
-  }
-
-  const rawOwnerId = readString(rawRecord.ownerOrganizationUserId);
-  if (rawOwnerId && (rawOwnerId === user.id || linkedUserIds.includes(rawOwnerId))) {
-    return true;
-  }
-
-  const rawDirectUserId = readString(rawRecord.userId) || readString(rawRecord.externalId);
-  if (rawDirectUserId && (rawDirectUserId === user.id || linkedUserIds.includes(rawDirectUserId))) {
-    return true;
-  }
-
-  const rawEmail = readString(rawUser.email) || readString(rawRecord.email);
-  if (allowEmailMatch() && normalizedEmail && rawEmail.toLowerCase() === normalizedEmail) {
-    return true;
-  }
-
-  return false;
 };
 
 const addIdentifier = (ids: Set<string>, value: unknown) => {
@@ -224,7 +306,16 @@ export const getAccountIdentifiers = (
 export async function listTraderAccounts(user: SupabaseUserIdentity): Promise<VolumetricaAccountRow[]> {
   const supabase = createSupabaseAdminClient();
   const linkedUserIds = await getLinkedVolumetricaUserIds(supabase, user);
-  const ors = buildAccountOrFilters(user, linkedUserIds);
+  if (!linkedUserIds.length) {
+    console.warn("volumetrica.accounts.list.empty-link", {
+      source: "listTraderAccounts",
+      user_id: user.id,
+      email: user.email ?? null,
+      volumetrica_user_ref: [],
+    });
+    return [];
+  }
+  const ors = buildAccountOrFilters(linkedUserIds);
 
   const { data, error } = await supabase
     .from("volumetrica_accounts")
@@ -239,35 +330,59 @@ export async function listTraderAccounts(user: SupabaseUserIdentity): Promise<Vo
     throw new Error(error.message);
   }
 
-  return (data ?? []) as VolumetricaAccountRow[];
+  const accounts = (data ?? []) as VolumetricaAccountRow[];
+  const filtered = accounts.filter((account) => isAccountLinkedToUser(account, linkedUserIds));
+  await hydrateRuleNames(supabase, filtered);
+  console.info("volumetrica.accounts.list", {
+    source: "listTraderAccounts",
+    user_id: user.id,
+    email: user.email ?? null,
+    volumetrica_user_ref: linkedUserIds,
+    account_ref: filtered.map((account) => account.account_id),
+  });
+  return filtered;
 }
 
 export async function getTraderAccountById(
   user: SupabaseUserIdentity,
   accountId: string,
 ): Promise<VolumetricaAccountRow | null> {
+  const normalizedRoute = accountId.toLowerCase().trim();
+  if (!normalizedRoute) return null;
+
+  const account = await getAccountById(accountId);
+  if (!account) return null;
+
   const supabase = createSupabaseAdminClient();
   const linkedUserIds = await getLinkedVolumetricaUserIds(supabase, user);
+  if (!isAccountLinkedToUser(account, linkedUserIds)) {
+    console.warn("volumetrica.accounts.detail.denied", {
+      source: "getTraderAccountById",
+      user_id: user.id,
+      email: user.email ?? null,
+      volumetrica_user_ref: linkedUserIds,
+      account_ref: accountId,
+    });
+    return null;
+  }
+
+  await hydrateRuleNames(supabase, [account]);
+  console.info("volumetrica.accounts.detail", {
+    source: "getTraderAccountById",
+    user_id: user.id,
+    email: user.email ?? null,
+    volumetrica_user_ref: linkedUserIds,
+    account_ref: account.account_id,
+  });
+  return account;
+}
+
+export async function getAccountById(accountId: string): Promise<VolumetricaAccountRow | null> {
+  const normalized = accountId.trim();
+  if (!normalized) return null;
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
-    .from("volumetrica_accounts")
-    .select(
-      "account_id,user_id,account_family_id,owner_organization_user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
-    )
-    .eq("account_id", accountId)
-    .eq("is_deleted", false)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  if (data) {
-    const accountRow = data as VolumetricaAccountRow;
-    return doesAccountMatchUser(accountRow, user, linkedUserIds) ? accountRow : null;
-  }
-
-  const { data: fallback, error: fallbackError } = await supabase
     .from("volumetrica_accounts")
     .select(
       "account_id,user_id,account_family_id,owner_organization_user_id,status,trading_permission,enabled,reason,end_date,rule_id,rule_name,snapshot,raw,updated_at,is_hidden,is_test,is_deleted,deleted_at",
@@ -275,30 +390,30 @@ export async function getTraderAccountById(
     .eq("is_deleted", false)
     .or(
       [
-        `account_id.eq.${accountId}`,
-        `raw->>id.eq.${accountId}`,
-        `raw->>accountId.eq.${accountId}`,
-        `raw->>accountHeader.eq.${accountId}`,
-        `raw->>header.eq.${accountId}`,
+        `account_id.eq.${normalized}`,
+        `raw->>id.eq.${normalized}`,
+        `raw->>accountId.eq.${normalized}`,
+        `raw->>accountHeader.eq.${normalized}`,
+        `raw->>header.eq.${normalized}`,
+        `raw->>accountNumber.eq.${normalized}`,
+        `raw->>tradingAccountId.eq.${normalized}`,
+        `snapshot->>accountId.eq.${normalized}`,
+        `snapshot->>accountHeader.eq.${normalized}`,
+        `snapshot->>header.eq.${normalized}`,
+        `snapshot->>accountNumber.eq.${normalized}`,
       ].join(","),
     )
     .maybeSingle();
 
-  if (fallbackError) {
-    throw new Error(fallbackError.message);
+  if (error) {
+    throw new Error(error.message);
   }
 
-  if (!fallback) {
-    const accounts = await listTraderAccounts(user);
-    const normalizedRoute = accountId.toLowerCase().trim();
-    const matchedAccount = accounts.find((account) =>
-      getAccountIdentifiers(account).some((id) => id.toLowerCase().trim() === normalizedRoute),
-    );
-    return matchedAccount ?? null;
+  const account = (data ?? null) as VolumetricaAccountRow | null;
+  if (account) {
+    await hydrateRuleNames(supabase, [account]);
   }
-
-  const accountRow = fallback as VolumetricaAccountRow;
-  return doesAccountMatchUser(accountRow, user, linkedUserIds) ? accountRow : null;
+  return account;
 }
 
 export async function listPositionsByAccountIds(accountIds: string[]): Promise<VolumetricaPositionRow[]> {

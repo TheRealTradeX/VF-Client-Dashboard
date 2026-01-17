@@ -62,6 +62,39 @@ export async function applyWebhookProjections(
   const accountId = payload.accountId ?? payload.tradingAccount?.id ?? null;
   const userId = payload.userId ?? payload.tradingAccount?.user?.userId ?? null;
 
+  if (accountId && userId) {
+    const { data: existingAccount, error: existingError } = await supabase
+      .from("volumetrica_accounts")
+      .select("user_id, raw")
+      .eq("account_id", accountId)
+      .maybeSingle();
+
+    if (existingError) {
+      errors.push(`accounts: ${existingError.message}`);
+    } else if (existingAccount && !existingAccount.user_id) {
+      const rawRecord =
+        existingAccount.raw && typeof existingAccount.raw === "object"
+          ? { ...(existingAccount.raw as Record<string, unknown>) }
+          : {};
+      if (!("userId" in rawRecord)) {
+        rawRecord.userId = userId;
+      }
+      if (!("user" in rawRecord)) {
+        rawRecord.user = { userId };
+      }
+
+      const { error: linkError } = await supabase
+        .from("volumetrica_accounts")
+        .update({ user_id: userId, raw: rawRecord })
+        .eq("account_id", accountId);
+      if (linkError) {
+        errors.push(`accounts: ${linkError.message}`);
+      } else {
+        updates.push("volumetrica_accounts");
+      }
+    }
+  }
+
   if (payload.tradingAccount && (payload.tradingAccount as TradingAccountWebhookViewModel).id) {
     const account = payload.tradingAccount as TradingAccountWebhookViewModel;
     const accountRecord = {
@@ -91,6 +124,36 @@ export async function applyWebhookProjections(
       errors.push(`accounts: ${error.message}`);
     } else {
       updates.push("volumetrica_accounts");
+    }
+  }
+
+  if (!payload.tradingAccount && accountId) {
+    const { data: existingAccount, error: existingError } = await supabase
+      .from("volumetrica_accounts")
+      .select("account_id")
+      .eq("account_id", accountId)
+      .maybeSingle();
+    if (existingError) {
+      errors.push(`accounts: ${existingError.message}`);
+    } else if (!existingAccount) {
+      const placeholderRecord = {
+        account_id: accountId,
+        user_id: userId ?? null,
+        raw: { accountId, userId, user: userId ? { userId } : null },
+        last_event_id: meta.eventId,
+        updated_at: meta.receivedAt,
+        is_deleted: normalizedEvent === "Deleted",
+        deleted_at: normalizedEvent === "Deleted" ? meta.receivedAt : null,
+      };
+
+      const { error } = await supabase
+        .from("volumetrica_accounts")
+        .insert(placeholderRecord);
+      if (error) {
+        errors.push(`accounts: ${error.message}`);
+      } else {
+        updates.push("volumetrica_accounts");
+      }
     }
   }
 

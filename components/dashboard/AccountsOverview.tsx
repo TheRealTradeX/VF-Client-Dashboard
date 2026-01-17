@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CheckCircle2, Clock } from 'lucide-react';
-import { getAccountRouteId } from "@/lib/mockData";
+import { resolveAccountRouteId } from "@/lib/volumetrica/account-routing";
 
 export type AccountsOverviewItem = {
   id: string;
@@ -54,7 +54,7 @@ export function AccountsOverview({ accounts }: { accounts?: AccountsOverviewItem
           {rows.map((account) => (
             <Link
               key={account.id}
-              href={`/accounts/${encodeURIComponent(getAccountRouteId(account))}`}
+              href={`/accounts/${encodeURIComponent(resolveAccountRouteId(account))}`}
               className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-lg hover:border-emerald-500/30 transition-colors cursor-pointer block"
             >
               <div className="flex items-start justify-between mb-3">

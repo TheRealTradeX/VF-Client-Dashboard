@@ -55,19 +55,36 @@ const toIsoFromDate = (value: unknown) => {
   return date.toISOString();
 };
 
-const normalizeAccountRecord = (account: Record<string, unknown>, receivedAt: string) => {
+const normalizeAccountRecord = (
+  account: Record<string, unknown>,
+  receivedAt: string,
+  fallbackAccountId?: string | null,
+  fallbackUserId?: string | null,
+) => {
   const rawUser = account.user;
   const rawUserRecord = rawUser && typeof rawUser === "object" ? (rawUser as Record<string, unknown>) : null;
+  const accountIdFromString =
+    toNullableString(account.accountId) ?? toNullableString(account.id) ?? toNullableString(account.accountDefaultId);
+  const accountIdFromNumber =
+    typeof account.id === "number" && Number.isFinite(account.id) ? String(account.id) : null;
+  const accountId = accountIdFromString ?? accountIdFromNumber ?? fallbackAccountId ?? "";
   return {
-    account_id: toNullableString(account.id) ?? toNullableString(account.accountId) ?? "",
-    user_id: toNullableString(rawUserRecord?.userId) ?? toNullableString(account.userId) ?? null,
+    account_id: accountId,
+    user_id:
+      toNullableString(rawUserRecord?.userId) ??
+      toNullableString(account.userId) ??
+      fallbackUserId ??
+      null,
     status: toNullableString(account.status),
     trading_permission: toNullableString(account.tradingPermission),
     enabled: toNullableBoolean(account.enabled),
     reason: toNullableString(account.reason),
     end_date: toNullableString(account.endDate),
-    rule_id: toNullableString(account.ruleId),
-    rule_name: toNullableString(account.ruleName),
+    rule_id: toNullableString(account.ruleId) ?? toNullableString(account.tradingRuleId),
+    rule_name:
+      toNullableString(account.ruleName) ??
+      toNullableString(account.rule) ??
+      toNullableString(account.tradingRuleOrganizationReferenceId),
     account_family_id: toNullableString(account.accountFamilyId),
     owner_organization_user_id: toNullableString(account.ownerOrganizationUserId),
     snapshot: account.snapshot && typeof account.snapshot === "object" ? account.snapshot : null,
@@ -171,13 +188,18 @@ export async function POST(request: Request) {
         (acct): acct is Record<string, unknown> => typeof acct === "object" && acct !== null,
       );
       const apiAccountIds = apiAccountRecords
-        .map((acct) => (typeof acct.id === "string" ? acct.id : null))
+        .map((acct) => {
+          if (typeof acct.accountId === "string" && acct.accountId.trim()) return acct.accountId.trim();
+          if (typeof acct.id === "string" && acct.id.trim()) return acct.id.trim();
+          if (typeof acct.id === "number" && Number.isFinite(acct.id)) return String(acct.id);
+          return null;
+        })
         .filter((id): id is string => typeof id === "string");
 
       const { data: projectedAccounts, error } = await supabase
         .from("volumetrica_accounts")
-        .select("account_id")
-        .eq("user_id", userId);
+        .select("account_id,user_id,status,rule_id,rule_name,snapshot,raw")
+        .in("account_id", apiAccountIds);
 
       if (error) {
         throw new Error(error.message);
@@ -189,16 +211,72 @@ export async function POST(request: Request) {
 
       const diff = diffArray(apiAccountIds, projectionAccountIds);
       let backfilled = 0;
+      let linkedAccounts = 0;
       let tradesBackfilled = 0;
       const tradeBackfillErrors: string[] = [];
       const receivedAt = new Date().toISOString();
 
-      for (const missingId of diff.missingInProjection) {
-        const apiAccount = await volumetricaClient.getAccountInfo(missingId);
-        const record =
+      if (resolvedUserId) {
+        const { data: existingAccounts } = await supabase
+          .from("volumetrica_accounts")
+          .select("account_id,user_id,raw")
+          .in("account_id", apiAccountIds);
+
+        const accountsToLink =
+          (existingAccounts ?? []).filter(
+            (row) => typeof row.account_id === "string" && row.user_id === null,
+          ) ?? [];
+
+        for (const row of accountsToLink) {
+          const rawRecord =
+            row.raw && typeof row.raw === "object" ? { ...(row.raw as Record<string, unknown>) } : {};
+          if (!("userId" in rawRecord)) {
+            rawRecord.userId = resolvedUserId;
+          }
+          if (!("user" in rawRecord)) {
+            rawRecord.user = { userId: resolvedUserId };
+          }
+
+          const { error: linkError } = await supabase
+            .from("volumetrica_accounts")
+            .update({ user_id: resolvedUserId, raw: rawRecord })
+            .eq("account_id", row.account_id);
+
+          if (!linkError) {
+            linkedAccounts += 1;
+          }
+        }
+      }
+
+      const projectionMap = new Map(
+        (projectedAccounts ?? [])
+          .map((row) => {
+            if (!row || typeof row !== "object") return null;
+            const record = row as Record<string, unknown>;
+            if (typeof record.account_id !== "string") return null;
+            return [record.account_id, record] as [string, Record<string, unknown>];
+          })
+          .filter((entry): entry is [string, Record<string, unknown>] => Boolean(entry)),
+      );
+
+      const accountsToRefresh = apiAccountIds.filter((accountKey) => {
+        const existing = projectionMap.get(accountKey);
+        if (!existing) return true;
+        const hasRuleName = Boolean(existing.rule_name);
+        const hasStatus = Boolean(existing.status);
+        const hasSnapshot = Boolean(existing.snapshot);
+        return !(hasRuleName && hasStatus && hasSnapshot);
+      });
+
+      for (const accountKey of accountsToRefresh) {
+        const apiAccount = await volumetricaClient.getAccountInfo(accountKey);
+        const apiAccountRecord =
           typeof apiAccount === "object" && apiAccount
-            ? normalizeAccountRecord(apiAccount as Record<string, unknown>, receivedAt)
+            ? (resolveReportData(apiAccount) as Record<string, unknown>)
             : null;
+        const record = apiAccountRecord
+          ? normalizeAccountRecord(apiAccountRecord, receivedAt, accountKey, resolvedUserId ?? userId ?? null)
+          : null;
 
         if (!record || !record.account_id) {
           continue;
@@ -259,6 +337,7 @@ export async function POST(request: Request) {
         projectionCount: projectionAccountIds.length,
         ...diff,
         backfilled,
+        linkedAccounts,
         tradesBackfilled,
         tradeBackfillErrors,
       };
@@ -266,6 +345,9 @@ export async function POST(request: Request) {
 
     if (accountId) {
       const apiAccount = await volumetricaClient.getAccountInfo(accountId);
+      const receivedAt = new Date().toISOString();
+      let accountUpserted = false;
+      let accountUpsertError: string | null = null;
       const { data: projection, error } = await supabase
         .from("volumetrica_accounts")
         .select("account_id,status,trading_permission,enabled,rule_id")
@@ -276,7 +358,44 @@ export async function POST(request: Request) {
         throw new Error(error.message);
       }
 
-      const apiRecord = typeof apiAccount === "object" && apiAccount ? (apiAccount as Record<string, unknown>) : {};
+      const apiRecord =
+        typeof apiAccount === "object" && apiAccount
+          ? ((resolveReportData(apiAccount) as Record<string, unknown>) ?? {})
+          : {};
+      const normalizedAccount =
+        apiRecord && Object.keys(apiRecord).length
+          ? normalizeAccountRecord(apiRecord, receivedAt, accountId)
+          : null;
+      const { data: existingAccount } = await supabase
+        .from("volumetrica_accounts")
+        .select("user_id, raw")
+        .eq("account_id", accountId)
+        .maybeSingle();
+      if (normalizedAccount?.account_id) {
+        if (!normalizedAccount.user_id && existingAccount?.user_id) {
+          normalizedAccount.user_id = existingAccount.user_id;
+        }
+        if (existingAccount?.raw && typeof existingAccount.raw === "object") {
+          const existingRaw = existingAccount.raw as Record<string, unknown>;
+          const normalizedRaw = normalizedAccount.raw as Record<string, unknown>;
+          if (normalizedRaw && typeof normalizedRaw === "object") {
+            if (!("user" in normalizedRaw) && "user" in existingRaw) {
+              normalizedRaw.user = existingRaw.user;
+            }
+            if (!("userId" in normalizedRaw) && "userId" in existingRaw) {
+              normalizedRaw.userId = existingRaw.userId;
+            }
+          }
+        }
+        const { error: upsertError } = await supabase
+          .from("volumetrica_accounts")
+          .upsert(normalizedAccount, { onConflict: "account_id" });
+        if (upsertError) {
+          accountUpsertError = upsertError.message;
+        } else {
+          accountUpserted = true;
+        }
+      }
 
       const reportStart =
         startDt ??
@@ -305,6 +424,8 @@ export async function POST(request: Request) {
           ruleId: apiRecord.tradingRuleId ?? null,
         },
         projection: projection ?? null,
+        accountUpserted,
+        accountUpsertError,
         tradesBackfilled: trades.length,
         tradeBackfillErrors: tradeBackfillResult.errors,
       };
